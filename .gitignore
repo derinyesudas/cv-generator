@@ -1,0 +1,25 @@
+*.log
+node_modules/
+tests/fixtures/e2e-out/
+
+# Privacy pass, 25 Sept 2026: local-only values that must never be
+# committed (see data/private-overrides.example.json for the shape and
+# js/data.js's loadPrivateOverrides). The app runs correctly without this
+# file - its absence is the normal state for a fresh clone or GitHub Pages.
+data/private-overrides.json
+
+# Item 7, 27 Sept 2026: inbox/ is a staging area for large pasted/uploaded
+# job-ad text (see inbox/README.md, which IS tracked) - working scratch
+# and not-yet-reviewed real ad text, never committed. A file only enters
+# the tracked fixture corpus once Derin approves it and it's copied to
+# tests/fixtures/jd/.
+inbox/*.txt
+
+# Built by scripts/build-site.mjs; GitHub Actions builds its own copy.
+_site/
+
+# Earlier versions of Derin's own CVs and cover letters, kept on his
+# computer for reference but not published: they predate the 25 Sept 2026
+# privacy pass (client names, the Excel-filter claim). No test reads them.
+tests/fixtures/reference/
+tests/golden/reference-output.docx

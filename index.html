@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151a22" media="(prefers-color-scheme: dark)">
+<script>
+  // Theme, applied before the stylesheet so the first paint is never the
+  // wrong theme. A choice made with the switch in the app bar is kept in
+  // this browser (js/ui.js saves it); until one is made, the system
+  // setting is followed. Presentation only: nothing here touches a document.
+  (function () {
+    var theme = null;
+    try { theme = window.localStorage.getItem("cvGenerator.theme"); } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    var root = document.documentElement;
+    root.setAttribute("data-theme", theme);
+    var scheme = document.querySelector('meta[name="color-scheme"]');
+    if (scheme) scheme.setAttribute("content", theme);
+    var bar = theme === "dark" ? "#151a22" : "#ffffff";
+    var metas = document.querySelectorAll('meta[name="theme-color"]');
+    for (var i = 0; i < metas.length; i++) metas[i].setAttribute("content", bar);
+  })();
+</script>
+<meta name="description" content="Derin Yesudas's CV generator: paste a job ad, see whether to apply, and download a one-page tailored CV and cover letter (PDF or Word) and ready-to-paste form answers.">
+<title>CV Generator · Derin Yesudas</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#jd-input">Skip to the job ad</a>
+
+  <!-- Every id below is read or written by js/app.js and/or driven by the
+       Playwright suites (tests/golden, tests/fixtures). Layout can move them;
+       nothing may rename, remove or hide them. See css/app.css's header. -->
+  <header class="appbar">
+    <h1 class="sr-only">CV Generator: a tailored CV, cover letter and form answers from one job ad</h1>
+    <a class="brand" href="#top" aria-label="CV Generator, back to top">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#1F3864"/>
+        <path d="M11.25 6.5h7.1l4.9 4.9v13.35a1.75 1.75 0 0 1-1.75 1.75h-10.25a1.75 1.75 0 0 1-1.75-1.75V8.25a1.75 1.75 0 0 1 1.75-1.75z" fill="#fff"/>
+        <path d="M18.35 6.5v3.4c0 .83.67 1.5 1.5 1.5h3.4" fill="none" stroke="#1F3864" stroke-width="1.1"/>
+        <path d="M12.6 14.6h7.8" stroke="#1F3864" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M12.6 17.9h7.8M12.6 20.9h5.2" stroke="#8FA3C4" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">CV Generator</span>
+        <span class="brand-sub">Derin Yesudas</span>
+      </span>
+    </a>
+    <nav class="appbar-nav" aria-label="Jump to a document">
+      <a href="#doc-cv" data-nav="doc-cv">CV</a>
+      <a href="#doc-letter" data-nav="doc-letter" class="nav-cap"><span class="nav-long">Cover </span>letter</a>
+      <a href="#doc-answers" data-nav="doc-answers" class="nav-cap"><span class="nav-long">Form </span>answers</a>
+    </nav>
+    <div class="appbar-status">
+      <p id="load-status" class="load-status" role="status" data-state="loading">Loading data file...</p>
+    </div>
+    <button type="button" class="theme-switch" id="theme-switch" role="switch" aria-checked="false" aria-label="Dark theme" title="Switch to dark theme">
+      <svg class="theme-switch-icon theme-switch-icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="2.6"/><path d="M8 1.8v1.4M8 12.8v1.4M1.8 8h1.4M12.8 8h1.4M3.6 3.6l1 1M11.4 11.4l1 1M3.6 12.4l1-1M11.4 4.6l1-1"/></svg>
+      <svg class="theme-switch-icon theme-switch-icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 9.8A5.4 5.4 0 0 1 6.2 2.8a5.4 5.4 0 1 0 7 7z"/></svg>
+      <span class="theme-switch-thumb" aria-hidden="true">
+        <svg class="theme-switch-glyph-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="2.7" fill="currentColor" stroke="none"/><path d="M8 1.6v1.5M8 12.9v1.5M1.6 8h1.5M12.9 8h1.5M3.5 3.5l1.1 1.1M11.4 11.4l1.1 1.1M3.5 12.5l1.1-1.1M11.4 4.6l1.1-1.1"/></svg>
+        <svg class="theme-switch-glyph-moon" viewBox="0 0 16 16"><path d="M13.3 9.9A5.5 5.5 0 0 1 6.1 2.7a5.5 5.5 0 1 0 7.2 7.2z" fill="currentColor"/></svg>
+      </span>
+    </button>
+  </header>
+
+  <div id="validation-errors" class="validation-errors" hidden></div>
+
+  <div class="workspace" id="top">
+    <aside class="sidebar" aria-label="Job ad, verdict and details from the ad">
+
+      <section class="panel" id="panel-ad" aria-labelledby="h-ad">
+        <div class="panel-head">
+          <h2 class="panel-title" id="h-ad">Job ad</h2>
+        </div>
+        <label class="sr-only" for="jd-input">Job description</label>
+        <textarea id="jd-input" rows="8" spellcheck="false" placeholder="Paste the full job ad here: title, duties, requirements, all of it."></textarea>
+      </section>
+
+      <section class="panel panel-verdict" id="panel-verdict" aria-labelledby="h-verdict">
+        <div class="panel-head">
+          <h2 class="panel-title" id="h-verdict">Should you apply?</h2>
+        </div>
+        <div id="verdict-card" class="verdict-card" role="status" hidden></div>
+        <div id="hardreq-actions" class="hardreq-actions" hidden>
+          <button id="hardreq-build-anyway-btn" class="btn btn-warn btn-sm" type="button">Build anyway</button>
+          <button id="hardreq-skip-btn" class="btn btn-ghost btn-sm" type="button">Skip this job</button>
+        </div>
+        <p class="empty-hint verdict-empty">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.25v3.5M8 5.2h.01"/></svg>
+          Paste a job ad to see whether it's worth applying: requirements you don't meet, experience it asks for, tools you haven't used.
+        </p>
+        <div class="field archetype-override">
+          <label for="archetype-select">Role type</label>
+          <select id="archetype-select"></select>
+        </div>
+        <div id="archetype-notice" class="archetype-notice" hidden></div>
+        <details class="verdict-details" id="verdict-details">
+          <summary>Every check in detail</summary>
+          <div class="verdict-details-body">
+            <h3 class="detail-title">Eligibility</h3>
+            <div id="hardreq-banner" class="hardreq-banner" hidden></div>
+            <h3 class="detail-title">Experience, tools and warnings</h3>
+            <div id="fitcheck-verdict" class="fitcheck-verdict"></div>
+            <ul id="fitcheck-findings" class="fitcheck-findings"></ul>
+            <h3 class="detail-title">Role type</h3>
+            <div class="archetype-readout" id="archetype-readout"></div>
+            <details class="keywords">
+              <summary>Keyword coverage <span class="keywords-count" id="keywords-count"></span></summary>
+              <table id="fitcheck-keywords" class="fitcheck-keywords">
+                <thead>
+                  <tr><th scope="col">Term</th><th scope="col">Ad wants</th><th scope="col">I have</th><th scope="col">On CV</th></tr>
+                </thead>
+                <tbody id="fitcheck-keywords-body"></tbody>
+              </table>
+            </details>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel" id="panel-letter" aria-labelledby="h-letter">
+        <div class="panel-head">
+          <h2 class="panel-title" id="h-letter">Details from the ad</h2>
+        </div>
+        <p class="panel-desc">Read from the ad when you paste it. Team, recipient and start date must appear in it word for word.</p>
+        <div id="adinfo-status" class="adinfo-status" role="status" hidden></div>
+        <div class="letter-inputs">
+          <div class="field-row">
+            <div class="field">
+              <label for="letter-company">Company</label>
+              <input id="letter-company" type="text" placeholder="Company name" autocomplete="off" aria-describedby="letter-company-source">
+              <p class="field-source" id="letter-company-source"></p>
+            </div>
+            <div class="field">
+              <label for="letter-role">Role title</label>
+              <input id="letter-role" type="text" placeholder="As it should read" autocomplete="off" aria-describedby="letter-role-source">
+              <p class="field-source" id="letter-role-source"></p>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="letter-city">City <span class="opt">optional</span></label>
+              <input id="letter-city" type="text" placeholder="The office city" autocomplete="off" aria-describedby="letter-city-source">
+              <p class="field-source" id="letter-city-source"></p>
+            </div>
+            <div class="field">
+              <label for="jd-start-date">Start date <span class="opt">optional</span></label>
+              <input id="jd-start-date" type="text" placeholder="e.g. September 2027" autocomplete="off" aria-describedby="jd-start-date-source jd-start-date-help">
+              <p class="field-source" id="jd-start-date-source"></p>
+              <p class="field-help" id="jd-start-date-help">If later than 1 November 2026, the CV's right-to-work line names it.</p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="letter-team">Team <span class="opt">optional</span></label>
+            <input id="letter-team" type="text" placeholder="Leave blank to address the company only" autocomplete="off" aria-describedby="letter-team-source">
+            <p class="field-source" id="letter-team-source"></p>
+          </div>
+          <div class="field">
+            <label for="letter-recipient-name">Recipient name <span class="opt">optional</span></label>
+            <input id="letter-recipient-name" type="text" placeholder="Leave blank for &quot;Dear Hiring Team,&quot;" autocomplete="off" aria-describedby="letter-recipient-name-source">
+            <p class="field-source" id="letter-recipient-name-source"></p>
+            <p class="field-help">Full name exactly as written in the ad, no titles.</p>
+          </div>
+          <label class="check-row" for="letter-title-mismatch">
+            <input id="letter-title-mismatch" type="checkbox">
+            <span>The ad's job title differs materially from my own career history
+              <span class="field-help">A judgement call, never auto-detected.</span></span>
+          </label>
+        </div>
+      </section>
+
+      <details class="panel panel-adjust" id="panel-adjust">
+        <summary class="adjust-summary">
+          <span class="adjust-summary-text">
+            <span class="panel-title" id="h-adjust">Change sections and settings</span>
+            <span class="adjust-summary-sub">CV sections, letter paragraphs, private settings, audit trail</span>
+          </span>
+          <svg class="adjust-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 6.5 3.5 3.5 3.5-3.5"/></svg>
+        </summary>
+
+        <section class="adjust-group" id="panel-cv-sections" aria-labelledby="h-cv-sections">
+          <div class="adjust-head">
+            <h2 class="adjust-title" id="h-cv-sections">CV sections</h2>
+            <button id="cv-pickers-reset" class="btn btn-ghost btn-sm adjust-head-action" type="button" hidden>Back to recommended</button>
+          </div>
+          <p class="panel-desc">Each section starts on the version picked for this ad. Open a list to see every approved version and whether it still fits; hover one to see it on the CV, click to use it.</p>
+          <div id="cv-pickers" class="pickers"></div>
+          <p class="empty-hint pickers-empty">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.25v3.5M8 5.2h.01"/></svg>
+            Appears once a CV has been built.
+          </p>
+        </section>
+
+        <section class="adjust-group" id="panel-letter-sections" aria-labelledby="h-letter-sections">
+          <div class="adjust-head">
+            <h2 class="adjust-title" id="h-letter-sections">Letter paragraphs</h2>
+            <button id="letter-pickers-reset" class="btn btn-ghost btn-sm adjust-head-action" type="button" hidden>Back to recommended</button>
+          </div>
+          <p class="panel-desc">The same for the letter, including the line it quotes from the ad.</p>
+          <div id="letter-pickers" class="pickers"></div>
+          <p class="empty-hint pickers-empty">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.25v3.5M8 5.2h.01"/></svg>
+            Appears once a letter has been built.
+          </p>
+        </section>
+
+        <section class="adjust-group" id="panel-private" aria-labelledby="h-private">
+          <div class="adjust-head">
+            <h2 class="adjust-title" id="h-private">Private settings</h2>
+          </div>
+          <p class="panel-desc">The referee's name for the letter and your salary expectation for each role type, for the form answers. Kept only in this browser: never in the site or its repository.</p>
+          <form id="private-settings-form" class="private-form" novalidate>
+            <div class="field">
+              <label for="private-referee">Referee name</label>
+              <input id="private-referee" type="text" autocomplete="off" placeholder="Leave blank to leave the referee line out">
+            </div>
+            <fieldset class="private-salaries">
+              <legend>Salary expectation by role type <span class="opt">as you'd write it, e.g. EUR 32,000 - EUR 36,000</span></legend>
+              <div id="private-salary-fields" class="private-salary-fields"></div>
+            </fieldset>
+            <div class="private-actions">
+              <button id="private-settings-save-btn" class="btn btn-primary btn-sm" type="submit">Save in this browser</button>
+              <button id="load-private-settings-btn" class="btn btn-ghost btn-sm" type="button">Import a file</button>
+              <input id="private-settings-file-input" type="file" accept="application/json,.json" hidden>
+            </div>
+          </form>
+          <p id="private-settings-status" class="private-status" role="status"></p>
+        </section>
+
+        <section class="adjust-group" id="panel-audit" aria-labelledby="h-audit">
+          <div class="adjust-head">
+            <h2 class="adjust-title" id="h-audit">Audit trail</h2>
+          </div>
+          <p class="panel-desc">Every selection and check behind the current CV, as a .json file.</p>
+          <button id="audit-export-btn" class="btn btn-secondary btn-sm" type="button" disabled>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2H5a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 5 14h6a1.5 1.5 0 0 0 1.5-1.5V5z"/><path d="M9.5 2v3h3M6 8.5h4M6 11h2.5"/></svg>
+            Export audit trail (.json)
+          </button>
+        </section>
+      </details>
+
+      <footer id="app-footer" class="app-footer">
+        <p>Assembled only from approved content, the ad's own wording and the details above: nothing is written fresh.</p>
+        <p><span id="data-version">Data file version: loading...</span></p>
+      </footer>
+    </aside>
+
+    <main class="desk" id="main">
+      <div id="build-error" class="build-error" role="alert" hidden></div>
+
+      <article class="doc" id="doc-cv" aria-labelledby="doc-cv-title">
+        <div class="doc-bar">
+          <h2 class="doc-title" id="doc-cv-title">CV <span class="doc-kicker">One page, A4</span></h2>
+          <div class="doc-buttons">
+            <button id="download-btn" class="btn btn-secondary" type="button" disabled data-hint="download-hint" aria-label="Download CV as Word (.docx)">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v7.75M4.75 7 8 10.25 11.25 7M3 13.25h10"/></svg>
+              <span class="btn-label">Word</span> <span class="btn-ext">.docx</span>
+            </button>
+            <button id="download-pdf-btn" class="btn btn-primary" type="button" disabled aria-label="Download CV as PDF">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v7.75M4.75 7 8 10.25 11.25 7M3 13.25h10"/></svg>
+              <span class="btn-label">Download CV</span><span class="btn-short">PDF</span> <span class="btn-ext">.pdf</span>
+            </button>
+          </div>
+        </div>
+        <div class="doc-meta">
+          <p id="fit-readout" class="fit-readout"></p>
+          <div class="doc-notes">
+            <p class="btn-hint" id="download-hint"></p>
+            <p id="status" class="doc-status" role="status"></p>
+          </div>
+          <ul id="gates-list" class="gates-list" aria-label="CV safety gates"></ul>
+        </div>
+        <div id="trim-log" class="trim-log" hidden></div>
+        <div class="paper-frame">
+          <div class="paper-sizer" data-paper>
+            <div class="preview-outer">
+              <div id="preview-page" class="preview-page">
+                <div id="preview-container" class="preview-container"></div>
+                <div id="page-boundary" class="page-boundary" title="A4 usable-height limit"></div>
+                <div class="paper-empty" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 5H13a4 4 0 0 0-4 4v30a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V16z"/><path d="M28 5v11h11M16 24h16M16 31h16M16 38h9"/></svg>
+                  <p class="paper-empty-title">Your tailored CV</p>
+                  <p class="paper-empty-text">Paste a job ad on the left and the best-matching one-page CV is built here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="doc" id="doc-letter" aria-labelledby="doc-letter-title">
+        <div class="doc-bar">
+          <h2 class="doc-title" id="doc-letter-title">Cover letter <span class="doc-kicker">One page, A4</span></h2>
+          <div class="doc-buttons">
+            <button id="letter-download-btn" class="btn btn-secondary" type="button" disabled data-hint="letter-download-hint" aria-label="Download cover letter as Word (.docx)">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v7.75M4.75 7 8 10.25 11.25 7M3 13.25h10"/></svg>
+              <span class="btn-label">Word</span> <span class="btn-ext">.docx</span>
+            </button>
+            <button id="letter-download-pdf-btn" class="btn btn-primary" type="button" disabled aria-label="Download cover letter as PDF">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v7.75M4.75 7 8 10.25 11.25 7M3 13.25h10"/></svg>
+              <span class="btn-label">Download letter</span><span class="btn-short">PDF</span> <span class="btn-ext">.pdf</span>
+            </button>
+          </div>
+        </div>
+        <div class="doc-meta">
+          <p id="letter-fit-readout" class="fit-readout"></p>
+          <div class="doc-notes">
+            <p class="btn-hint" id="letter-download-hint"></p>
+            <p id="letter-status" class="doc-status" role="status"></p>
+          </div>
+          <ul id="letter-gates-list" class="gates-list" aria-label="Cover letter safety gates"></ul>
+        </div>
+        <div id="letter-notice" class="archetype-notice" hidden></div>
+        <div class="paper-frame">
+          <div class="paper-sizer" data-paper>
+            <div class="preview-outer">
+              <div id="letter-preview-page" class="preview-page">
+                <div id="letter-preview-container" class="preview-container"></div>
+                <div class="paper-empty" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="36" height="26" rx="4"/><path d="m8 14 16 12 16-12"/></svg>
+                  <p class="paper-empty-title">Your cover letter</p>
+                  <p class="paper-empty-text">Built alongside the CV, using the details read from the ad.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <section class="doc doc-answers" id="doc-answers" aria-labelledby="doc-answers-title">
+        <div class="doc-bar">
+          <h2 class="doc-title" id="doc-answers-title">Form answers</h2>
+        </div>
+        <p class="doc-intro">Ready to paste into the questions most application forms ask, selected from approved content and never written fresh. "Why do you want to work for us?" is deliberately left out: it needs a company-specific reason.</p>
+        <div id="form-answers-container" class="form-answers-container"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+  <!-- The PDF and Word libraries (lib/, see lib/README.md) load only when a
+       download button is pressed: js/libs.js. -->
+  <script src="js/libs.js"></script>
+  <script src="js/matcher.js"></script>
+  <script src="js/blockhash.js"></script>
+  <script src="js/render-docx.js"></script>
+  <script src="js/render-pdf.js"></script>
+  <script src="js/preview.js"></script>
+  <script src="js/textwrap.js"></script>
+  <script src="js/pagefit.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/validate.js"></script>
+  <script src="js/segment.js"></script>
+  <script src="js/adinfo.js"></script>
+  <script src="js/score.js"></script>
+  <script src="js/assemble.js"></script>
+  <script src="js/verify.js"></script>
+  <script src="js/experience.js"></script>
+  <script src="js/trim.js"></script>
+  <script src="js/fitcheck.js"></script>
+  <script src="js/letterbuild.js"></script>
+  <script src="js/letter.js"></script>
+  <script src="js/hardreq.js"></script>
+  <script src="js/picker.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>

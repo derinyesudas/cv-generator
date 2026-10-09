@@ -1,0 +1,499 @@
+{
+  "_readme": "Per-tag keyword-precision baseline (Derin, 25 Sept 2026, item 6). For each tag js/score.js's CVScore.allKnownTags() knows about, the list of real fixture ads (tests/fixtures/jd/) whose raw JD text produces a nonzero CVScore.extractFromJD().keywordHits count for that tag - the exact function/universe the app itself scores archetypes with. Recompute with `node tests/golden/record-keyword-baseline.mjs` ONLY when intentionally accepting a precision trade (a tag was added/removed/reworded on purpose); every other run just compares against this file and prints a delta (see run-golden-tests.mjs) - it never rewrites this file.",
+  "generatedAt": "2026-09-27T21:53:06.541Z",
+  "dataVersion": "1.26",
+  "fixtures": [
+    "alphasense-associate-expert-call-services",
+    "clydeco-junior-associate-corporate-insurance",
+    "netapp-fpa-intern",
+    "ornua-graduate-trainee",
+    "sigmar-customer-service-representative-night",
+    "softco-document-processing-administrator",
+    "standard-life-pensions-investments-administrator",
+    "wtw-pensions-administrator"
+  ],
+  "tagHitCounts": {
+    "accuracy": 3,
+    "accuracy record": 0,
+    "advanced excel": 0,
+    "ai": 1,
+    "ai automation": 0,
+    "ai copilot": 0,
+    "anomaly detection": 0,
+    "artificial intelligence": 0,
+    "attention to detail": 5,
+    "automation": 2,
+    "back office": 0,
+    "banking sector": 0,
+    "bi": 1,
+    "business analysis": 1,
+    "business analytics": 1,
+    "business forecasting": 1,
+    "business intelligence": 0,
+    "business planning": 1,
+    "claims processing": 0,
+    "claude code": 0,
+    "client calls": 1,
+    "client liaison": 1,
+    "client programme": 0,
+    "client requirements": 1,
+    "client review": 0,
+    "competing deadlines": 0,
+    "complaint handling": 1,
+    "contract verification": 0,
+    "controls": 1,
+    "corporate finance": 0,
+    "cost accounting": 0,
+    "critical risk": 0,
+    "cross functional": 1,
+    "customer operations": 0,
+    "customer service": 3,
+    "dashboard": 1,
+    "data analysis": 1,
+    "data cleaning": 0,
+    "data confidentiality": 0,
+    "data integrity": 1,
+    "data migration": 0,
+    "data modelling": 0,
+    "data protection": 1,
+    "data quality": 1,
+    "data storytelling": 0,
+    "data validation": 2,
+    "data visualisation": 0,
+    "dax": 0,
+    "dax measures": 0,
+    "decision": 2,
+    "decision support": 1,
+    "documented procedures": 2,
+    "efficiency gains": 0,
+    "electronic records": 0,
+    "english fluency": 2,
+    "excel skills": 1,
+    "fast paced": 5,
+    "financial accounting": 0,
+    "financial auditing": 0,
+    "financial data": 1,
+    "financial services": 3,
+    "fixed turnaround": 0,
+    "food hygiene": 0,
+    "full attendance": 0,
+    "gdpr": 1,
+    "graduate programme": 1,
+    "gst": 0,
+    "gst bookkeeping": 0,
+    "high accuracy": 2,
+    "high volume": 0,
+    "highly organised": 0,
+    "hindi speaker": 0,
+    "hospitality experience": 0,
+    "insurance operations": 0,
+    "insurance systems": 0,
+    "interactive dashboard": 0,
+    "internal audit": 1,
+    "internal controls": 0,
+    "investment analysis": 0,
+    "invoice processing": 0,
+    "issue resolution": 0,
+    "kpi": 0,
+    "large datasets": 0,
+    "llm": 0,
+    "maker checker": 0,
+    "malayalam speaker": 0,
+    "management consulting": 0,
+    "management information": 0,
+    "management reporting": 2,
+    "market surveillance": 0,
+    "mi": 0,
+    "microsoft excel": 1,
+    "microsoft office": 2,
+    "migration": 0,
+    "ms access": 0,
+    "ms office": 0,
+    "ms powerpoint": 0,
+    "ms word": 0,
+    "non-technical audience": 0,
+    "omni": 0,
+    "operating procedure": 0,
+    "peer review": 0,
+    "performance analysis": 0,
+    "performance metrics": 0,
+    "personal initiative": 0,
+    "pilot": 0,
+    "pivot tables": 0,
+    "policy administration": 0,
+    "portfolio management": 0,
+    "power bi": 1,
+    "power query": 0,
+    "predictive analytics": 0,
+    "prescriptive analytics": 0,
+    "presentation skills": 1,
+    "process documentation": 2,
+    "process improvement": 1,
+    "process ownership": 0,
+    "process scripting": 0,
+    "processing targets": 1,
+    "professional licensing": 0,
+    "proven reliability": 0,
+    "punctuality": 0,
+    "python programming": 0,
+    "quality assurance": 0,
+    "query resolution": 0,
+    "r programming": 0,
+    "record keeping": 0,
+    "records administration": 0,
+    "regulated industry": 0,
+    "regulatory compliance": 1,
+    "relationship management": 0,
+    "reliability": 0,
+    "report writing": 0,
+    "reporting": 4,
+    "requirements clarification": 0,
+    "requirements documentation": 0,
+    "requirements gathering": 0,
+    "retail experience": 0,
+    "risk management": 1,
+    "risk monitoring": 0,
+    "rotational programme": 0,
+    "securities markets": 0,
+    "shift work": 1,
+    "single point of contact": 0,
+    "sla": 0,
+    "spreadsheet skills": 1,
+    "stakeholder briefing": 0,
+    "stakeholder communication": 1,
+    "stakeholder liaison": 0,
+    "stakeholder management": 0,
+    "standard operating procedure": 0,
+    "statistical analysis": 0,
+    "store policy": 0,
+    "strict deadlines": 0,
+    "supermarket retail": 0,
+    "systems administration": 1,
+    "tableau reporting": 0,
+    "tally prime": 0,
+    "targets": 3,
+    "task automation": 0,
+    "task prioritisation": 1,
+    "team collaboration": 2,
+    "technical documentation": 0,
+    "till operation": 0,
+    "tooling": 4,
+    "trend analysis": 1,
+    "turnaround targets": 0,
+    "visualisation": 0,
+    "wealth management": 0,
+    "work ethic": 0
+  },
+  "tagFixtures": {
+    "accuracy": [
+      "netapp-fpa-intern",
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "accuracy record": [],
+    "advanced excel": [],
+    "ai": [
+      "netapp-fpa-intern"
+    ],
+    "ai automation": [],
+    "ai copilot": [],
+    "anomaly detection": [],
+    "artificial intelligence": [],
+    "attention to detail": [
+      "alphasense-associate-expert-call-services",
+      "clydeco-junior-associate-corporate-insurance",
+      "netapp-fpa-intern",
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "automation": [
+      "netapp-fpa-intern",
+      "wtw-pensions-administrator"
+    ],
+    "back office": [],
+    "banking sector": [],
+    "bi": [
+      "netapp-fpa-intern"
+    ],
+    "business analysis": [
+      "netapp-fpa-intern"
+    ],
+    "business analytics": [
+      "netapp-fpa-intern"
+    ],
+    "business forecasting": [
+      "netapp-fpa-intern"
+    ],
+    "business intelligence": [],
+    "business planning": [
+      "netapp-fpa-intern"
+    ],
+    "claims processing": [],
+    "claude code": [],
+    "client calls": [
+      "alphasense-associate-expert-call-services"
+    ],
+    "client liaison": [
+      "softco-document-processing-administrator"
+    ],
+    "client programme": [],
+    "client requirements": [
+      "softco-document-processing-administrator"
+    ],
+    "client review": [],
+    "competing deadlines": [],
+    "complaint handling": [
+      "sigmar-customer-service-representative-night"
+    ],
+    "contract verification": [],
+    "controls": [
+      "alphasense-associate-expert-call-services"
+    ],
+    "corporate finance": [],
+    "cost accounting": [],
+    "critical risk": [],
+    "cross functional": [
+      "netapp-fpa-intern"
+    ],
+    "customer operations": [],
+    "customer service": [
+      "sigmar-customer-service-representative-night",
+      "standard-life-pensions-investments-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "dashboard": [
+      "netapp-fpa-intern"
+    ],
+    "data analysis": [
+      "netapp-fpa-intern"
+    ],
+    "data cleaning": [],
+    "data confidentiality": [],
+    "data integrity": [
+      "softco-document-processing-administrator"
+    ],
+    "data migration": [],
+    "data modelling": [],
+    "data protection": [
+      "softco-document-processing-administrator"
+    ],
+    "data quality": [
+      "softco-document-processing-administrator"
+    ],
+    "data storytelling": [],
+    "data validation": [
+      "netapp-fpa-intern",
+      "softco-document-processing-administrator"
+    ],
+    "data visualisation": [],
+    "dax": [],
+    "dax measures": [],
+    "decision": [
+      "alphasense-associate-expert-call-services",
+      "netapp-fpa-intern"
+    ],
+    "decision support": [
+      "netapp-fpa-intern"
+    ],
+    "documented procedures": [
+      "sigmar-customer-service-representative-night",
+      "wtw-pensions-administrator"
+    ],
+    "efficiency gains": [],
+    "electronic records": [],
+    "english fluency": [
+      "sigmar-customer-service-representative-night",
+      "softco-document-processing-administrator"
+    ],
+    "excel skills": [
+      "wtw-pensions-administrator"
+    ],
+    "fast paced": [
+      "alphasense-associate-expert-call-services",
+      "clydeco-junior-associate-corporate-insurance",
+      "netapp-fpa-intern",
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "financial accounting": [],
+    "financial auditing": [],
+    "financial data": [
+      "netapp-fpa-intern"
+    ],
+    "financial services": [
+      "clydeco-junior-associate-corporate-insurance",
+      "standard-life-pensions-investments-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "fixed turnaround": [],
+    "food hygiene": [],
+    "full attendance": [],
+    "gdpr": [
+      "softco-document-processing-administrator"
+    ],
+    "graduate programme": [
+      "ornua-graduate-trainee"
+    ],
+    "gst": [],
+    "gst bookkeeping": [],
+    "high accuracy": [
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "high volume": [],
+    "highly organised": [],
+    "hindi speaker": [],
+    "hospitality experience": [],
+    "insurance operations": [],
+    "insurance systems": [],
+    "interactive dashboard": [],
+    "internal audit": [
+      "ornua-graduate-trainee"
+    ],
+    "internal controls": [],
+    "investment analysis": [],
+    "invoice processing": [],
+    "issue resolution": [],
+    "kpi": [],
+    "large datasets": [],
+    "llm": [],
+    "maker checker": [],
+    "malayalam speaker": [],
+    "management consulting": [],
+    "management information": [],
+    "management reporting": [
+      "netapp-fpa-intern",
+      "wtw-pensions-administrator"
+    ],
+    "market surveillance": [],
+    "mi": [],
+    "microsoft excel": [
+      "netapp-fpa-intern"
+    ],
+    "microsoft office": [
+      "netapp-fpa-intern",
+      "wtw-pensions-administrator"
+    ],
+    "migration": [],
+    "ms access": [],
+    "ms office": [],
+    "ms powerpoint": [],
+    "ms word": [],
+    "non-technical audience": [],
+    "omni": [],
+    "operating procedure": [],
+    "peer review": [],
+    "performance analysis": [],
+    "performance metrics": [],
+    "personal initiative": [],
+    "pilot": [],
+    "pivot tables": [],
+    "policy administration": [],
+    "portfolio management": [],
+    "power bi": [
+      "netapp-fpa-intern"
+    ],
+    "power query": [],
+    "predictive analytics": [],
+    "prescriptive analytics": [],
+    "presentation skills": [
+      "ornua-graduate-trainee"
+    ],
+    "process documentation": [
+      "netapp-fpa-intern",
+      "softco-document-processing-administrator"
+    ],
+    "process improvement": [
+      "netapp-fpa-intern"
+    ],
+    "process ownership": [],
+    "process scripting": [],
+    "processing targets": [
+      "softco-document-processing-administrator"
+    ],
+    "professional licensing": [],
+    "proven reliability": [],
+    "punctuality": [],
+    "python programming": [],
+    "quality assurance": [],
+    "query resolution": [],
+    "r programming": [],
+    "record keeping": [],
+    "records administration": [],
+    "regulated industry": [],
+    "regulatory compliance": [
+      "clydeco-junior-associate-corporate-insurance"
+    ],
+    "relationship management": [],
+    "reliability": [],
+    "report writing": [],
+    "reporting": [
+      "netapp-fpa-intern",
+      "sigmar-customer-service-representative-night",
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "requirements clarification": [],
+    "requirements documentation": [],
+    "requirements gathering": [],
+    "retail experience": [],
+    "risk management": [
+      "clydeco-junior-associate-corporate-insurance"
+    ],
+    "risk monitoring": [],
+    "rotational programme": [],
+    "securities markets": [],
+    "shift work": [
+      "sigmar-customer-service-representative-night"
+    ],
+    "single point of contact": [],
+    "sla": [],
+    "spreadsheet skills": [
+      "wtw-pensions-administrator"
+    ],
+    "stakeholder briefing": [],
+    "stakeholder communication": [
+      "netapp-fpa-intern"
+    ],
+    "stakeholder liaison": [],
+    "stakeholder management": [],
+    "standard operating procedure": [],
+    "statistical analysis": [],
+    "store policy": [],
+    "strict deadlines": [],
+    "supermarket retail": [],
+    "systems administration": [
+      "wtw-pensions-administrator"
+    ],
+    "tableau reporting": [],
+    "tally prime": [],
+    "targets": [
+      "clydeco-junior-associate-corporate-insurance",
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "task automation": [],
+    "task prioritisation": [
+      "softco-document-processing-administrator"
+    ],
+    "team collaboration": [
+      "alphasense-associate-expert-call-services",
+      "softco-document-processing-administrator"
+    ],
+    "technical documentation": [],
+    "till operation": [],
+    "tooling": [
+      "alphasense-associate-expert-call-services",
+      "netapp-fpa-intern",
+      "softco-document-processing-administrator",
+      "wtw-pensions-administrator"
+    ],
+    "trend analysis": [
+      "netapp-fpa-intern"
+    ],
+    "turnaround targets": [],
+    "visualisation": [],
+    "wealth management": [],
+    "work ethic": []
+  }
+}

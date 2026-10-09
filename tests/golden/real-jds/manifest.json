@@ -1,0 +1,44 @@
+[
+  {
+    "archetype_hint": "business-analyst",
+    "id": "71e03f1f063787b4",
+    "title": "Business Analyst",
+    "company": "Davy Group",
+    "file": "business-analyst__Davy_Group.txt"
+  },
+  {
+    "archetype_hint": "analyst-bi",
+    "id": "76a11661c44cd6df",
+    "title": "MI & Reporting Data Analyst",
+    "company": "Davy Group",
+    "file": "analyst-bi__Davy_Group.txt"
+  },
+  {
+    "archetype_hint": "consulting-tech",
+    "id": "40a5322a0fdc42a0",
+    "title": "Business & Technology Consulting Graduate Programme FY28",
+    "company": "Accenture Ireland",
+    "file": "consulting-tech__Accenture_Ireland.txt"
+  },
+  {
+    "archetype_hint": "graduate-programme",
+    "id": "f77558235710d425",
+    "title": "Data Analytics Graduate Programme",
+    "company": "Allianz Insurance",
+    "file": "graduate-programme__Allianz_Insurance.txt"
+  },
+  {
+    "archetype_hint": "insurance-pensions",
+    "id": "fcbf6d444f3b8cec",
+    "title": "Claims Assessor",
+    "company": "Canada Life Group Services (Irish Life Group)",
+    "file": "insurance-pensions__Canada_Life_Group_Services_(Irish_Life_Group).txt"
+  },
+  {
+    "archetype_hint": "finance-ops",
+    "id": "f22df2b74b2b87ea",
+    "title": "Reinsurance Finance Analyst",
+    "company": "Allianz Insurance",
+    "file": "finance-ops__Allianz_Insurance.txt"
+  }
+]

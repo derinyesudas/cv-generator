@@ -1,0 +1,50 @@
+Title: MI & Reporting Data Analyst
+Company: Davy Group
+URL: https://apply.workable.com/j/236BC30528
+
+About us   
+ At Davy, it’s the unique talents of all our people that have been the foundations of our success for 100 years. As we continue to grow, so do you. Because you are not just part of our team – you are a key player in shaping our future.  
+ At Davy, you are the difference.    
+ Established in 1926, the Davy Group sits at the heart of wealth and capital in Ireland, providing a broad range of services to high-net-worth individuals, self-directed investors, small-to-medium enterprises, credit unions, corporations, and domestic & international institutional investors.  
+ Our culture is shaped around three values, which are at the heart of everything we do: client success, one Davy, and building a proud legacy. Sharing the same goals, we work together to deliver exceptional outcomes for our clients. As part of a team of over 900, you will be encouraged to learn and to grow, both professionally and personally.  
+ About the role  
+ We are seeking a results driven data analyst with a passion for finance and wealth management to join the newly established Data and Analytics Centre of Excellence. 
+The purpose of this role is to enable the delivery of exceptional client experience through data driven decisions. You will collaborate with key stakeholders in Wealth Management, Strategy and Marketing to deliver outcomes that improve operational efficiency, client experience, and business performance. You will help shape the backbone of our analytics function as we move into Snowflake and adopt more advanced analytical techniques. This is a high-impact role blending technical skills, business acumen, and forward-thinking curiosity.
+This is an excellent opportunity for the right person to join Ireland's leading wealth management business and develop their career in Data and Analytics.
+ In the role, the successful candidate will: 
+ Support the migration of legacy data assets to Snowflake, ensuring fidelity and efficiency.
+ Design and execute exploratory and statistical analyses to uncover business insights.
+ Partner with business units across Compliance, Risk, Operations, Finance, Marketing, and Investments to deliver data products and solutions.
+ Prototype and deliver compelling visual analytics via Power BI.
+ Contribute to the design and development of data products.
+ Champion data literacy across the organization through ad-hoc training or support.
+ Document metadata, maintain data lineage, and support data quality frameworks.
+ Requirements 
+ About you: 
+ We are looking for somebody who has the following background and skills: 
+ 2-3 years in a data or analytics role, ideally in financial services or a similarly regulated industry.
+ Strong fluency in Excel & SQL and experience working with large datasets.
+ Solid understanding of Snowflake or other cloud data platforms.
+ Exposure to data modelling best practices and schema design.
+ Familiarity with Python, R, or equivalent data science tools is advantageous.
+ Demonstrated experience with BI tools like Power BI or Tableau.
+ Ability to translate business requirements into data-driven solutions.
+ Effective communication and documentation skills with a natural curiosity and drive to learn.
+ Benefits 
+ What we offer: 
+ At Davy, our people are our biggest investment. In today’s fast-moving world, we know it’s important to feel secure and empowered. That’s why Davy benefits support you through all of life’s stages, offering health and wellness, flexible working options, flexible benefits allowance, learning and development opportunities, through to assisted retirement planning.   
+ Health and Wellbeing   
+ Psychological safety, emotional wellbeing and support are a priority at Davy. We offer a comprehensive Employee Assistance Programme (EAP) and mental health first aid. Our Sports & Social teams promote physical wellbeing and social connection.  
+ Reward and Recognition   
+ We offer a competitive remuneration package to include salary, bonus, pension and a host of additional benefits to protect you and your family when it matters most.  
+ Growth and Development   
+ Our award-winning L&D function supports you and your growth at Davy. We offer a comprehensive range of professional and personal development opportunities. Our culture supports learning, and we encourage you to explore more at Davy.  
+ Positive Workplace   
+ Our workplace is inclusive, diverse, and offers everyone a sense of belonging. We are flexible and continue to support a hybrid working model. You will get to be your best at Davy.  
+ Values and Culture   
+ Exceptional client outcomes delivered by a world class team, underpinned by our core Davy values – One Team, Client Success, and Proud Legacy.   
+ Important Information  
+ Davy is an equal opportunities employer, committed to fostering an inclusive and diverse workplace. We value diversity in both background and experience, and even if you don’t meet all of the requirements outlined in the job description, we still encourage you to apply. We review all applications received. As part of our commitment to creating an accessible environment, we want to ensure that everyone has an equal opportunity to participate in the interview process. If you require any reasonable accommodations, please let us know, and we will do our best to make the necessary arrangements.  
+ Appointment to this role is subject to the candidate's eligibility to work in Ireland. 
+ Where agency assistance is required, our Recruitment Team will engage directly with suppliers. Unsolicited CVs / profiles supplied to us by recruitment agencies will not be accepted for this role. 
+ Davy Group is a member of the Bank of Ireland Group.

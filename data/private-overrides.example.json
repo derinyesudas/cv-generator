@@ -1,0 +1,21 @@
+{
+  "_readme": "Copy this file to data/private-overrides.json (already in .gitignore - it will never be committed) and fill in real values. Every key is optional; an absent key means the app behaves exactly as if this file did not exist at all (e.g. no refereeName means the referee block is omitted from the letter, never rendered with an empty slot). See letterBlocks.close['let-close-referee'] in cv-generator-data.json and js/letterbuild.js's REFEREE slot comment for how this is used.",
+  "refereeName": "",
+  "salaryRanges": {
+    "_readme": "26 Sept 2026, item 5 (form-answers panel), same privacy-pass reasoning as refereeName above: a compensation figure must not ship in the published bundle, so the actual bands live only here. Keys must match data.formAnswers.salaryBucketByArchetype's bucket names exactly - the form-answers panel looks up the current archetype's bucket, then this object, and shows 'add salaryRanges to private-overrides.json' if the bucket exists here with no matching key, never a blank or guessed figure. 'advertised-rate' (retail-parttime's bucket) deliberately has no key here at all - it bypasses this lookup entirely, see formAnswers.retailAdvertisedRateAnswer. 'ops-admin-analyst-regional' (26 Sept 2026, rule b) is the reduced figure used when the letter's City field names a location outside Dublin/Cork and the resolved bucket is EITHER ops-admin-analyst OR insurance-pensions - one shared key, not two, since Derin gave one reduced figure for both (26 Sept 2026, item 3a: 'the out-of-region salary rule applies to BOTH ops-admin-analyst and insurance-pensions... claims and admin level roles'). 'insurance-pensions' (added same pass) is its own standard/Dublin figure, split out of ops-admin-analyst once Derin gave it a distinct figure of its own.",
+    "graduate-programme": "",
+    "analyst": "",
+    "ops-admin-analyst": "",
+    "insurance-pensions": "",
+    "consulting-tech": "",
+    "finance-ops": "",
+    "ops-admin-analyst-regional": ""
+  },
+  "contactPhone": "",
+  "permission": "",
+  "formAnswers": {
+    "rightToWorkSponsorship": ""
+  },
+  "neverClaimExtra": [],
+  "_readme_private_details": "9 Oct 2026 privacy pass: details that must never be in the public repo or on the live site. contactPhone goes into the CV header after the email; permission replaces availability.permission; formAnswers replaces the answer of the named form answer; neverClaimExtra adds terms (such as client names) to the never-claim list. Loading a file in the app adds its keys to what the browser already holds."
+}

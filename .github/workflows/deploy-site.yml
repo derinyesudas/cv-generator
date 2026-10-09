@@ -1,0 +1,44 @@
+# Publishes the site to GitHub Pages on every push to main.
+#
+# scripts/build-site.mjs builds _site/: only the files the app loads, and the
+# data file without its authoring notes. If the build finds a problem (a
+# file the page needs is missing, or the data file fails the app's own
+# validation) it stops and the live site is left as it was.
+#
+# Needs, once, in the repository on github.com:
+#   Settings > Pages > Build and deployment > Source: GitHub Actions
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer push waits for the one in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/configure-pages@v6
+      - name: Build _site
+        run: node scripts/build-site.mjs
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v5
