@@ -398,6 +398,12 @@
         var conditionFour = value <= YEARS_UPPER_BOUND;
         candidates.push({
           start: sentence.start + m.index,
+          // The sentence's own span (9 Oct 2026), so js/fitcheck.js can ask
+          // whether a years warning hit sits in a sentence whose figure
+          // this extractor accepted. Dash normalization swaps one character
+          // for one, so these offsets hold in the raw ad too.
+          sentenceStart: sentence.start,
+          sentenceEnd: sentence.end,
           value: value,
           sentence: sentence.text,
           matchable: sentence.matchable,

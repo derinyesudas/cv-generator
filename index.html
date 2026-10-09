@@ -215,8 +215,12 @@
           <div class="adjust-head">
             <h2 class="adjust-title" id="h-private">Private settings</h2>
           </div>
-          <p class="panel-desc">The referee's name for the letter and your salary expectation for each role type, for the form answers. Kept only in this browser: never in the site or its repository.</p>
+          <p class="panel-desc">Your phone number for the CV and letter, the referee's name for the letter, and your salary expectation for each role type, for the form answers. Kept only in this browser: never in the site or its repository.</p>
           <form id="private-settings-form" class="private-form" novalidate>
+            <div class="field">
+              <label for="private-phone">Phone number</label>
+              <input id="private-phone" type="text" inputmode="tel" autocomplete="off" placeholder="Leave blank to leave it off the CV and letter">
+            </div>
             <div class="field">
               <label for="private-referee">Referee name</label>
               <input id="private-referee" type="text" autocomplete="off" placeholder="Leave blank to leave the referee line out">

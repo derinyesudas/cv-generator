@@ -154,7 +154,7 @@
     if (ov.formAnswers && typeof ov.formAnswers === 'object' && d.formAnswers) {
       Object.keys(ov.formAnswers).forEach(function (k) {
         var e = d.formAnswers[k];
-        if (e && typeof e === 'object' && !Array.isArray(e) && typeof ov.formAnswers[k] === 'string') e.answer = ov.formAnswers[k];
+        if (e && typeof e === 'object' && !Array.isArray(e) && typeof ov.formAnswers[k] === 'string' && ov.formAnswers[k].trim()) e.answer = ov.formAnswers[k];
       });
     }
     if (Array.isArray(ov.neverClaimExtra) && Array.isArray(d.neverClaim)) {
@@ -186,6 +186,8 @@
   function renderPrivateSettingsForm() {
     var referee = document.getElementById('private-referee');
     if (referee) referee.value = (privateOverrides && privateOverrides.refereeName) || '';
+    var phone = document.getElementById('private-phone');
+    if (phone) phone.value = (privateOverrides && privateOverrides.contactPhone) || '';
     var box = document.getElementById('private-salary-fields');
     if (!box || !loadedData) return;
     var labels = (loadedData.formAnswers && loadedData.formAnswers.salaryBucketLabels) || {};
@@ -216,6 +218,14 @@
     var referee = document.getElementById('private-referee');
     var name = referee ? referee.value.trim() : '';
     if (name) next.refereeName = name;
+    // The phone number box (9 Oct 2026): typed here instead of imported in a
+    // file. Empty removes it.
+    var phoneBefore = (privateOverrides && privateOverrides.contactPhone) || '';
+    var phoneEl = document.getElementById('private-phone');
+    if (phoneEl) {
+      var phone = phoneEl.value.trim();
+      if (phone) next.contactPhone = phone; else delete next.contactPhone;
+    }
     var ranges = {};
     Array.prototype.forEach.call(document.querySelectorAll('#private-salary-fields input[data-bucket]'), function (input) {
       var v = input.value.trim();
@@ -224,6 +234,12 @@
     if (Object.keys(ranges).length) next.salaryRanges = ranges;
     privateOverrides = next;
     savePrivateOverridesToLocalStorage(next);
+    if ((next.contactPhone || '') !== phoneBefore) {
+      var st = document.getElementById('private-settings-status');
+      if (st) st.textContent = 'Saved. Reloading to put the phone number on the CV and letter...';
+      global.location.reload();
+      return;
+    }
     renderPrivateSettingsStatus(true);
     renderFormAnswers();
     recomputeLetter();
@@ -912,6 +928,11 @@
         if (f.quote) quoted[key(f.quote)] = true;
       });
     }
+    // Red reasons first (9 Oct 2026): a "Likely not eligible" card opens with
+    // the reason that made it red, even when that reason came from the fit
+    // check after an amber eligibility item. Order within a tone is kept.
+    reasons = reasons.filter(function (r) { return r.tone === 'red'; })
+      .concat(reasons.filter(function (r) { return r.tone !== 'red'; }));
     var level = 'green';
     if (hr.verdict === 'RED' || (fc && fc.verdict === 'BLOCKED')) level = 'red';
     else if (hr.verdict === 'AMBER' || reasons.length || (fc && fc.verdict === 'STRETCH')) level = 'amber';

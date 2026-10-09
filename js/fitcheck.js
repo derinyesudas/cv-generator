@@ -134,6 +134,21 @@
       }
       return true; // no containing sentence found (shouldn't happen) - fail open rather than silently drop a real finding
     }
+    // 9 Oct 2026: a warning marked confirmedByYearsExtractor (w-years) only
+    // counts a hit inside a sentence whose figure js/segment.js's years
+    // extractor accepted as an experience requirement (Derin's four
+    // conditions: a years word, an experience word or a matchable section,
+    // and 15 or under). Without this the warning's plain regex fired on
+    // company history ("for over 100 years") that the extractor had already
+    // discarded, so the screen said "no experience requirement detected"
+    // and "Years of experience demanded" about the same ad.
+    var yearsInfo = null;
+    function yearsAcceptedAt(index) {
+      if (!yearsInfo) yearsInfo = Segment.extractYearsInfo(rawJD);
+      return yearsInfo.candidates.some(function (c) {
+        return c.valid && index >= c.sentenceStart && index < c.sentenceEnd;
+      });
+    }
     (data.warnings || []).forEach(function (w) {
       var re;
       try {
@@ -148,7 +163,7 @@
       var m;
       var chosen = null;
       while ((m = re.exec(rawJD)) !== null) {
-        if (isMatchableAt(m.index)) { chosen = m; break; }
+        if (isMatchableAt(m.index) && (!w.confirmedByYearsExtractor || yearsAcceptedAt(m.index))) { chosen = m; break; }
         if (re.lastIndex === m.index) re.lastIndex++; // guard against zero-width match loops
       }
       if (!chosen) return;

@@ -22,7 +22,9 @@ Only what the page loads: `index.html`, `favicon.svg`, `css/`, `fonts/`
 and `lib/` (with their licence texts), the page's scripts combined into
 one minified file (`js/bundle.js`), and `data/cv-generator-data.json`
 without its `_` notes. Tests, notes, scripts and documentation stay in the
-repository and are not published.
+repository and are not published. The page asks for the bundle, the
+stylesheet and the data file by a content stamp (`?v=`), so after a push a
+browser never runs the new page with an older copy of any of them.
 
 The minifier (esbuild, pinned version) is fetched with `npx` during the
 build. If it can't be fetched, the build publishes the combined scripts

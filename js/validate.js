@@ -514,6 +514,13 @@
         errors.push("data.warnings['" + w.id + "'].severityByWording.heldOrInProgress must be an array of regex strings.");
       }
     });
+    // confirmedByYearsExtractor (9 Oct 2026, w-years): a flag js/fitcheck.js
+    // reads as true/false; a string "false" would quietly switch it on.
+    (data.warnings || []).forEach(function (w) {
+      if ("confirmedByYearsExtractor" in w && typeof w.confirmedByYearsExtractor !== "boolean") {
+        errors.push("data.warnings['" + w.id + "'].confirmedByYearsExtractor must be true or false, got " + JSON.stringify(w.confirmedByYearsExtractor) + ".");
+      }
+    });
 
     // --- data.warnings[].outcomeLog shape (second review pass, 14 Sept
     // 2026): the log may only ever prompt, never adjust severity itself -

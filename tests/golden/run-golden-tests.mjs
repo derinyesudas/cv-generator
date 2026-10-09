@@ -572,6 +572,49 @@ const allianzGradQual = await page.evaluate((args) => {
 check('Fit-check: the real Allianz graduate ad ("academic projects") is not BLOCKED by w-qualification',
   allianzGradQual.verdict !== 'BLOCKED' && allianzGradQual.ids.indexOf('w-qualification') === -1, JSON.stringify(allianzGradQual));
 
+// 9 Oct 2026 (data 1.34): w-years fires only where the years extractor
+// accepts the figure as an experience requirement (confirmedByYearsExtractor).
+// The Allianz graduate ad's "for over 100 years" of company history used to
+// show "Years of experience demanded" while the same screen said no
+// experience requirement was detected.
+const yearsWarnCases = await page.evaluate((args) => {
+  var data = args.data;
+  var archetype = data.archetypes.find(function (a) { return a.id === 'business-analyst'; });
+  function run(text) {
+    var ex = CVScore.extractFromJD(data, text);
+    var r = CVFitCheck.run(data, ex, archetype, '');
+    var f = r.findings.filter(function (x) { return x.id === 'w-years'; })[0];
+    return { quote: f ? f.quote : null, discarded: ex.yearsRequiredAllDiscarded, years: ex.yearsRequired };
+  }
+  var patched = JSON.parse(JSON.stringify(data));
+  patched.warnings.find(function (w) { return w.id === 'w-years'; }).confirmedByYearsExtractor = 'true';
+  return {
+    allianzGrad: run(args.allianzGrad),
+    sigmar: run(args.sigmar),
+    historyThenReal: run('Founded over 100 years ago, we serve customers across Ireland. Requirements: 2+ years’ experience in customer service.'),
+    historyOnly: run('We have served customers in Ireland for 20 years.'),
+    flagIsBoolean: data.warnings.find(function (w) { return w.id === 'w-years'; }).confirmedByYearsExtractor === true,
+    stringFlagErrors: CVValidate.validateData(patched).filter(function (e) { return /confirmedByYearsExtractor/.test(e); })
+  };
+}, {
+  data: dataJson,
+  allianzGrad: fs.readFileSync(path.join(__dirname, 'real-jds', 'graduate-programme__Allianz_Insurance.txt'), 'utf8'),
+  sigmar: fs.readFileSync(path.join(REPO_ROOT, 'tests', 'fixtures', 'jd', 'sigmar-customer-service-representative-night.txt'), 'utf8')
+});
+check('Fit-check: company history ("for over 100 years", Allianz graduate ad) no longer raises "Years of experience demanded"',
+  yearsWarnCases.allianzGrad.quote === null && yearsWarnCases.allianzGrad.discarded === true, JSON.stringify(yearsWarnCases.allianzGrad).slice(0, 300));
+check('Fit-check: a real years requirement still raises it (Sigmar, "2+ years\' experience")',
+  /2\+ years/.test(yearsWarnCases.sigmar.quote || ''), JSON.stringify(yearsWarnCases.sigmar));
+check('Fit-check: a false years hit earlier in the ad does not hide a real one later (quotes the "2+ years" requirement)',
+  /2\+ years/.test(yearsWarnCases.historyThenReal.quote || '') && !/100 years/.test(yearsWarnCases.historyThenReal.quote || ''), JSON.stringify(yearsWarnCases.historyThenReal));
+check('Fit-check: a figure over 15 ("for 20 years") is not an experience requirement and raises nothing',
+  yearsWarnCases.historyOnly.quote === null, JSON.stringify(yearsWarnCases.historyOnly));
+check('w-years carries confirmedByYearsExtractor: true, and a string value fails validation',
+  yearsWarnCases.flagIsBoolean && yearsWarnCases.stringFlagErrors.length === 1, JSON.stringify(yearsWarnCases.stringFlagErrors));
+check('No warning message points at a data-file field ("outcomeLog") the screen never shows',
+  dataJson.warnings.every((w) => !/outcomeLog/.test(w.message || '') && !/outcomeLog/.test(w.hedgedMessage || '')),
+  JSON.stringify(dataJson.warnings.filter((w) => /outcomeLog/.test((w.message || '') + (w.hedgedMessage || ''))).map((w) => w.id)));
+
 // ---- Second review pass, 14 Sept 2026: standing constraint + outcome log --
 console.log('\n--- Second review pass: standing constraint, outcome log, archetype notice ---');
 
@@ -2890,6 +2933,115 @@ console.log('\n--- The screen: one verdict, plain status, CV named by role and c
   }
 }
 
+// ---- Privacy pass (9 Oct 2026): private details laid over the data ----------
+// The phone number, the detailed permission wording, a private form answer and
+// private never-claim terms are not in the public data file; they come from
+// this browser's private settings and are laid over the data at load. Test
+// values only - the real ones never appear in this repository.
+console.log('\n--- Privacy pass: private details come from this browser, never from the public data ---');
+{
+  const PHONE_LIKE = /^\+?[\d\s().-]{7,}$/;
+  check('Public data: no phone number among the contact details',
+    dataJson.identity.contact.every((c) => !PHONE_LIKE.test(String(c.text || '').trim())), JSON.stringify(dataJson.identity.contact.map((c) => c.text)));
+  const WTW = fs.readFileSync(path.join(REPO_ROOT, 'tests', 'fixtures', 'jd', 'wtw-pensions-administrator.txt'), 'utf8');
+  const TEST_PRIVATE = {
+    contactPhone: '+353 00 000 0000',
+    permission: 'TEST PERMISSION WORDING',
+    formAnswers: { rightToWorkSponsorship: 'TEST RIGHT-TO-WORK ANSWER' },
+    neverClaimExtra: ['zzq test term'],
+    refereeName: 'Test Referee'
+  };
+  const ctx = await browser.newContext();
+  const p = await ctx.newPage();
+  const errs = [];
+  p.on('pageerror', (e) => errs.push(e.message));
+  const ready = () => p.waitForFunction(() => document.getElementById('load-status').textContent.includes('loaded'), null, { timeout: 15000 });
+  const read = () => p.evaluate(() => {
+    const d = CVApp._test.getLoadedData();
+    return {
+      cv: document.getElementById('preview-container').textContent,
+      letter: document.getElementById('letter-preview-container').textContent,
+      answers: document.getElementById('form-answers-container').textContent,
+      contact: d.identity.contact.map((c) => c.text),
+      permission: d.availability.permission,
+      neverClaimHasExtra: d.neverClaim.indexOf('zzq test term') !== -1,
+      phoneField: document.getElementById('private-phone').value,
+      status: document.getElementById('private-settings-status').textContent,
+      cvWord: !document.getElementById('download-btn').disabled,
+      letterWord: !document.getElementById('letter-download-btn').disabled
+    };
+  });
+  try {
+    await p.goto(BASE_URL + '/index.test.html');
+    await ready();
+    await p.fill('#jd-input', WTW);
+    await p.waitForTimeout(1500);
+    const none = await read();
+    check('Privacy: with nothing saved, the CV carries no phone number and the status says so',
+      !/\+353 00 000 0000/.test(none.cv) && /phone number out/.test(none.status), JSON.stringify({ status: none.status, contact: none.contact }));
+
+    await p.evaluate((v) => localStorage.setItem('cvGenerator.privateOverrides', JSON.stringify(v)), TEST_PRIVATE);
+    await p.reload();
+    await ready();
+    await p.fill('#jd-input', WTW);
+    await p.waitForTimeout(1500);
+    const withPrivate = await read();
+    const emailAt = withPrivate.contact.findIndex((t) => /@/.test(t));
+    check('Privacy: a saved phone number goes on the CV, right after the email',
+      withPrivate.contact[emailAt + 1] === '+353 00 000 0000' && /\+353 00 000 0000/.test(withPrivate.cv), JSON.stringify(withPrivate.contact));
+    check('Privacy: and on the letter', /\+353 00 000 0000/.test(withPrivate.letter));
+    check('Privacy: the private right-to-work answer replaces the public one in the form answers', /TEST RIGHT-TO-WORK ANSWER/.test(withPrivate.answers));
+    check('Privacy: the private permission wording and never-claim terms are laid over the data',
+      withPrivate.permission === 'TEST PERMISSION WORDING' && withPrivate.neverClaimHasExtra, JSON.stringify({ permission: withPrivate.permission, extra: withPrivate.neverClaimHasExtra }));
+    check('Privacy: the form shows the phone number and the status lists every private detail held',
+      withPrivate.phoneField === '+353 00 000 0000' && /your phone number/.test(withPrivate.status) && /permission wording/.test(withPrivate.status) &&
+      /private form answers/.test(withPrivate.status) && /private never-claim terms/.test(withPrivate.status), withPrivate.status);
+    check('Privacy: with the phone on the page every check still passes and the downloads are on', withPrivate.cvWord && withPrivate.letterWord);
+
+    // Saving the form keeps what only a file can set; the referee alone does
+    // not reload the page.
+    await p.evaluate(() => { document.getElementById('panel-adjust').open = true; });
+    await p.fill('#private-referee', 'Another Referee');
+    await p.click('#private-settings-save-btn');
+    await p.waitForTimeout(400);
+    const kept = await p.evaluate(() => JSON.parse(localStorage.getItem('cvGenerator.privateOverrides')));
+    check('Privacy: saving the form keeps the permission wording, form answers and never-claim terms',
+      kept.refereeName === 'Another Referee' && kept.contactPhone === '+353 00 000 0000' && kept.permission === 'TEST PERMISSION WORDING' &&
+      kept.formAnswers && kept.formAnswers.rightToWorkSponsorship === 'TEST RIGHT-TO-WORK ANSWER' && Array.isArray(kept.neverClaimExtra), JSON.stringify(kept));
+
+    // A new phone number reloads the page so the CV is rebuilt with it.
+    await p.fill('#private-phone', '+353 00 111 2222');
+    await Promise.all([p.waitForEvent('load', { timeout: 15000 }), p.click('#private-settings-save-btn')]);
+    await ready();
+    await p.fill('#jd-input', WTW);
+    await p.waitForTimeout(1500);
+    const newPhone = await read();
+    check('Privacy: changing the phone number in the form reloads the page and the CV shows the new one',
+      /\+353 00 111 2222/.test(newPhone.cv) && !/\+353 00 000 0000/.test(newPhone.cv), JSON.stringify(newPhone.contact));
+
+    // Importing a file adds to what the browser holds (the referee survives)
+    // and applies a data-level key at once (by reloading).
+    await p.evaluate(() => { document.getElementById('panel-adjust').open = true; });
+    await Promise.all([
+      p.waitForEvent('load', { timeout: 15000 }),
+      p.setInputFiles('#private-settings-file-input', { name: 'private-overrides.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ contactPhone: '+353 00 333 4444' })) })
+    ]);
+    await ready();
+    const imported = await p.evaluate(() => JSON.parse(localStorage.getItem('cvGenerator.privateOverrides')));
+    await p.fill('#jd-input', WTW);
+    await p.waitForTimeout(1500);
+    const afterImport = await read();
+    check('Privacy: importing a file adds to what is saved (the referee and permission wording stay)',
+      imported.contactPhone === '+353 00 333 4444' && imported.refereeName === 'Another Referee' && imported.permission === 'TEST PERMISSION WORDING', JSON.stringify(imported));
+    check('Privacy: the imported phone number is on the CV after the reload', /\+353 00 333 4444/.test(afterImport.cv), JSON.stringify(afterImport.contact));
+    check('Privacy: no uncaught page errors', errs.length === 0, JSON.stringify(errs));
+  } catch (e) {
+    check('Privacy: private details laid over the data', false, e.message);
+  } finally {
+    await ctx.close();
+  }
+}
+
 // ---- The never-claim scan reads the data file's words, not the application's
 // details (8 Oct 2026). Derin's Salesforce ad: "salesforce" is on the
 // never-claim list (a CRM he has not used), and the company's own name in the
@@ -2937,6 +3089,62 @@ console.log('\n--- Never-claim scan: the company, role and other details of an a
     check('A letter to Salesforce: no uncaught page errors', errs.length === 0, JSON.stringify(errs));
   } catch (e) {
     check('A letter to Salesforce builds and downloads', false, e.message);
+  } finally {
+    await ctx.close();
+  }
+}
+
+// ---- 9 Oct 2026: red reasons first; the stamped data address ---------------
+console.log('\n--- Verdict card leads with its red reason; the published data address is stamped ---');
+{
+  const WTW = fs.readFileSync(path.join(REPO_ROOT, 'tests', 'fixtures', 'jd', 'wtw-pensions-administrator.txt'), 'utf8');
+  const ctx = await browser.newContext();
+  const p = await ctx.newPage();
+  const errs = [];
+  p.on('pageerror', (e) => errs.push(e.message));
+  try {
+    await p.goto(BASE_URL + '/index.test.html');
+    await p.waitForFunction(() => document.getElementById('load-status').textContent.includes('loaded'), null, { timeout: 15000 });
+    // WTW's eligibility check lists QFA (amber) first; a required ACCA line
+    // adds a red item after it. The card is red, so the red reason leads.
+    await p.fill('#jd-input', WTW + '\n\nRequirements:\n- ACCA qualified essential for this position.\n');
+    await p.waitForTimeout(1500);
+    const card = await p.evaluate(() => {
+      const el = document.getElementById('verdict-card');
+      return {
+        level: (el.className.match(/verdict-(red|amber|green)/) || [])[1] || null,
+        reasons: [...el.querySelectorAll('.verdict-reason')].map((li) => ({ red: li.classList.contains('verdict-reason-red'), text: li.querySelector('.verdict-reason-text').textContent }))
+      };
+    });
+    check('Verdict card: a red card lists its red reason first (ACCA required, ahead of the amber QFA item)',
+      card.level === 'red' && card.reasons.length >= 2 && card.reasons[0].red && /ACCA/.test(card.reasons[0].text) &&
+      card.reasons.some((r) => !r.red && /^QFA/.test(r.text)), JSON.stringify(card));
+    check('Verdict card: every red reason comes before every amber one',
+      card.reasons.findIndex((r) => !r.red) === -1 || card.reasons.slice(card.reasons.findIndex((r) => !r.red)).every((r) => !r.red), JSON.stringify(card.reasons.map((r) => r.red)));
+
+    const stamp = await p.evaluate(async () => {
+      const seen = [];
+      const realFetch = window.fetch;
+      window.fetch = function (u) { seen.push(String(u)); return realFetch.apply(this, arguments); };
+      const meta = document.createElement('meta');
+      meta.name = 'cv-data-url';
+      meta.content = 'data/cv-generator-data.json?v=abc123def0';
+      document.head.appendChild(meta);
+      let stamped = null, other = null;
+      try { stamped = (await CVData.load())._version; } catch (e) { stamped = 'ERROR ' + e.message; }
+      meta.content = 'https://example.com/other.json';
+      try { other = (await CVData.load())._version; } catch (e) { other = 'ERROR ' + e.message; }
+      meta.remove();
+      window.fetch = realFetch;
+      return { seen, stamped, other };
+    });
+    check('Data file: the published page\'s stamped address is the one fetched',
+      stamp.seen[0] === 'data/cv-generator-data.json?v=abc123def0' && /^\d+\.\d+$/.test(stamp.stamped || ''), JSON.stringify(stamp));
+    check('Data file: any other address in that tag is ignored and the plain address is fetched',
+      stamp.seen[1] === 'data/cv-generator-data.json' && /^\d+\.\d+$/.test(stamp.other || ''), JSON.stringify(stamp));
+    check('Red-first and stamp checks: no uncaught page errors', errs.length === 0, JSON.stringify(errs));
+  } catch (e) {
+    check('Red-first and stamp checks run', false, e.message);
   } finally {
     await ctx.close();
   }

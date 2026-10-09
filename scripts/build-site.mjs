@@ -10,6 +10,9 @@
 //   3. The data file is published without its authoring notes (the
 //      "_"-prefixed keys: changelog, reasons, reminders). The source file in
 //      data/ is not touched and keeps every note.
+//   4. The page asks for the bundle, the stylesheet and the data file by a
+//      content stamp (?v=), so a browser never runs a new page with an
+//      older copy of any of them.
 //
 // It stops, and nothing is published, if a file the page asks for is
 // missing from _site/ or the published data file fails the app's own
@@ -107,6 +110,27 @@ function bundleScripts() {
   return { scripts: tags.length, minified, sourceBytes: Buffer.byteLength(combined), bundleBytes: fs.statSync(outPath).size };
 }
 
+// The stylesheet and the data file are asked for by a content stamp too
+// (9 Oct 2026), like the bundle. GitHub Pages lets a browser reuse a file for
+// up to 10 minutes, so without a stamp a fresh page could run with the
+// previous stylesheet or data file in that window. The data file's address
+// goes in a <meta> tag that js/data.js reads; the repository's own pages
+// have no such tag and load the plain address.
+function stampAssets() {
+  const indexPath = path.join(OUT, "index.html");
+  let page = fs.readFileSync(indexPath, "utf8");
+  const stampOf = (rel) => crypto.createHash("sha256").update(fs.readFileSync(path.join(OUT, rel))).digest("hex").slice(0, 10);
+  const cssTag = '<link rel="stylesheet" href="css/app.css">';
+  if (page.split(cssTag).length !== 2) fail("index.html must load css/app.css exactly once, as " + cssTag);
+  const css = stampOf("css/app.css");
+  const data = stampOf(DATA_FILE);
+  page = page.replace(cssTag,
+    '<meta name="cv-data-url" content="' + DATA_FILE + "?v=" + data + '">\n' +
+    '<link rel="stylesheet" href="css/app.css?v=' + css + '">');
+  fs.writeFileSync(indexPath, page);
+  return { css, data };
+}
+
 // Every file the published page asks for: script and link tags in
 // _site/index.html, url() references in the stylesheet, and the paths the
 // scripts fetch themselves.
@@ -163,6 +187,7 @@ validate(data);
 fs.mkdirSync(path.join(OUT, "data"), { recursive: true });
 fs.writeFileSync(path.join(OUT, DATA_FILE), JSON.stringify(data));
 published.push(DATA_FILE);
+const stamps = stampAssets();
 
 const missing = [...referencedFiles()].filter((rel) => !fs.existsSync(path.join(OUT, rel)));
 if (missing.length) fail("the page asks for files that are not in _site/: " + missing.join(", "));
@@ -172,4 +197,5 @@ const sourceSize = fs.statSync(path.join(ROOT, DATA_FILE)).size;
 const publishedSize = fs.statSync(path.join(OUT, DATA_FILE)).size;
 console.log("build-site: " + published.length + " files in _site/; " + bundle.scripts + " scripts -> " + BUNDLE + " " +
   kb(bundle.sourceBytes) + " -> " + kb(bundle.bundleBytes) + (bundle.minified ? " minified" : " (not minified)") +
-  "; data file " + kb(sourceSize) + " -> " + kb(publishedSize) + " without notes; validation passed.");
+  "; data file " + kb(sourceSize) + " -> " + kb(publishedSize) + " without notes; stylesheet ?v=" + stamps.css +
+  ", data ?v=" + stamps.data + "; validation passed.");
