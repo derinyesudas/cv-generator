@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.37",
+  "_version": "1.38",
   "_changelog": [
+    {
+      "version": "1.38",
+      "date": "15 Oct 2026",
+      "summary": "profileVariants['prof-retail'] no longer says 'both finished' (full and short text). Derin, 15 Oct 2026, verbatim: 'yes drop the redundant wording' - since 1.37 the profile opens 'Earned ...', which already says both degrees are finished. Nothing else changed. Heights re-measured with tests/golden/measure-blocks.js."
+    },
     {
       "version": "1.37",
       "date": "15 Oct 2026",
@@ -1786,20 +1791,21 @@
         "customer service",
         "shift work"
       ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, both finished, and now looking for work in Dublin. Ten months on a high-volume supermarket floor in Mumbai, on tills and shop floor, handling customer questions and first-line complaints through peak trade. Seven months of full shifts in a busy hotel kitchen alongside full-time study, with no absences. Available for evenings, weekends and night shifts, and I have worked all three.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and now looking for work in Dublin. Ten months on a high-volume supermarket floor in Mumbai, on tills and shop floor, handling customer questions and first-line complaints through peak trade. Seven months of full shifts in a busy hotel kitchen alongside full-time study, with no absences. Available for evenings, weekends and night shifts, and I have worked all three.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "6d3dd73c"
+        "hash": "f6fdebb5"
       },
       "basis": {
         "strength": "required",
         "why": "Required - and, per Derin's 19 Sept 2026 reversal of the 14 Sept exemption, this variant now DOES lead with the classification sentence like every other archetype; see _reversal19Sept for why the earlier exemption no longer applies."
       },
-      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, both finished. Ten months on a high-volume supermarket floor, on tills and shop floor, handling customer questions and first-line complaints. Available for evenings, weekends and night shifts, and I have worked all three.",
+      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. Ten months on a high-volume supermarket floor, on tills and shop floor, handling customer questions and first-line complaints. Available for evenings, weekends and night shifts, and I have worked all three.",
       "_reversal19Sept": "Derin's 19 Sept 2026 follow-up message explicitly reverses the 14 Sept 2026 _educationRuleExempt decision this profile used to carry: prof-retail now leads with the degree-classification sentence like every other archetype (house-style rule, no exemption), then moves quickly past it to availability - 'both finished' is doing the real work there, answering the screener's actual concern (about to vanish back into study) rather than avoiding the topic. Also resolved in the same message: 'SALES AND SOURCING' (flagged 19 Sept as either a reversal of this rule or a distinct new archetype) is confirmed the latter - a full-time sales/business-development target, genuinely different from part-time retail floor work, kept out of this profile and not yet built as its own archetype. See _changelog and the decision log for the open follow-up.",
+      "_bothFinishedDropped15Oct2026": "Derin, 15 Oct 2026, verbatim: 'yes drop the redundant wording'. 'both finished' came out of the full and short text: since 1.37 the profile opens 'Earned ...', which already says both degrees are finished, so the screener's concern in the 19 Sept note is still answered.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "7f3cbc3e"
+        "hash": "727f4ef7"
       },
       "linesSaved": 1
     }
