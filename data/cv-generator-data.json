@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.36",
+  "_version": "1.37",
   "_changelog": [
+    {
+      "version": "1.37",
+      "date": "15 Oct 2026",
+      "summary": "Every CV profile (all eight, full and short) now opens 'Earned a/an ...' instead of 'Holds a/an ...'. Derin, 15 Oct 2026: the opening 'says holds a finance degree as if it is saying about a third person. It should be earned a finance degree ... in first person perspective.' 'Earned' was already on the approved action-verb list, and the first sentence still names both degrees and their classifications. Nothing else in the wording changed. A check of every other CV and letter text found no other third-person wording. Heights re-measured with tests/golden/measure-blocks.js."
+    },
     {
       "version": "1.36",
       "date": "9 Oct 2026",
@@ -1584,15 +1589,15 @@
         "rotational programme",
         "business analytics"
       ],
-      "text": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services in insurance operations, on permanent night shifts, working to SLAs and targets from my first month. On a ten-person pilot team I held 99% accuracy across every contract processed, the highest in the team, and wrote the operating procedure the rest of the team worked from. For the MSc group project I built the live alert console in Power BI.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services in insurance operations, on permanent night shifts, working to SLAs and targets from my first month. On a ten-person pilot team I held 99% accuracy across every contract processed, the highest in the team, and wrote the operating procedure the rest of the team worked from. For the MSc group project I built the live alert console in Power BI.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "5de4a249"
+        "hash": "630c9906"
       },
-      "short": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services in insurance operations, working to SLAs and targets from my first month. On a ten-person pilot team I held 99% accuracy, the highest in the team.",
+      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services in insurance operations, working to SLAs and targets from my first month. On a ten-person pilot team I held 99% accuracy, the highest in the team.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "e8b5deaf"
+        "hash": "e413add2"
       },
       "basis": {
         "strength": "required",
@@ -1613,15 +1618,15 @@
         "task automation",
         "personal initiative"
       ],
-      "text": "Holds an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Certified by Anthropic in Claude Code and Claude Cowork. For the MSc group project I built the live alert console in Power BI, ranking the highest-risk cases and showing why each was flagged.",
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Certified by Anthropic in Claude Code and Claude Cowork. For the MSc group project I built the live alert console in Power BI, ranking the highest-risk cases and showing why each was flagged.",
       "heightPx": {
         "cv": 50.2,
-        "hash": "f577209f"
+        "hash": "f89049c2"
       },
-      "short": "Holds an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Certified by Anthropic in Claude Code and Claude Cowork.",
+      "short": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Certified by Anthropic in Claude Code and Claude Cowork.",
       "shortHeightPx": {
         "cv": 33.47,
-        "hash": "dbafe7c0"
+        "hash": "9a763ffd"
       },
       "basis": {
         "strength": "required",
@@ -1642,15 +1647,15 @@
         "stakeholder management",
         "financial services"
       ],
-      "text": "Holds an MSc in Business Analytics at 2:1 Honours from University College Cork, taken on top of a finance degree with First Class Honours. A year at Tata Consultancy Services verifying client data ahead of a system migration, on a ten-person pilot team where I held 99% accuracy across every contract processed, the highest in the team. I wrote and owned the team's operating procedure and sat in on client calls to take changes back to the team. For the MSc group project I built the live alert console in Power BI.",
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, taken on top of a finance degree with First Class Honours. A year at Tata Consultancy Services verifying client data ahead of a system migration, on a ten-person pilot team where I held 99% accuracy across every contract processed, the highest in the team. I wrote and owned the team's operating procedure and sat in on client calls to take changes back to the team. For the MSc group project I built the live alert console in Power BI.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "bfac3fc3"
+        "hash": "2f35a0e6"
       },
-      "short": "Holds an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. A year at Tata Consultancy Services verifying client data ahead of a system migration, holding 99% accuracy on a ten-person pilot team, the highest in the team.",
+      "short": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. A year at Tata Consultancy Services verifying client data ahead of a system migration, holding 99% accuracy on a ten-person pilot team, the highest in the team.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "e3a9e1b9"
+        "hash": "2bca10f6"
       },
       "basis": {
         "strength": "required",
@@ -1669,15 +1674,15 @@
         "data visualisation",
         "large datasets"
       ],
-      "text": "Holds an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Power BI with DAX, Python, R and Advanced Excel certified at 100%. A year at Tata Consultancy Services verifying large record sets against a client specification, holding 99% accuracy on a ten-person pilot team. For the MSc group project I built the live alert console in Power BI, ranking the highest-risk cases and showing why each was flagged.",
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Power BI with DAX, Python, R and Advanced Excel certified at 100%. A year at Tata Consultancy Services verifying large record sets against a client specification, holding 99% accuracy on a ten-person pilot team. For the MSc group project I built the live alert console in Power BI, ranking the highest-risk cases and showing why each was flagged.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "77fe7711"
+        "hash": "fc3ae00e"
       },
-      "short": "Holds an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Power BI with DAX, Python and Advanced Excel certified at 100%. A year verifying large record sets against a client specification, at 99% accuracy on a ten-person pilot team.",
+      "short": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. Power BI with DAX, Python and Advanced Excel certified at 100%. A year verifying large record sets against a client specification, at 99% accuracy on a ten-person pilot team.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "3d2b1a4"
+        "hash": "45bcf221"
       },
       "basis": {
         "strength": "required",
@@ -1697,15 +1702,15 @@
         "electronic records",
         "invoice processing"
       ],
-      "text": "Holds a Finance degree with First Class Honours, and an MSc in Business Analytics at 2:1 Honours from University College Cork with modules in business forecasting, predictive analytics and data visualisation. Advanced Excel certified at 100%. A year at Tata Consultancy Services in insurance operations, where on a ten-person pilot team I held 99% accuracy across every contract processed, the highest in the team. For the MSc group project I built the live alert console in Power BI.",
+      "text": "Earned a Finance degree with First Class Honours, and an MSc in Business Analytics at 2:1 Honours from University College Cork with modules in business forecasting, predictive analytics and data visualisation. Advanced Excel certified at 100%. A year at Tata Consultancy Services in insurance operations, where on a ten-person pilot team I held 99% accuracy across every contract processed, the highest in the team. For the MSc group project I built the live alert console in Power BI.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "2bea5144"
+        "hash": "14e8fe67"
       },
-      "short": "Holds a Finance degree with First Class Honours, and an MSc in Business Analytics at 2:1 Honours from University College Cork with modules in business forecasting and predictive analytics. Advanced Excel certified at 100%. On a ten-person pilot team at Tata Consultancy Services I held 99% accuracy, the highest in the team.",
+      "short": "Earned a Finance degree with First Class Honours, and an MSc in Business Analytics at 2:1 Honours from University College Cork with modules in business forecasting and predictive analytics. Advanced Excel certified at 100%. On a ten-person pilot team at Tata Consultancy Services I held 99% accuracy, the highest in the team.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "60bb964a"
+        "hash": "63d4bf6d"
       },
       "basis": {
         "strength": "required",
@@ -1725,15 +1730,15 @@
         "policy administration",
         "systems administration"
       ],
-      "text": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year in the insurance vertical at Tata Consultancy Services across two US carriers: claims processing on the OMNI and Legacy systems, then contract data verification ahead of a system migration on a ten-person pilot team, where I held 99% accuracy, the highest in the team. Fully licensed and carrying the same SLAs as far more experienced colleagues within a month of joining.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year in the insurance vertical at Tata Consultancy Services across two US carriers: claims processing on the OMNI and Legacy systems, then contract data verification ahead of a system migration on a ten-person pilot team, where I held 99% accuracy, the highest in the team. Fully licensed and carrying the same SLAs as far more experienced colleagues within a month of joining.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "a5630b02"
+        "hash": "aa8b01bf"
       },
-      "short": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year in the insurance vertical at Tata Consultancy Services across two US carriers, holding 99% accuracy on a ten-person pilot team, the highest in the team.",
+      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year in the insurance vertical at Tata Consultancy Services across two US carriers, holding 99% accuracy on a ten-person pilot team, the highest in the team.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "144f247d"
+        "hash": "639ce0ba"
       },
       "basis": {
         "strength": "required",
@@ -1753,15 +1758,15 @@
         "SLA",
         "shift work"
       ],
-      "text": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services as the single point of contact between the client and internal teams, on permanent night shifts, taking queries and complaints directly and resolving them. Ten months before that on a high-volume supermarket floor in Mumbai, on tills and handling first-line complaints through peak trade. Fluent English at CEFR C1, with Hindi and Malayalam.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services as the single point of contact between the client and internal teams, on permanent night shifts, taking queries and complaints directly and resolving them. Ten months before that on a high-volume supermarket floor in Mumbai, on tills and handling first-line complaints through peak trade. Fluent English at CEFR C1, with Hindi and Malayalam.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "dc8b0ac"
+        "hash": "e10932a9"
       },
-      "short": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services as single point of contact between the client and internal teams, on permanent night shifts. Fluent English at CEFR C1, with Hindi and Malayalam.",
+      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services as single point of contact between the client and internal teams, on permanent night shifts. Fluent English at CEFR C1, with Hindi and Malayalam.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "eff9ec4"
+        "hash": "50e9df41"
       },
       "basis": {
         "strength": "required",
@@ -1781,20 +1786,20 @@
         "customer service",
         "shift work"
       ],
-      "text": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, both finished, and now looking for work in Dublin. Ten months on a high-volume supermarket floor in Mumbai, on tills and shop floor, handling customer questions and first-line complaints through peak trade. Seven months of full shifts in a busy hotel kitchen alongside full-time study, with no absences. Available for evenings, weekends and night shifts, and I have worked all three.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, both finished, and now looking for work in Dublin. Ten months on a high-volume supermarket floor in Mumbai, on tills and shop floor, handling customer questions and first-line complaints through peak trade. Seven months of full shifts in a busy hotel kitchen alongside full-time study, with no absences. Available for evenings, weekends and night shifts, and I have worked all three.",
       "heightPx": {
         "cv": 66.93,
-        "hash": "be9986ff"
+        "hash": "6d3dd73c"
       },
       "basis": {
         "strength": "required",
         "why": "Required - and, per Derin's 19 Sept 2026 reversal of the 14 Sept exemption, this variant now DOES lead with the classification sentence like every other archetype; see _reversal19Sept for why the earlier exemption no longer applies."
       },
-      "short": "Holds a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, both finished. Ten months on a high-volume supermarket floor, on tills and shop floor, handling customer questions and first-line complaints. Available for evenings, weekends and night shifts, and I have worked all three.",
+      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, both finished. Ten months on a high-volume supermarket floor, on tills and shop floor, handling customer questions and first-line complaints. Available for evenings, weekends and night shifts, and I have worked all three.",
       "_reversal19Sept": "Derin's 19 Sept 2026 follow-up message explicitly reverses the 14 Sept 2026 _educationRuleExempt decision this profile used to carry: prof-retail now leads with the degree-classification sentence like every other archetype (house-style rule, no exemption), then moves quickly past it to availability - 'both finished' is doing the real work there, answering the screener's actual concern (about to vanish back into study) rather than avoiding the topic. Also resolved in the same message: 'SALES AND SOURCING' (flagged 19 Sept as either a reversal of this rule or a distinct new archetype) is confirmed the latter - a full-time sales/business-development target, genuinely different from part-time retail floor work, kept out of this profile and not yet built as its own archetype. See _changelog and the decision log for the open follow-up.",
       "shortHeightPx": {
         "cv": 50.2,
-        "hash": "3a5d7cc1"
+        "hash": "7f3cbc3e"
       },
       "linesSaved": 1
     }
