@@ -5,7 +5,7 @@
     {
       "version": "1.42",
       "date": "19 Oct 2026",
-      "summary": "Circle K: branch name removed everywhere (Derin's instruction); the store is described as one of the three busiest Circle K stores in Dublin (his own statement) in the role bullet, the retail and customer-ops profiles and the letter paragraph."
+      "summary": "Circle K: branch name removed everywhere (Derin's instruction); the store is described as one of the busiest Circle K stores in Dublin (his own statement, wording confirmed) in the role bullet, the retail and customer-ops profiles and the letter paragraph."
     },
     {
       "version": "1.41",
@@ -350,7 +350,7 @@
           "_note": "From Derin's LinkedIn (Sep 2026 - Present). Month-only start, so the 1st is a convention. endDate null means still working there; js/experience.js counts to today. Part-time retail, so it counts only toward months_other_employment."
         },
         "_unmeasured": true,
-        "_note": "Derin, 19 Oct 2026: the store is one of the three busiest Circle K stores in Dublin (his statement, used on the CV, profiles and letter). Do not name the branch or area anywhere."
+        "_note": "Derin, 19 Oct 2026: the store is one of the busiest Circle K stores in Dublin (his statement, used on the CV, profiles and letter). Do not name the branch or area anywhere."
       },
       {
         "id": "role-dmart",
@@ -818,7 +818,7 @@
             "convenience store",
             "high volume"
           ],
-          "text": "Serve customers on the till at one of the three busiest Circle K stores in Dublin, taking cash, card and contactless payments accurately and keeping the queue moving at peak times. Handle queries and complaints calmly and escalate when needed.",
+          "text": "Serve customers on the till at one of the busiest Circle K stores in Dublin, taking cash, card and contactless payments accurately and keeping the queue moving at peak times. Handle queries and complaints calmly and escalate when needed.",
           "verifiedBy": "stated",
           "_unmeasured": true
         }
@@ -1855,7 +1855,7 @@
         "client liaison",
         "single point of contact"
       ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. For a year at Tata Consultancy Services I was the person the client called: I took their queries and complaints directly and sorted out requirements that did not match what was being delivered. Before that I spent ten months on a busy supermarket floor in Mumbai, and I now work part-time on the tills at one of the three busiest Circle K stores in Dublin. I speak English at CEFR C1, along with Hindi and Malayalam.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. For a year at Tata Consultancy Services I was the person the client called: I took their queries and complaints directly and sorted out requirements that did not match what was being delivered. Before that I spent ten months on a busy supermarket floor in Mumbai, and I now work part-time on the tills at one of the busiest Circle K stores in Dublin. I speak English at CEFR C1, along with Hindi and Malayalam.",
       "basis": {
         "strength": "required",
         "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
@@ -1901,7 +1901,7 @@
         "hospitality experience",
         "convenience store"
       ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and I am now looking for work in Dublin. I know what a busy shop floor feels like: I am on the tills at one of the three busiest Circle K stores in Dublin, I handled billing and customer questions at a high-volume supermarket in Mumbai, and I worked full shifts in a hotel kitchen in Co. Cork while I studied. Evenings, weekends and nights are all hours I have worked.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and I am now looking for work in Dublin. I know what a busy shop floor feels like: I am on the tills at one of the busiest Circle K stores in Dublin, I handled billing and customer questions at a high-volume supermarket in Mumbai, and I worked full shifts in a hotel kitchen in Co. Cork while I studied. Evenings, weekends and nights are all hours I have worked.",
       "basis": {
         "strength": "required",
         "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
@@ -2447,7 +2447,7 @@
           "convenience store",
           "high volume"
         ],
-        "text": "I work part-time at one of the three busiest Circle K stores in Dublin, a petrol station and convenience store. I serve customers on the till at busy times, take cash, card and contactless payments accurately, and handle queries and complaints calmly, escalating when something needs it. It has also taught me to follow store procedure properly: FIFO stock rotation, HACCP food safety and forecourt safety.",
+        "text": "I work part-time at one of the busiest Circle K stores in Dublin, a petrol station and convenience store. I serve customers on the till at busy times, take cash, card and contactless payments accurately, and handle queries and complaints calmly, escalating when something needs it. It has also taught me to follow store procedure properly: FIFO stock rotation, HACCP food safety and forecourt safety.",
         "_unmeasured": true
       },
       {
