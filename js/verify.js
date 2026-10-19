@@ -202,6 +202,9 @@
           failures.push({ index: i, type: block.t, field: field, reason: "no provenance recorded - not traceable to the data file", actual: actual, path: null });
           return;
         }
+        // Text edited via js/edits.js has no data-file source by design; it
+        // is held to editFindings() below instead of to equality.
+        if (prov.edited) return;
         var expected = expectedFromProv(prov);
         if (expected !== actual) {
           failures.push({ index: i, type: block.t, field: field, reason: "text does not match the data file exactly", expected: expected, actual: actual, path: provPath(pathIndex, prov) });
@@ -405,6 +408,52 @@
     return findings;
   }
 
+  // ---- Gate 6: hand-edited text (js/edits.js) --------------------------
+  // The fact bank is the only source of claims about Derin; the ad (and what
+  // he typed for this application) is the only source about the employer.
+  // Every figure, spelled-out number and capitalised name in an edited block
+  // must already appear in one of them. Sentence-initial words are skipped,
+  // and a false alarm is fixed by editing the text in the page.
+  var FIGURE = /\d[\d.,:]*\d%?|\d%/g;
+  var NUMBER_WORDS =/\b(two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|hundred|thousand)\b/gi;
+
+  // Words only: authoring notes, layout measurements, hashes and bare numbers
+  // (a measured 45px is not a fact about Derin) stay out of the corpus.
+  function dropNotes(k, v) {
+    return k.charAt(0) === "_" || /^(heightPx|shortHeightPx|hash)$/.test(k) || typeof v === "number" ? undefined : v;
+  }
+
+  function groundingText(data) {
+    return JSON.stringify([data.identity, data.availability, data.facts, data.bulletVariants, data.skillLines, data.profileVariants, data.letterBlocks], dropNotes).toLowerCase();
+  }
+
+  function editFindings(model, data) {
+    var findings = [];
+    var corpus = null;
+    model.forEach(function (b, i) {
+      if (!b._edited) return;
+      corpus = corpus || groundingText(data);
+      var hay = corpus + " " + String(b._edited.ground || "").toLowerCase();
+      var seen = {};
+      function flag(what) { if (!seen[what]) { seen[what] = true; findings.push('Block ' + i + ': "' + what + '" is not in your fact bank or the ad. Remove it or edit the sentence.'); } }
+      var text = b.text || "";
+      // Whole figures only: "45" must not pass because "1045" is somewhere.
+      var figures = hay.match(FIGURE) || [];
+      (text.match(FIGURE) || []).forEach(function (n) { if (figures.indexOf(n) === -1) flag(n); });
+      (text.match(NUMBER_WORDS) || []).forEach(function (n) { if (hay.indexOf(n.toLowerCase()) === -1) flag(n); });
+      text.split(/(?<=[.!?])\s+/).forEach(function (sentence) {
+        (sentence.split(/\s+/).slice(1).join(" ").match(/\b[A-Z][A-Za-z&]+/g) || []).forEach(function (w) {
+          if (w !== "I" && hay.indexOf(w.toLowerCase()) === -1) flag(w);
+        });
+      });
+      if (b._edited.kind === "profile") {
+        var opens = (data.profileVariants || []).some(function (p) { return text.indexOf(p.text.split(". ")[0] + ".") === 0; });
+        if (!opens) findings.push("Block " + i + ": the profile must open with one of the approved degree sentences (it names the degree and its classification in line one).");
+      }
+    });
+    return findings;
+  }
+
   // ---- Bringing it together ---------------------------------------------------
   // `fit`, if given, is a js/pagefit.js CVPageFit.measure() result (17 Sept
   // 2026 - previously js/preview.js's CVPreview.measure(), same shape) -
@@ -458,6 +507,11 @@
              "px budget. Would risk spilling to a second page - drop content (trimPolicy.order) and re-check."]
           : []
       });
+    }
+
+    var editIssues = editFindings(model, data);
+    if (model.some(function (b) { return b._edited; })) {
+      gates.push({ name: "Edited text fact check", passed: editIssues.length === 0, findings: editIssues });
     }
 
     if (docType === "letter") {

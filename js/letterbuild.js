@@ -579,6 +579,15 @@
     return req.some(function (t) { return !!hits[String(t).toLowerCase()]; });
   }
 
+  // Picks one of several wording variants by a fixed rule on company and role
+  // (no randomness: the same ad always gives the same letter).
+  function rotate(list, company, role) {
+    var s = (company + "|" + role).toLowerCase();
+    var h = 0;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return list[h % list.length];
+  }
+
   function isTcsEvidence(entry) {
     return !!entry && /^let-ev-tcs-/.test(entry.id);
   }
@@ -733,6 +742,10 @@
     }
     var opening = Assemble.findById(lb.opening, openingId);
     if (!opening) throw new Error("letterbuild.js: letterBlocks.opening['" + openingId + "'] not found.");
+    // Wording variants of the plain openings (ids "<base>-v2", "-v3"): one is
+    // taken by a fixed rule on company and role, so a given application
+    // always reads the same way but two applications rarely do.
+    if (!closeMatchUsed) opening = rotate(lb.opening.filter(function (e) { return e.id === openingId || e.id.indexOf(openingId + "-v") === 0; }), company, role);
     blocks.push({
       id: opening.id, category: "opening", text: fillTemplate(opening.text, slots, opening.id), ref: opening,
       _prov: { text: templateProv(opening, "text", slots) }
@@ -772,7 +785,7 @@
     });
     var echoQuotedInWhy = false;
     if (echoText && echoFrames.length) {
-      var chosen = (choices.echoFrame && echoFrames.filter(function (e) { return e.id === choices.echoFrame; })[0]) || echoFrames[0];
+      var chosen = (choices.echoFrame && echoFrames.filter(function (e) { return e.id === choices.echoFrame; })[0]) || rotate(echoFrames, company, role);
       blocks.push({
         id: chosen.id, category: "why", text: fillTemplate(chosen.text, slots, chosen.id), ref: chosen,
         _prov: { text: templateProv(chosen, "text", slots) }
@@ -901,11 +914,25 @@
         evidenceKeepId = (dropMe === evidence ? evidence2 : evidence).id;
       }
     }
+    // Third evidence paragraph: when two are already chosen, the best
+    // remaining non-TCS match that actually hits the ad (at least one tag).
+    // js/letter.js takes it out first if the letter would not fit one page.
+    var evidence3 = null;
+    if (!closeMatchUsed && evidence && evidence2 && choices.evidence3 !== "none") {
+      var taken = [evidence.id, evidence2.id];
+      var thirdPool = evidenceCandidates.filter(function (e) { return taken.indexOf(e.id) === -1 && !isTcsEvidence(e) && Assemble.overlapScore(e.tags, extraction) > 0; });
+      evidence3 = bestByTags(thirdPool, extraction);
+    }
     var noHandPicks = !slot1Hand && !slot2Hand;
-    [evidence, evidence2].forEach(function (entry, i) {
-      if (!entry) return;
-      var role = noHandPicks ? (autoPrimary && entry.id === autoPrimary.id ? "primary" : "second") : (i === 0 ? "primary" : "second");
-      pushEvidence(entry, role, i + 1);
+    var shown = [evidence, evidence2, evidence3].map(function (entry, i) { return { entry: entry, slot: i + 1 }; })
+      .filter(function (x) { return !!x.entry; });
+    // With a third paragraph, print all three in the data file's order (the
+    // console paragraph reads right only first).
+    if (evidence3 && noHandPicks) shown.sort(function (a, b) { return evidenceOrder.indexOf(a.entry.id) - evidenceOrder.indexOf(b.entry.id); });
+    shown.forEach(function (x) {
+      var i = x.slot - 1;
+      var role = x.slot === 3 ? "third" : (noHandPicks ? (autoPrimary && x.entry.id === autoPrimary.id ? "primary" : "second") : (i === 0 ? "primary" : "second"));
+      pushEvidence(x.entry, role, x.slot);
     });
 
     function pushEvidence(evidence, role, slot) {
@@ -1015,6 +1042,7 @@
     var closeId = company ? "let-close-std" : "let-close-plain";
     var close = Assemble.findById(lb.close, closeId);
     if (!close) throw new Error("letterbuild.js: letterBlocks.close['" + closeId + "'] not found.");
+    close = rotate(lb.close.filter(function (e) { return e.id === closeId || e.id.indexOf(closeId + "-v") === 0; }), company, role);
     blocks.push({
       id: close.id, category: "close", text: fillTemplate(close.text, slots, close.id), ref: close,
       _prov: { text: templateProv(close, "text", slots) }
@@ -1076,7 +1104,7 @@
     });
 
     return { blocks: blocks, echoCandidates: echoCandidates, gapTrigger: gapTrigger, gapSuppressedDuplicate: gapSuppressedDuplicate, refereeEligible: refereeEligible, refereeRendered: refereeRendered, closeMatch: closeMatch, closeMatchUsed: closeMatchUsed,
-      evidenceId: evidence ? evidence.id : null, evidence2Id: evidence2 ? evidence2.id : null, evidenceDroppableId: evidenceDroppableId, evidenceKeepId: evidenceKeepId };
+      evidenceId: evidence ? evidence.id : null, evidence2Id: evidence2 ? evidence2.id : null, evidence3Id: evidence3 ? evidence3.id : null, evidenceDroppableId: evidenceDroppableId, evidenceKeepId: evidenceKeepId };
   }
 
   global.CVLetterBuild = {

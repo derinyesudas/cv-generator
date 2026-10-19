@@ -227,7 +227,19 @@
   // Content height (NOT including this block's own before/after spacing -
   // that's added separately by predict(), matching exactly how the offline
   // measurement isolated pure text height) for one model block.
+  // Free text written by js/edits.js has no pre-measured heightPx: wrap-
+  // simulate it with the same character widths and line advance as everything
+  // else (the same method letterLineHeight uses for the salutation).
+  function freeTextHeight(block, docType) {
+    var key = docType === "letter" ? "letterBody" : "body";
+    var cw = META.charWidths && META.charWidths[key];
+    if (!cw) throw new Error("pagefit.js: _blockHeightMeta.charWidths['" + key + "'] is missing.");
+    var widthPx = twipsToPx(docType === "letter" ? data.style.letterPage.textWidthTwips : data.style.textWidthTwips);
+    return TextWrap.wrapLineCount(block.text, cw, widthPx, 2, 0) * META.lineAdvancePx[key];
+  }
+
   function heightForBlock(block, docType) {
+    if (block._edited) return freeTextHeight(block, docType);
     switch (block.t) {
       case "name": return identityHeight("name");
       case "contact": return identityHeight("contact");
@@ -247,7 +259,10 @@
       // name or a long ECHO quote correctly add the extra wrapped line(s)
       // it actually costs, rather than under-measuring every filled letter
       // block the way a naive baseline lookup would.
-      case "letterPara": return letterBlockHeight(block.ref, block.text);
+      case "letterPara":
+        // Entries added without an offline measurement (_unmeasured) are wrap-simulated.
+        if (block.ref && block.ref._unmeasured) return freeTextHeight(block, docType);
+        return letterBlockHeight(block.ref, block.text);
 
       case "bullet": {
         var bRef = block._prov.text.atoms[0].ref;

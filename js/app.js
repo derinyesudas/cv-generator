@@ -1366,6 +1366,9 @@
 
     // Second evidence paragraph left out for space (4 Oct 2026): said on
     // screen rather than dropped silently.
+    if (built.letterResult.evidence3DroppedForFit) {
+      appendLetterNotice('a third evidence paragraph left out: the letter would run past one page with it');
+    }
     if (built.letterResult.evidence2DroppedForFit) {
       appendLetterNotice('one evidence paragraph left out (not the TCS one): the letter would run past one page with it');
     }
@@ -1631,6 +1634,8 @@
     // start date from the ad before anything below reads those fields.
     applyAdInfo(jdInputEl().value);
     var inputs = inputsNow();
+    var staleDraft = global.CVEdits.current();
+    if (staleDraft && staleDraft.jd !== inputs.jdText) { global.CVEdits.clear(); syncEditPanel(); }
 
     // Hard-requirement ineligibility alert (30 Sept 2026, additive): a
     // second, independent read of the same pasted JD text - see
@@ -1879,7 +1884,7 @@
       }
       if (b.category === 'evidence' && !r.closeMatchUsed) {
         if (b.evidenceSlot === 2) out.evidence2 = b.id;
-        else out.evidence = b.id;
+        else if (b.evidenceSlot !== 3) out.evidence = b.id;
       }
       if (b.category === 'gap' && String(b.id).indexOf('hardreq-gap-') !== 0) out.gap = b.id;
     });
@@ -2232,6 +2237,13 @@
   function renderLetterPickers() {
     clearPickers('letter');
     var host = document.getElementById('letter-pickers');
+    if (global.CVEdits.current() && host) {
+      var note = document.createElement('p');
+      note.className = 'picker-fixed-note';
+      note.textContent = 'The letter text was edited by hand. Use Back to automatic under Edit the text to return to the approved paragraphs.';
+      host.appendChild(note);
+      return;
+    }
     if (!host || !currentLetterModel || !lastLetterBase || !lastLetterAuto || !global.CVPicker) return;
     var lb = loadedData.letterBlocks;
     var auto = lastLetterAuto;
@@ -2620,6 +2632,7 @@
     // needing its own copy of the recompute()/updatePreview() staleness
     // dance.
     recomputeLetter();
+    fillEditBoxes();
 
     renderFormAnswers();
     renderCvPickers();
@@ -2700,7 +2713,50 @@
     CVLibs.saveBlob(blob, filenameFor(currentArchetypeId).replace(/\.docx$/, '') + '_audit-trail.json');
   }
 
+  // --- Edit the text (js/edits.js) --------------------------------------------
+  // The boxes show what the app built. Typing in either one turns that text
+  // into a hand-edited draft, held to the same fact check as everything else.
+  function editEl(id) { return document.getElementById(id); }
+
+  function syncEditPanel() {
+    var d = global.CVEdits.current();
+    editEl('edit-reset-btn').hidden = !d;
+    if (!d) fillEditBoxes();
+  }
+
+  // Only while nothing has been edited: copy the built text into the boxes.
+  function fillEditBoxes() {
+    if (global.CVEdits.current() || !currentModel || !currentLetterModel) return;
+    var profile = currentModel.filter(function (b) { return b._trim && b._trim.kind === 'profile'; })[0];
+    editEl('edit-profile').value = profile ? profile.text : '';
+    editEl('edit-letter').value = currentLetterModel.filter(function (b) {
+      return b.t === 'letterPara' && ['gap', 'close', 'signoff'].indexOf(b.category) === -1;
+    }).map(function (b) { return b.text; }).join('\n\n');
+  }
+
+  function handleEditInput() {
+    var li = letterInputsNow();
+    var paras = editEl('edit-letter').value.split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(Boolean);
+    global.CVEdits.set({
+      jd: inputsNow().jdText,
+      ground: [inputsNow().jdText, li.company, li.role, li.city, li.team, li.recipientName].join(' '),
+      profile: editEl('edit-profile').value.trim(),
+      letter: paras
+    });
+    editEl('edit-reset-btn').hidden = false;
+    recompute();
+  }
+
+  function handleEditReset() {
+    global.CVEdits.clear();
+    recompute();
+  }
+
   function boot() {
+    editEl('edit-reset-btn').addEventListener('click', handleEditReset);
+    var editDebounced = debounce(handleEditInput, 400);
+    editEl('edit-profile').addEventListener('input', editDebounced);
+    editEl('edit-letter').addEventListener('input', editDebounced);
     // Loaded together (25 Sept 2026): private overrides must be in hand
     // before the first recomputeLetter() call, same as loadedData itself -
     // otherwise the referee block would render once as absent, then

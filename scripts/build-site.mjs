@@ -46,7 +46,7 @@ const FOLDERS = [
 // "_"-prefixed data keys the app reads at runtime (found by searching js/
 // for every "._name" property read). Everything else starting with "_" is a
 // note and is left out.
-const KEEP_KEYS = new Set(["_version", "_blockHeightMeta", "_rules", "_sqlNote", "_pendingReview", "_educationRuleExempt"]);
+const KEEP_KEYS = new Set(["_version", "_blockHeightMeta", "_rules", "_sqlNote", "_pendingReview", "_educationRuleExempt", "_unmeasured"]);
 
 function fail(message) {
   console.error("build-site: " + message);

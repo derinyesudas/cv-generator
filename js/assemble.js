@@ -650,6 +650,22 @@
       }
     });
 
+    // A hand-edited profile (js/edits.js) replaces the approved one unless
+    // Derin picked a profile version by hand. It carries no _trim (nothing
+    // shorter exists to fall back to), so js/verify.js's edit gate and the
+    // page-fit gate are what protect it.
+    var draft = global.CVEdits && global.CVEdits.current();
+    if (draft && draft.profile && !(choices && choices.profile)) {
+      model.forEach(function (b) {
+        if (b._trim && b._trim.kind === "profile") {
+          b.text = draft.profile;
+          b._prov = { text: { edited: true } };
+          b._edited = { ground: draft.ground, kind: "profile" };
+          delete b._trim;
+        }
+      });
+    }
+
     fixLastParagraphSpacing(model);
     return model;
   }

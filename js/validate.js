@@ -773,7 +773,7 @@
       var entries = data.letterBlocks[category];
       if (!Array.isArray(entries)) return; // e.g. letterBlocks._rules, a plain string, not a block list
       entries.forEach(function (b) {
-        if (!b.text) return;
+        if (!b.text || b._unmeasured) return;
         var baseline = String(b.text).replace(/\{\{[A-Z]+\}\}/g, "");
         checkHeight(b.heightPx, null, "letterBlocks['" + category + "']['" + b.id + "']", { text: baseline, sizeKey: "letterBody", docType: "letter", isBullet: false });
       });

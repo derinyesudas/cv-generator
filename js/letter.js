@@ -183,6 +183,19 @@
   // exemption can only work if `category` survives into the content model.
   function bodyBlocks(data, letterResult) {
     var after = data.style.spacingAfter.letterPara;
+    // An edited draft (js/edits.js) replaces the approved opening/why/evidence
+    // paragraphs; the approved gap, closing (Dublin, sponsorship, start date,
+    // referee) and sign-off blocks are kept, so those facts never come from it.
+    var draft = global.CVEdits && global.CVEdits.current();
+    if (draft && draft.letter && draft.letter.length) {
+      var written = draft.letter.map(function (text) {
+        return { t: "letterPara", text: text, ref: null, category: "edited", _prov: { text: { edited: true } }, _edited: { ground: draft.ground }, opts: { size: Style.letterBodySize(), after: after } };
+      });
+      var approved = letterResult.blocks.filter(function (b) { return b.category === "gap" || b.category === "close" || b.category === "signoff"; });
+      return written.concat(approved.map(function (b) {
+        return { t: "letterPara", text: b.text, ref: b.ref, category: b.category, _prov: b._prov, opts: { size: Style.letterBodySize(), after: after } };
+      }));
+    }
     return letterResult.blocks.map(function (b) {
       return { t: "letterPara", text: b.text, ref: b.ref, category: b.category, _prov: b._prov, opts: { size: Style.letterBodySize(), after: after } };
     });
@@ -226,6 +239,23 @@
     // never a hand pick) comes out again and the letter is rebuilt with
     // the other one alone. The page-fit gate still covers everything else.
     var PageFit = global.CVPageFit;
+    // The third evidence paragraph goes first when the page is full.
+    if (letterResult.evidence3Id && PageFit && typeof PageFit.measure === "function") {
+      var fit3 = null;
+      try { fit3 = PageFit.measure(model, "letter"); } catch (e) { fit3 = null; }
+      if (fit3 && fit3.overflows) {
+        var dropped3 = letterResult.evidence3Id;
+        var optsNo3 = {};
+        Object.keys(opts).forEach(function (k) { optsNo3[k] = opts[k]; });
+        optsNo3.choices = {};
+        Object.keys(opts.choices || {}).forEach(function (k) { optsNo3.choices[k] = opts.choices[k]; });
+        optsNo3.choices.evidence3 = "none";
+        opts = optsNo3;
+        letterResult = LetterBuild.buildLetterModel(data, opts);
+        letterResult.evidence3DroppedForFit = dropped3;
+        model = assembleLetter(data, opts, letterResult);
+      }
+    }
     if (letterResult.evidenceDroppableId && PageFit && typeof PageFit.measure === "function") {
       var fit = null;
       try { fit = PageFit.measure(model, "letter"); } catch (e) { fit = null; }

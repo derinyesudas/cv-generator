@@ -176,6 +176,27 @@
         </div>
       </section>
 
+      <details class="panel" id="panel-edit">
+        <summary class="adjust-summary">
+          <span class="adjust-summary-text">
+            <span class="panel-title" id="h-edit">Edit the text</span>
+            <span class="adjust-summary-sub">Type over the CV profile or the letter</span>
+          </span>
+        </summary>
+        <p class="panel-desc">Change anything you like. Your text is checked like the rest: no figure or name that isn't in your fact bank or the ad, and the usual banned-term and one-page checks.</p>
+        <div class="field">
+          <label for="edit-profile">CV profile</label>
+          <textarea id="edit-profile" rows="5" spellcheck="true"></textarea>
+        </div>
+        <div class="field">
+          <label for="edit-letter">Cover letter body (blank line between paragraphs; the closing paragraph and signature are added automatically)</label>
+          <textarea id="edit-letter" rows="16" spellcheck="true"></textarea>
+        </div>
+        <div class="hardreq-actions">
+          <button id="edit-reset-btn" class="btn btn-ghost btn-sm" type="button" hidden>Back to automatic</button>
+        </div>
+      </details>
+
       <details class="panel panel-adjust" id="panel-adjust">
         <summary class="adjust-summary">
           <span class="adjust-summary-text">
@@ -365,6 +386,7 @@
   <script src="js/segment.js"></script>
   <script src="js/adinfo.js"></script>
   <script src="js/score.js"></script>
+  <script src="js/edits.js"></script>
   <script src="js/assemble.js"></script>
   <script src="js/verify.js"></script>
   <script src="js/experience.js"></script>

@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.38",
+  "_version": "1.39",
   "_changelog": [
+    {
+      "version": "1.39",
+      "date": "19 Oct 2026",
+      "summary": "Letter bank widened: six new evidence paragraphs (clients, tools, report writing, reliability, customer service, claims) drafted from the approved bullets and flagged _pendingReview; two extra wording variants for the plain opening (with and without team), the company closing and the quoted-line frame, picked by a fixed rule on company and role; a third evidence paragraph is added when it fits one page. New entries carry _unmeasured (page fit is wrap-simulated, not measured offline)."
+    },
     {
       "version": "1.38",
       "date": "15 Oct 2026",
@@ -17,8 +22,16 @@
       "date": "9 Oct 2026",
       "summary": "Two fixes on top of 1.35 (built on 9 Oct as 1.34, before the privacy pass took that number), both approved by Derin on 9 Oct ('fix the still wrong issues with the best possible solution'). (1) warnings['w-years'] gains confirmedByYearsExtractor: true - it now fires only on a sentence whose figure the years extractor accepts as an experience requirement (a years word, an experience word or a matchable section, 15 or under), so company history such as 'for over 100 years' (the Allianz graduate test ad) no longer shows 'Years of experience demanded'. Every real requirement in the 16 test ads still shows. (2) warnings['w-qualification'].message no longer ends ' - see outcomeLog below': 'outcomeLog' is this file's field name and nothing was shown below it. Nothing else in the message changed. No document text changed."
     },
-    {"version": "1.35", "date": "2026-10-09", "summary": "Job titles corrected to the ones Derin uses everywhere else, at her request (9 Oct 2026): role-tcs is now Data Processor, role-blarney Kitchen Assistant and role-dmart Customer Service Assistant. The TCS form answer (formAnswers.tcsRoleDescription) uses the new TCS title, and the older notes and the 19 Sept changelog entry that quoted the previous titles were updated to match, so the previous wording no longer appears in this file. The three role lines were re-measured with tests/golden/measure-blocks.js: each is still one line (16.73px), only its hash changed, and every other block measured exactly as stored. No other CV or letter text changed."},
-    {"version": "1.34", "date": "2026-10-09", "summary": "Privacy pass for the public repo and live site (Derin, 8-9 Oct 2026: keep the repo public, take the sensitive details out). The phone number, the detailed permission wording, the TCS client names and one personal note are no longer in this file. They now come from the private settings (contactPhone, permission, formAnswers, neverClaimExtra), imported from a private-overrides.json file and kept in the browser, never committed. A bullet id that carried a client's initials was renamed (now bul-tcs-claims). No approved CV or letter text changed."},
+    {
+      "version": "1.35",
+      "date": "2026-10-09",
+      "summary": "Job titles corrected to the ones Derin uses everywhere else, at her request (9 Oct 2026): role-tcs is now Data Processor, role-blarney Kitchen Assistant and role-dmart Customer Service Assistant. The TCS form answer (formAnswers.tcsRoleDescription) uses the new TCS title, and the older notes and the 19 Sept changelog entry that quoted the previous titles were updated to match, so the previous wording no longer appears in this file. The three role lines were re-measured with tests/golden/measure-blocks.js: each is still one line (16.73px), only its hash changed, and every other block measured exactly as stored. No other CV or letter text changed."
+    },
+    {
+      "version": "1.34",
+      "date": "2026-10-09",
+      "summary": "Privacy pass for the public repo and live site (Derin, 8-9 Oct 2026: keep the repo public, take the sensitive details out). The phone number, the detailed permission wording, the TCS client names and one personal note are no longer in this file. They now come from the private settings (contactPhone, permission, formAnswers, neverClaimExtra), imported from a private-overrides.json file and kept in the browser, never committed. A bullet id that carried a client's initials was renamed (now bul-tcs-claims). No approved CV or letter text changed."
+    },
     {
       "version": "1.33",
       "date": "8 Oct 2026",
@@ -62,7 +75,7 @@
     {
       "version": "1.25",
       "date": "26 Sept 2026",
-      "summary": "Derin's 26 Sept 2026 reply to the seventeenth pass's three open items (\"Decisions are final; no need to ask back\"). ITEM 1 (paragraph review + unreviewed badge): checked all 7 newly-authored paragraphs (5 letterBlocks.closeMatch + 2 formAnswers) against Derin's own 7 rules before sending; found and fixed one real violation caught during that check, not by him - let-closematch-tools invented an untraceable \"I use Power BI daily\" usage claim (the only approved fact is the MSc console build plus the two certifications; the old 'daily' claim traced only to a bullet deleted 19 Sept). Rewrote to remove it and lead on the console build instead. All 7 also re-opened on an approved action verb where the register allows it (5 close-match sentences dropped their leading pronoun/preposition; the 2 form answers, a more r\u00e9sum\u00e9-like register, were restructured more thoroughly). Every entry now carries a new _pendingReview string; js/app.js's recomputeLetter() shows an 'Unreviewed: ...' banner in the letter panel whenever close-match mode fires and any of its 5 entries still carries the flag, and renderFormAnswers()/addRow() render a title-texted 'Unreviewed' badge next to the two affected form-answer rows - both proven with real gate-fires DOM tests, not just added and trusted. ITEM 2 (fixture 8, the real SoftCo ad): NOT completed this pass - flagged, not silently dropped. The exact verbatim ad text Derin supplied did not survive this session's own context compaction (checked the raw session transcript directly; only a paraphrased placeholder remained). Fabricating replacement 'verbatim' ad text would violate this project's own binding rule against inventing content, so tests/fixtures/jd/softco-document-processing-administrator.txt was NOT created and none of the 5 fixture-8 checks Derin asked for were run. 'gdpr' and 'xml' were still added to neverClaim on their own merits (Derin's rule - GDPR must never appear as a claimed skill/training, only as a matching tag behind 'Confidentiality and data protection', which is how skillLines['soft']/['domain'] already use it) - confirmed via the collision test these two new terms hit nothing already approved. Derin needs to resend fixture 8's exact text. ITEM 3 (salary buckets): all 3 previously-null archetypes now mapped, per Derin's own figures (never committed here - see data/private-overrides.example.json). consulting-tech and finance-ops are each their own new bucket key (distinct figures from the pre-existing 'analyst' bucket, not folded into it). retail-parttime maps to a new sentinel bucket, 'advertised-rate', that bypasses the private-overrides lookup entirely and reads a new dedicated field, formAnswers.retailAdvertisedRateAnswer ('In line with your advertised rate for the role.') - Derin's own reasoning, hourly minimum rates change every January so a hardcoded figure would go stale. Two rules layered on top of every bucket lookup, both new in js/app.js: (a) detectAdStatesSalary() - a shape-only heuristic (currency-near-digits / per-annum-near-digits / salary-word-near-digits, same discipline as validate.js's privacy-shape patterns) - when the pasted ad states its own salary, the answer becomes 'In line with the advertised range.' and no bucket figure is ever shown, overriding even 'no archetype selected yet'; (b) detectOutsideDublinCork() - reads only the hand-typed letter City field, never JD prose (this project has repeatedly found free-text location inference unreliable past section headings) - when City is filled in and names neither Dublin nor Cork, and the resolved bucket is ops-admin-analyst, the answer substitutes the new 'ops-admin-analyst-regional' figure instead of the standard one; an empty City never triggers this, never guessing a location nobody typed."
+      "summary": "Derin's 26 Sept 2026 reply to the seventeenth pass's three open items (\"Decisions are final; no need to ask back\"). ITEM 1 (paragraph review + unreviewed badge): checked all 7 newly-authored paragraphs (5 letterBlocks.closeMatch + 2 formAnswers) against Derin's own 7 rules before sending; found and fixed one real violation caught during that check, not by him - let-closematch-tools invented an untraceable \"I use Power BI daily\" usage claim (the only approved fact is the MSc console build plus the two certifications; the old 'daily' claim traced only to a bullet deleted 19 Sept). Rewrote to remove it and lead on the console build instead. All 7 also re-opened on an approved action verb where the register allows it (5 close-match sentences dropped their leading pronoun/preposition; the 2 form answers, a more résumé-like register, were restructured more thoroughly). Every entry now carries a new _pendingReview string; js/app.js's recomputeLetter() shows an 'Unreviewed: ...' banner in the letter panel whenever close-match mode fires and any of its 5 entries still carries the flag, and renderFormAnswers()/addRow() render a title-texted 'Unreviewed' badge next to the two affected form-answer rows - both proven with real gate-fires DOM tests, not just added and trusted. ITEM 2 (fixture 8, the real SoftCo ad): NOT completed this pass - flagged, not silently dropped. The exact verbatim ad text Derin supplied did not survive this session's own context compaction (checked the raw session transcript directly; only a paraphrased placeholder remained). Fabricating replacement 'verbatim' ad text would violate this project's own binding rule against inventing content, so tests/fixtures/jd/softco-document-processing-administrator.txt was NOT created and none of the 5 fixture-8 checks Derin asked for were run. 'gdpr' and 'xml' were still added to neverClaim on their own merits (Derin's rule - GDPR must never appear as a claimed skill/training, only as a matching tag behind 'Confidentiality and data protection', which is how skillLines['soft']/['domain'] already use it) - confirmed via the collision test these two new terms hit nothing already approved. Derin needs to resend fixture 8's exact text. ITEM 3 (salary buckets): all 3 previously-null archetypes now mapped, per Derin's own figures (never committed here - see data/private-overrides.example.json). consulting-tech and finance-ops are each their own new bucket key (distinct figures from the pre-existing 'analyst' bucket, not folded into it). retail-parttime maps to a new sentinel bucket, 'advertised-rate', that bypasses the private-overrides lookup entirely and reads a new dedicated field, formAnswers.retailAdvertisedRateAnswer ('In line with your advertised rate for the role.') - Derin's own reasoning, hourly minimum rates change every January so a hardcoded figure would go stale. Two rules layered on top of every bucket lookup, both new in js/app.js: (a) detectAdStatesSalary() - a shape-only heuristic (currency-near-digits / per-annum-near-digits / salary-word-near-digits, same discipline as validate.js's privacy-shape patterns) - when the pasted ad states its own salary, the answer becomes 'In line with the advertised range.' and no bucket figure is ever shown, overriding even 'no archetype selected yet'; (b) detectOutsideDublinCork() - reads only the hand-typed letter City field, never JD prose (this project has repeatedly found free-text location inference unreliable past section headings) - when City is filled in and names neither Dublin nor Cork, and the resolved bucket is ops-admin-analyst, the answer substitutes the new 'ops-admin-analyst-regional' figure instead of the standard one; an empty City never triggers this, never guessing a location nobody typed."
     },
     {
       "version": "1.24",
@@ -1855,6 +1868,26 @@
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "470730ee"
         }
+      },
+      {
+        "id": "let-open-std-v2",
+        "text": "I am writing to apply for the {{ROLE}} role at {{COMPANY}}.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v3",
+        "text": "Please accept this application for the {{ROLE}} role at {{COMPANY}}.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v2",
+        "text": "I am writing to apply for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v3",
+        "text": "Please accept this application for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}.",
+        "_unmeasured": true
       }
     ],
     "why": [
@@ -1924,6 +1957,24 @@
           "hash": "fdcc55e7"
         },
         "isEchoFallback": true
+      },
+      {
+        "id": "let-why-echo-d",
+        "archetypes": [
+          "*"
+        ],
+        "isEchoFrame": true,
+        "text": "Your description puts it as \"{{ECHO}}\". That is the kind of work I have done before and want to do more of.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-echo-e",
+        "archetypes": [
+          "*"
+        ],
+        "isEchoFrame": true,
+        "text": "One line in your description stayed with me: \"{{ECHO}}.\" It describes the work I want to be doing.",
+        "_unmeasured": true
       }
     ],
     "evidence": [
@@ -2047,6 +2098,99 @@
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "8a335a7a"
         }
+      },
+      {
+        "id": "let-ev-x-clients",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "client liaison",
+          "stakeholder management",
+          "single point of contact",
+          "query resolution",
+          "client calls"
+        ],
+        "text": "At Tata Consultancy Services I dealt with the client directly. I acted as the single point of contact between the client and our internal teams, taking queries and complaints directly and resolving requirements that did not match what was being delivered, so that delivery stayed inside the agreed deadlines. I also joined client calls with my team lead and briefed the team on every change that came out of them.",
+        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-tools",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "microsoft excel",
+          "power bi",
+          "data visualisation",
+          "interactive dashboard"
+        ],
+        "text": "At Tata Consultancy Services the verification work ran in Excel, on files of 30 to 50 columns and several thousand records. Since then I have added a certified Advanced Excel qualification at 100%, covering Power Query, pivot tables, lookups and conditional logic. I also work in Power BI with DAX and Power Query, and I have used Tableau, Python and R.",
+        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-report",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "report writing",
+          "presentation skills",
+          "stakeholder communication",
+          "data storytelling",
+          "technical documentation"
+        ],
+        "text": "For my MSc group project, a six-member team working on stock market manipulation detection, I sourced the project data, wrote several sections of the 38-page report and wrote the presentation that took our findings to a non-technical audience. Explaining analysis to people who need the answer rather than the method is something I have practised.",
+        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-reliability",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "proven reliability",
+          "work ethic",
+          "full attendance"
+        ],
+        "text": "Reliability is easy to claim and harder to show, so here is the record. From January to August 2026 I worked full shifts in a busy hotel kitchen alongside full-time postgraduate study, with no absences in seven months, and my written reference cites consistency and accuracy.",
+        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-customer",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "customer service",
+          "retail experience",
+          "complaint handling",
+          "store policy",
+          "supermarket retail"
+        ],
+        "text": "Alongside my first year of study I worked at D-Mart in Mumbai, a job I took on to fund my own college tuition. I rotated across the shop floor, billing and replenishment in a high-volume store through peak evening and weekend trade, answered questions on prices, offers and policy, and handled first-line complaints, escalating where needed.",
+        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-claims",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "claims processing",
+          "omni",
+          "sla",
+          "professional licensing",
+          "insurance operations"
+        ],
+        "text": "At Tata Consultancy Services I first processed claims for a US pensions provider on the OMNI and Legacy systems. I was fully licensed and carrying the same SLAs and targets as colleagues with far more experience within one month of joining, working permanent night shifts.",
+        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
+        "_unmeasured": true
       }
     ],
     "_closeMatchWhy": "26 Sept 2026, item 4, new. Derin rejected a real letter today as generic, for an ad (SoftCo, Document Processing Administrator) whose responsibilities were almost exactly his TCS job - the standard single-evidence-paragraph letter undersold a genuinely unusual overlap. Trigger (CVLetterBuild.computeCloseMatchTrigger, js/letterbuild.js): 50% or more of the pasted ad's MATCHABLE-section lines (js/segment.js's own matchable/ignored split, already used everywhere else in this app) contain at least one of letterBlocks.closeMatch's own five entries' tags. When it fires, buildLetterModel replaces the normal opening+why+evidence+gap sequence with letterBlocks.opening's let-open-closematch-std/-team entry followed by every letterBlocks.closeMatch entry IN FILE ORDER, then the standard close - never a subset, never reordered, matching Derin's own fixed shape ('the opening paragraph states the match plainly, then one paragraph per matched cluster... Then the standard close'). Each entry's text is newly authored prose for this pass (letter voice, not a CV bullet), but every fact in it already exists elsewhere in this file, verbatim or as the same figure - see each entry's own basis.why for its exact source. FLAGGED FOR DERIN'S REVIEW: unlike let-ev-tcs-pilot/control/improve (which read as if Derin wrote them directly), these five paragraphs are Claude-authored under this work order's own instruction, from approved facts only - read them before the first close-match letter actually goes out. Fixture 8 (the SoftCo ad Derin will paste) is still pending as of this pass - the trigger and letter shape are built and unit-tested against synthetic JD text, not yet against the real ad.",
@@ -2247,6 +2391,16 @@
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "94110dbf"
         }
+      },
+      {
+        "id": "let-close-std-v2",
+        "text": "I would welcome the chance to talk this through, and I would be glad to do this work at {{COMPANY}}. I am in Dublin, I need no sponsorship, and I am available full-time from 1 November.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-close-std-v3",
+        "text": "{{COMPANY}} is where I would like to apply all of this, and I am glad to talk whenever suits. I am in Dublin, I need no sponsorship, and I am available full-time from 1 November.",
+        "_unmeasured": true
       }
     ],
     "signoff": [
@@ -2556,7 +2710,7 @@
       "colour": "1F3864"
     },
     "bullet": {
-      "glyph": "\u2022",
+      "glyph": "•",
       "colour": "1F3864",
       "indentLeft": 200,
       "hanging": 160
@@ -2938,45 +3092,415 @@
   "hardRequirements": {
     "_readme": "Hard-requirement ineligibility alert (added 30 Sept 2026, Derin's own instruction). Purely additive - nothing else in this file reads this key, so it cannot change CV/letter selection, scoring, or any existing gate. js/hardreq.js is the only consumer: it classifies matched job-ad lines as required/preferred and reports RED/AMBER/GREEN before any document is generated, per its own file header. `items` never appears on a CV/letter by itself; only `gapBlocks` entries ever render (letter-only, at most two, only when their owning item's finding is RED - see js/letterbuild.js's buildHardReqGapBlock).",
     "items": [
-      { "id": "hr-apa", "label": "APA (Accredited Products Adviser)", "patterns": ["apa qualified", "apa accredited", "accredited products adviser"], "held": false, "qualification": true, "gapBlockId": "gap-apa" },
-      { "id": "hr-qfa", "label": "QFA (Qualified Financial Adviser)", "patterns": ["qfa", "qfa qualified", "qualified financial adviser"], "held": false, "qualification": true, "gapBlockId": "gap-qfa" },
-      { "id": "hr-cip", "label": "CIP (Certified Insurance Practitioner)", "patterns": ["cip qualification", "cip qualified", "cip"], "held": false, "qualification": true },
-      { "id": "hr-acii-cii", "label": "ACII / CII", "patterns": ["acii", "cii qualification", "cii qualified", "chartered insurance institute"], "held": false, "qualification": true },
-      { "id": "hr-iipm-qpa", "label": "IIPM / QPA", "patterns": ["iipm", "qpa"], "held": false, "qualification": true },
-      { "id": "hr-cfa", "label": "CFA (Chartered Financial Analyst)", "patterns": ["cfa charter", "cfa qualified", "chartered financial analyst", "cfa level"], "held": false, "qualification": true },
-      { "id": "hr-aca", "label": "ACA (Associate Chartered Accountant)", "patterns": ["aca qualified", "associate chartered accountant", "aca"], "held": false, "qualification": true },
-      { "id": "hr-acca", "label": "ACCA", "patterns": ["acca qualified", "acca"], "held": false, "qualification": true },
-      { "id": "hr-cima", "label": "CIMA", "patterns": ["cima qualified", "cima"], "held": false, "qualification": true },
-      { "id": "hr-cpa", "label": "CPA (Certified Public Accountant)", "patterns": ["cpa qualified", "certified public accountant", "cpa"], "held": false, "qualification": true },
-      { "id": "hr-cta-aiti", "label": "CTA / AITI", "patterns": ["cta qualified", "aiti", "chartered tax adviser"], "held": false, "qualification": true },
-      { "id": "hr-solicitor", "label": "Qualified solicitor or barrister / practising certificate", "patterns": ["qualified solicitor", "qualified barrister", "practising certificate", "admitted as a solicitor", "admitted to practice law"], "held": false, "qualification": true },
-      { "id": "hr-pqe", "label": "Post-qualification experience (PQE)", "patterns": ["pqe", "post-qualification experience", "post qualification experience"], "held": false, "qualification": true },
-      { "id": "hr-supervisory", "label": "Supervisory, team lead or people management experience", "patterns": ["supervisory experience", "supervisory role", "team lead experience", "people management experience", "line management experience", "managed a team"], "held": false, "qualification": false, "gapBlockId": "gap-supervisory" },
-      { "id": "hr-sql", "label": "SQL", "patterns": ["sql"], "held": false, "qualification": false, "_why": "Until Derin updates it (Derin's own note, 30 Sept 2026)." },
-      { "id": "hr-sap", "label": "SAP", "patterns": ["sap"], "held": false, "qualification": false },
-      { "id": "hr-other-language", "label": "Fluency in a language other than English, Hindi or Malayalam", "patterns": ["fluent in french", "fluency in french", "french speaker", "fluent in german", "fluency in german", "german speaker", "fluent in spanish", "fluency in spanish", "spanish speaker", "fluent in italian", "fluent in mandarin", "mandarin speaker", "fluent in portuguese", "fluent in polish", "fluent in arabic", "fluent in dutch"], "held": false, "qualification": false, "_why": "Best-effort list of common language names, not exhaustive - a judgement call, flagged per this project's own standing practice (see js/hardreq.js's file header)." },
-      { "id": "hr-self-employed", "label": "Self-employed, freelance or contractor engagement", "patterns": ["self-employed", "self employed", "freelance", "independent contractor", "contractor engagement"], "held": false, "qualification": false, "_why": "Some Irish immigration permissions prohibit self-employment/freelance/contractor work (Derin's own note, 30 Sept 2026)." },
-      { "id": "hr-still-studying", "label": "Currently enrolled student / must return to studies", "patterns": ["currently enrolled", "must return to studies", "in full-time education", "currently studying towards a degree", "final year student"], "held": false, "qualification": false, "_why": "MSc completed September 2026 (Derin's own note, 30 Sept 2026)." },
-      { "id": "hr-rtw-other-country", "label": "Right to work in the UK or any country other than Ireland", "patterns": ["right to work in the uk", "eligible to work in the uk", "right to work in the united kingdom", "authorised to work in the united states", "work authorization in the us", "authorized to work in the united states", "right to work in australia", "right to work in canada"], "held": false, "qualification": false },
-      { "id": "hr-driving-licence", "label": "Driving licence", "patterns": ["driving licence", "driving license", "full clean licence", "full clean driving licence"], "held": "unknown", "qualification": false },
-      { "id": "hr-security-clearance", "label": "Security clearance", "patterns": ["security clearance", "security vetting"], "held": "unknown", "qualification": false },
-      { "id": "hr-eu-eea-citizenship", "label": "EU/EEA or Irish citizenship required", "patterns": ["eu citizenship", "eea citizenship", "irish citizenship required", "eu/eea citizenship", "eu or eea citizenship"], "held": "unknown", "qualification": false },
-      { "id": "hr-garda-vetting", "label": "Garda vetting", "patterns": ["garda vetting", "garda vetted"], "held": "unknown", "qualification": false },
-      { "id": "hr-degree-classification", "label": "Degree 2:1 or higher", "patterns": ["2:1 degree", "upper second class", "first class honours"], "held": true, "evidence": "edu-msc" },
-      { "id": "hr-discipline", "label": "Finance/business/analytics discipline", "patterns": ["finance degree", "business analytics degree"], "held": true },
-      { "id": "hr-excel", "label": "Advanced Excel", "patterns": ["advanced excel"], "held": true },
-      { "id": "hr-powerbi", "label": "Power BI", "patterns": ["power bi"], "held": true },
-      { "id": "hr-python", "label": "Python (taught level)", "patterns": ["python"], "held": true },
-      { "id": "hr-english-c1", "label": "English C1", "patterns": ["english c1", "fluent english"], "held": true },
-      { "id": "hr-one-year-experience", "label": "One year of experience", "patterns": ["one year of experience", "1 year of experience"], "held": true, "evidence": "role-tcs" },
-      { "id": "hr-rtw-ireland", "label": "Right to work in Ireland with no sponsorship now", "patterns": ["right to work in ireland"], "held": true },
-      { "id": "hr-available-nov-2026", "label": "Available full-time from 1 November 2026", "patterns": ["available from november", "available full-time from november"], "held": true },
-      { "id": "hr-dublin-based", "label": "Dublin based", "patterns": ["dublin based", "based in dublin"], "held": true }
+      {
+        "id": "hr-apa",
+        "label": "APA (Accredited Products Adviser)",
+        "patterns": [
+          "apa qualified",
+          "apa accredited",
+          "accredited products adviser"
+        ],
+        "held": false,
+        "qualification": true,
+        "gapBlockId": "gap-apa"
+      },
+      {
+        "id": "hr-qfa",
+        "label": "QFA (Qualified Financial Adviser)",
+        "patterns": [
+          "qfa",
+          "qfa qualified",
+          "qualified financial adviser"
+        ],
+        "held": false,
+        "qualification": true,
+        "gapBlockId": "gap-qfa"
+      },
+      {
+        "id": "hr-cip",
+        "label": "CIP (Certified Insurance Practitioner)",
+        "patterns": [
+          "cip qualification",
+          "cip qualified",
+          "cip"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-acii-cii",
+        "label": "ACII / CII",
+        "patterns": [
+          "acii",
+          "cii qualification",
+          "cii qualified",
+          "chartered insurance institute"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-iipm-qpa",
+        "label": "IIPM / QPA",
+        "patterns": [
+          "iipm",
+          "qpa"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-cfa",
+        "label": "CFA (Chartered Financial Analyst)",
+        "patterns": [
+          "cfa charter",
+          "cfa qualified",
+          "chartered financial analyst",
+          "cfa level"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-aca",
+        "label": "ACA (Associate Chartered Accountant)",
+        "patterns": [
+          "aca qualified",
+          "associate chartered accountant",
+          "aca"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-acca",
+        "label": "ACCA",
+        "patterns": [
+          "acca qualified",
+          "acca"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-cima",
+        "label": "CIMA",
+        "patterns": [
+          "cima qualified",
+          "cima"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-cpa",
+        "label": "CPA (Certified Public Accountant)",
+        "patterns": [
+          "cpa qualified",
+          "certified public accountant",
+          "cpa"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-cta-aiti",
+        "label": "CTA / AITI",
+        "patterns": [
+          "cta qualified",
+          "aiti",
+          "chartered tax adviser"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-solicitor",
+        "label": "Qualified solicitor or barrister / practising certificate",
+        "patterns": [
+          "qualified solicitor",
+          "qualified barrister",
+          "practising certificate",
+          "admitted as a solicitor",
+          "admitted to practice law"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-pqe",
+        "label": "Post-qualification experience (PQE)",
+        "patterns": [
+          "pqe",
+          "post-qualification experience",
+          "post qualification experience"
+        ],
+        "held": false,
+        "qualification": true
+      },
+      {
+        "id": "hr-supervisory",
+        "label": "Supervisory, team lead or people management experience",
+        "patterns": [
+          "supervisory experience",
+          "supervisory role",
+          "team lead experience",
+          "people management experience",
+          "line management experience",
+          "managed a team"
+        ],
+        "held": false,
+        "qualification": false,
+        "gapBlockId": "gap-supervisory"
+      },
+      {
+        "id": "hr-sql",
+        "label": "SQL",
+        "patterns": [
+          "sql"
+        ],
+        "held": false,
+        "qualification": false,
+        "_why": "Until Derin updates it (Derin's own note, 30 Sept 2026)."
+      },
+      {
+        "id": "hr-sap",
+        "label": "SAP",
+        "patterns": [
+          "sap"
+        ],
+        "held": false,
+        "qualification": false
+      },
+      {
+        "id": "hr-other-language",
+        "label": "Fluency in a language other than English, Hindi or Malayalam",
+        "patterns": [
+          "fluent in french",
+          "fluency in french",
+          "french speaker",
+          "fluent in german",
+          "fluency in german",
+          "german speaker",
+          "fluent in spanish",
+          "fluency in spanish",
+          "spanish speaker",
+          "fluent in italian",
+          "fluent in mandarin",
+          "mandarin speaker",
+          "fluent in portuguese",
+          "fluent in polish",
+          "fluent in arabic",
+          "fluent in dutch"
+        ],
+        "held": false,
+        "qualification": false,
+        "_why": "Best-effort list of common language names, not exhaustive - a judgement call, flagged per this project's own standing practice (see js/hardreq.js's file header)."
+      },
+      {
+        "id": "hr-self-employed",
+        "label": "Self-employed, freelance or contractor engagement",
+        "patterns": [
+          "self-employed",
+          "self employed",
+          "freelance",
+          "independent contractor",
+          "contractor engagement"
+        ],
+        "held": false,
+        "qualification": false,
+        "_why": "Some Irish immigration permissions prohibit self-employment/freelance/contractor work (Derin's own note, 30 Sept 2026)."
+      },
+      {
+        "id": "hr-still-studying",
+        "label": "Currently enrolled student / must return to studies",
+        "patterns": [
+          "currently enrolled",
+          "must return to studies",
+          "in full-time education",
+          "currently studying towards a degree",
+          "final year student"
+        ],
+        "held": false,
+        "qualification": false,
+        "_why": "MSc completed September 2026 (Derin's own note, 30 Sept 2026)."
+      },
+      {
+        "id": "hr-rtw-other-country",
+        "label": "Right to work in the UK or any country other than Ireland",
+        "patterns": [
+          "right to work in the uk",
+          "eligible to work in the uk",
+          "right to work in the united kingdom",
+          "authorised to work in the united states",
+          "work authorization in the us",
+          "authorized to work in the united states",
+          "right to work in australia",
+          "right to work in canada"
+        ],
+        "held": false,
+        "qualification": false
+      },
+      {
+        "id": "hr-driving-licence",
+        "label": "Driving licence",
+        "patterns": [
+          "driving licence",
+          "driving license",
+          "full clean licence",
+          "full clean driving licence"
+        ],
+        "held": "unknown",
+        "qualification": false
+      },
+      {
+        "id": "hr-security-clearance",
+        "label": "Security clearance",
+        "patterns": [
+          "security clearance",
+          "security vetting"
+        ],
+        "held": "unknown",
+        "qualification": false
+      },
+      {
+        "id": "hr-eu-eea-citizenship",
+        "label": "EU/EEA or Irish citizenship required",
+        "patterns": [
+          "eu citizenship",
+          "eea citizenship",
+          "irish citizenship required",
+          "eu/eea citizenship",
+          "eu or eea citizenship"
+        ],
+        "held": "unknown",
+        "qualification": false
+      },
+      {
+        "id": "hr-garda-vetting",
+        "label": "Garda vetting",
+        "patterns": [
+          "garda vetting",
+          "garda vetted"
+        ],
+        "held": "unknown",
+        "qualification": false
+      },
+      {
+        "id": "hr-degree-classification",
+        "label": "Degree 2:1 or higher",
+        "patterns": [
+          "2:1 degree",
+          "upper second class",
+          "first class honours"
+        ],
+        "held": true,
+        "evidence": "edu-msc"
+      },
+      {
+        "id": "hr-discipline",
+        "label": "Finance/business/analytics discipline",
+        "patterns": [
+          "finance degree",
+          "business analytics degree"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-excel",
+        "label": "Advanced Excel",
+        "patterns": [
+          "advanced excel"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-powerbi",
+        "label": "Power BI",
+        "patterns": [
+          "power bi"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-python",
+        "label": "Python (taught level)",
+        "patterns": [
+          "python"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-english-c1",
+        "label": "English C1",
+        "patterns": [
+          "english c1",
+          "fluent english"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-one-year-experience",
+        "label": "One year of experience",
+        "patterns": [
+          "one year of experience",
+          "1 year of experience"
+        ],
+        "held": true,
+        "evidence": "role-tcs"
+      },
+      {
+        "id": "hr-rtw-ireland",
+        "label": "Right to work in Ireland with no sponsorship now",
+        "patterns": [
+          "right to work in ireland"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-available-nov-2026",
+        "label": "Available full-time from 1 November 2026",
+        "patterns": [
+          "available from november",
+          "available full-time from november"
+        ],
+        "held": true
+      },
+      {
+        "id": "hr-dublin-based",
+        "label": "Dublin based",
+        "patterns": [
+          "dublin based",
+          "based in dublin"
+        ],
+        "held": true
+      }
     ],
     "gapBlocks": [
-      { "id": "gap-apa", "text": "I am not yet APA qualified and would begin it straight away with your support.", "heightPx": { "letter": 18.53, "hash": "3191ba12" } },
-      { "id": "gap-qfa", "text": "I am not yet QFA qualified and would begin it straight away with your support.", "heightPx": { "letter": 18.53, "hash": "a6ad6378" } },
-      { "id": "gap-supervisory", "text": "I have not held a supervisory role; colleagues came to me when a case did not fit the pattern, and I wrote the procedure the team worked from.", "heightPx": { "letter": 37.07, "hash": "ac701fcb" } }
+      {
+        "id": "gap-apa",
+        "text": "I am not yet APA qualified and would begin it straight away with your support.",
+        "heightPx": {
+          "letter": 18.53,
+          "hash": "3191ba12"
+        }
+      },
+      {
+        "id": "gap-qfa",
+        "text": "I am not yet QFA qualified and would begin it straight away with your support.",
+        "heightPx": {
+          "letter": 18.53,
+          "hash": "a6ad6378"
+        }
+      },
+      {
+        "id": "gap-supervisory",
+        "text": "I have not held a supervisory role; colleagues came to me when a case did not fit the pattern, and I wrote the procedure the team worked from.",
+        "heightPx": {
+          "letter": 37.07,
+          "hash": "ac701fcb"
+        }
+      }
     ]
   }
 }
