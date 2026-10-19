@@ -1910,7 +1910,7 @@
         "hospitality experience",
         "full attendance"
       ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and now looking for work in Dublin. I have worked a high-volume supermarket floor in Mumbai, a busy hotel kitchen in Co. Cork and a year of permanent night shifts at Tata Consultancy Services. Available for evenings, weekends and nights, and I have worked all three.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and I am now looking for work in Dublin. I know what a busy shop floor feels like: tills, billing and customer questions at a high-volume supermarket in Mumbai, then full shifts in a hotel kitchen in Co. Cork while I studied. I have worked evenings, weekends and nights, so those hours are not a problem for me.",
       "basis": {
         "strength": "required",
         "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
@@ -1928,7 +1928,7 @@
         "client liaison",
         "single point of contact"
       ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services as the single point of contact between the client and internal teams, taking queries and complaints directly and resolving requirements that did not match what was being delivered. Before that, ten months on a high-volume supermarket floor in Mumbai, handling first-line complaints through peak trade. English at CEFR C1, with Hindi and Malayalam.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. For a year at Tata Consultancy Services I was the person the client called: I took their queries and complaints directly and sorted out requirements that did not match what was being delivered. Before that I spent ten months on a busy supermarket floor in Mumbai, dealing with customer questions and first-line complaints through peak trade. I speak English at CEFR C1, along with Hindi and Malayalam.",
       "basis": {
         "strength": "required",
         "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
@@ -2078,7 +2078,7 @@
       },
       {
         "id": "let-open-std-v9",
-        "text": "I am applying for the {{ROLE}} role at {{COMPANY}}. I have worked a busy supermarket floor, a hotel kitchen and a year of night shifts, and what they have in common is turning up on time and doing the job properly.",
+        "text": "I am applying for the {{ROLE}} role at {{COMPANY}}. I have worked a busy supermarket floor, a hotel kitchen and a year of night shifts, and each one taught me the same thing: turn up on time and do the job properly.",
         "archetypes": [
           "retail-parttime",
           "customer-ops"
@@ -2087,7 +2087,7 @@
       },
       {
         "id": "let-open-team-v9",
-        "text": "I am applying for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}. I have worked a busy supermarket floor, a hotel kitchen and a year of night shifts, and what they have in common is turning up on time and doing the job properly.",
+        "text": "I am applying for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}. I have worked a busy supermarket floor, a hotel kitchen and a year of night shifts, and each one taught me the same thing: turn up on time and do the job properly.",
         "archetypes": [
           "retail-parttime",
           "customer-ops"
