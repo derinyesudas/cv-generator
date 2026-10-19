@@ -294,6 +294,8 @@
       case "para": {
         var prov = block._prov.text;
         var ref0 = prov.atoms[0] && prov.atoms[0].ref;
+        // Profile added without an offline measurement (_unmeasured): wrap-simulated.
+        if (ref0 && ref0._unmeasured) return freeTextHeight(block, docType);
         // Modules line - atoms ref into e.modules (the array), not e itself.
         // Found by object IDENTITY (the same live array reference _prov
         // stored), never by re-matching text.

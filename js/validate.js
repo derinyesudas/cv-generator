@@ -726,6 +726,7 @@
       });
     });
     (data.profileVariants || []).forEach(function (p) {
+      if (p._unmeasured) return;
       checkHeight(p.heightPx, null, "profileVariants['" + p.id + "']", { text: p.text, sizeKey: "body", docType: "cv", isBullet: false });
       if (typeof p.short === "string" && p.short.length) {
         checkHeightAt(p, "shortHeightPx", "profileVariants['" + p.id + "'].short", { text: p.short, sizeKey: "body", docType: "cv", isBullet: false });

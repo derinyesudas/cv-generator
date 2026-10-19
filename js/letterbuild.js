@@ -745,7 +745,11 @@
     // Wording variants of the plain openings (ids "<base>-v2", "-v3"): one is
     // taken by a fixed rule on company and role, so a given application
     // always reads the same way but two applications rarely do.
-    if (!closeMatchUsed) opening = rotate(lb.opening.filter(function (e) { return e.id === openingId || e.id.indexOf(openingId + "-v") === 0; }), company, role);
+    // A variant with an archetypes list is only used for those role types.
+    if (!closeMatchUsed) opening = rotate(lb.opening.filter(function (e) {
+      var family = e.id === openingId || e.id.indexOf(openingId + "-v") === 0;
+      return family && (!e.archetypes || e.archetypes.indexOf("*") !== -1 || e.archetypes.indexOf(archetypeId) !== -1);
+    }), company, role);
     blocks.push({
       id: opening.id, category: "opening", text: fillTemplate(opening.text, slots, opening.id), ref: opening,
       _prov: { text: templateProv(opening, "text", slots) }

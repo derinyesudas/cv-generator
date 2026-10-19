@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.39",
+  "_version": "1.40",
   "_changelog": [
+    {
+      "version": "1.40",
+      "date": "19 Oct 2026",
+      "summary": "More openers, taken from the structure of Derin's earlier letters and CVs in the Ireland cv folder (facts only from the approved set; claims those files made that this data file excludes, such as the Excel filter, 9.13 CGPI, 50+ client accounts and 500 customers a day, were not carried over). Letter openings: six more wording families, four tied to role types. CV: a second approved profile for insurance-pensions, finance-ops, business-analyst, analyst-bi, retail-parttime and customer-ops, chosen by how well its tags match the ad. All new entries carry _unmeasured."
+    },
     {
       "version": "1.39",
       "date": "19 Oct 2026",
@@ -1821,6 +1826,114 @@
         "hash": "727f4ef7"
       },
       "linesSaved": 1
+    },
+    {
+      "id": "prof-insurance-b",
+      "archetypes": [
+        "insurance-pensions"
+      ],
+      "tags": [
+        "life and pensions",
+        "pension administration",
+        "claims assessor",
+        "policy administration"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services spent entirely on insurance and pensions work for two US clients: processing claims on the OMNI and Legacy systems, then verifying contract data ahead of a system migration. I held 99% accuracy across every contract on a ten-person pilot team, the highest in the team, and was the single point of contact for client queries. Advanced Excel certified at 100%.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
+    },
+    {
+      "id": "prof-finance-b",
+      "archetypes": [
+        "finance-ops"
+      ],
+      "tags": [
+        "regulatory reporting",
+        "financial services",
+        "data validation",
+        "quality standards"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services validating high-volume financial services data to quality standards, including contract verification on a ten-person pilot team where I held 99% accuracy across every contract processed, the highest in the team. Advanced Excel certified at 100%, with Power BI and Python from the MSc.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
+    },
+    {
+      "id": "prof-ba-b",
+      "archetypes": [
+        "business-analyst"
+      ],
+      "tags": [
+        "power bi",
+        "interactive dashboard",
+        "stakeholder management",
+        "decision support"
+      ],
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork on top of a finance degree with First Class Honours. For the MSc group project I built the live alert console in Power BI, ranking the highest-risk cases for reviewers and showing why each was flagged. Before that, a year at Tata Consultancy Services where I verified client data on a ten-person pilot team at 99% accuracy across every contract processed, the highest in the team, and acted as single point of contact between client and internal teams. Advanced Excel certified at 100%.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
+    },
+    {
+      "id": "prof-bi-b",
+      "archetypes": [
+        "analyst-bi"
+      ],
+      "tags": [
+        "non-technical audience",
+        "data storytelling",
+        "report writing",
+        "data visualisation"
+      ],
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. I work best where analysis has to be usable by people who are not analysts: for the MSc group project I wrote the presentation that took our findings to a non-technical audience and built the live alert console in Power BI. Power BI with DAX, Python, R and Advanced Excel certified at 100%.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
+    },
+    {
+      "id": "prof-retail-b",
+      "archetypes": [
+        "retail-parttime"
+      ],
+      "tags": [
+        "customer service",
+        "supermarket retail",
+        "hospitality experience",
+        "full attendance"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and now looking for work in Dublin. I have worked a high-volume supermarket floor in Mumbai, a busy hotel kitchen in Co. Cork and a year of permanent night shifts at Tata Consultancy Services. Available for evenings, weekends and nights, and I have worked all three.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
+    },
+    {
+      "id": "prof-customerops-b",
+      "archetypes": [
+        "customer-ops"
+      ],
+      "tags": [
+        "query resolution",
+        "complaint handling",
+        "client liaison",
+        "single point of contact"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services as the single point of contact between the client and internal teams, taking queries and complaints directly and resolving requirements that did not match what was being delivered. Before that, ten months on a high-volume supermarket floor in Mumbai, handling first-line complaints through peak trade. English at CEFR C1, with Hindi and Malayalam.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
     }
   ],
   "letterBlocks": {
@@ -1887,6 +2000,98 @@
       {
         "id": "let-open-team-v3",
         "text": "Please accept this application for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v4",
+        "text": "I am writing to apply for the {{ROLE}} role at {{COMPANY}}. I have an MSc in Business Analytics from University College Cork, a finance degree behind it, and a year in insurance operations at Tata Consultancy Services, and I would like to bring all three to this role.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v4",
+        "text": "I am writing to apply for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}. I have an MSc in Business Analytics from University College Cork, a finance degree behind it, and a year in insurance operations at Tata Consultancy Services, and I would like to bring all three to this role.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v5",
+        "text": "I wish to apply for the {{ROLE}} role at {{COMPANY}}.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v5",
+        "text": "I wish to apply for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v6",
+        "text": "I am writing to apply for the {{ROLE}} role at {{COMPANY}}. My year at Tata Consultancy Services was spent entirely on insurance and pensions work for two US clients, and doing that work in a role like this one is the direction I want my career to take.",
+        "archetypes": [
+          "insurance-pensions",
+          "finance-ops"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v6",
+        "text": "I am writing to apply for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}. My year at Tata Consultancy Services was spent entirely on insurance and pensions work for two US clients, and doing that work in a role like this one is the direction I want my career to take.",
+        "archetypes": [
+          "insurance-pensions",
+          "finance-ops"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v7",
+        "text": "Turning a large dataset into something a reviewer can act on without opening the full thing is the part of data work I care about most, and it is why I am applying for the {{ROLE}} role at {{COMPANY}}.",
+        "archetypes": [
+          "business-analyst",
+          "analyst-bi"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v7",
+        "text": "Turning a large dataset into something a reviewer can act on without opening the full thing is the part of data work I care about most, and it is why I am applying for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}.",
+        "archetypes": [
+          "business-analyst",
+          "analyst-bi"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v8",
+        "text": "I am writing to apply for the {{ROLE}} role at {{COMPANY}}. A year in insurance operations and an MSc in Business Analytics have given me the operational and the analytical side of a business, and I want to put the two together early in my career at {{COMPANY}}.",
+        "archetypes": [
+          "graduate-programme",
+          "consulting-tech"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v8",
+        "text": "I am writing to apply for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}. A year in insurance operations and an MSc in Business Analytics have given me the operational and the analytical side of a business, and I want to put the two together early in my career at {{COMPANY}}.",
+        "archetypes": [
+          "graduate-programme",
+          "consulting-tech"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-std-v9",
+        "text": "I am applying for the {{ROLE}} role at {{COMPANY}}. I have worked a busy supermarket floor, a hotel kitchen and a year of night shifts, and what they have in common is turning up on time and doing the job properly.",
+        "archetypes": [
+          "retail-parttime",
+          "customer-ops"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "let-open-team-v9",
+        "text": "I am applying for the {{ROLE}} role with the {{TEAM}} at {{COMPANY}}. I have worked a busy supermarket floor, a hotel kitchen and a year of night shifts, and what they have in common is turning up on time and doing the job properly.",
+        "archetypes": [
+          "retail-parttime",
+          "customer-ops"
+        ],
         "_unmeasured": true
       }
     ],
