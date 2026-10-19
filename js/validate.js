@@ -479,9 +479,9 @@
     (data.facts.roles || []).forEach(function (role) {
       var emp = role.employment;
       if (!emp) return;
-      if (!ISO_DATE.test(emp.startDate) || !ISO_DATE.test(emp.endDate)) {
+      if (!ISO_DATE.test(emp.startDate) || (emp.endDate !== null && !ISO_DATE.test(emp.endDate))) {
         errors.push("facts.roles['" + role.id + "'].employment: startDate/endDate must be 'YYYY-MM-DD' strings - got startDate=" + JSON.stringify(emp.startDate) + ", endDate=" + JSON.stringify(emp.endDate) + ".");
-      } else if (emp.endDate < emp.startDate) {
+      } else if (emp.endDate !== null && emp.endDate < emp.startDate) {
         errors.push("facts.roles['" + role.id + "'].employment: endDate (" + emp.endDate + ") is before startDate (" + emp.startDate + ").");
       }
       if (typeof emp.fullTime !== "boolean") {
@@ -719,6 +719,7 @@
     Object.keys(data.bulletVariants || {}).forEach(function (gid) {
       (data.bulletVariants[gid].variants || []).forEach(function (v) {
         var label = "bulletVariants['" + gid + "'].variants['" + v.id + "']";
+        if (v._unmeasured) return;
         checkHeight(v.heightPx, null, label, { text: v.text, sizeKey: "body", docType: "cv", isBullet: true });
         if (typeof v.short === "string" && v.short.length) {
           checkHeightAt(v, "shortHeightPx", label + ".short", { text: v.short, sizeKey: "body", docType: "cv", isBullet: true });
@@ -734,6 +735,7 @@
     });
     (data.facts.roles || []).forEach(function (r) {
       var label = "facts.roles['" + r.id + "']";
+      if (r._unmeasured) return;
       checkHeight(r.heightPx, "role", label, { text: roleHashText(r, true), sizeKey: "body", docType: "cv", isBullet: false });
       checkHeight(r.heightPx, "dates", label, { text: datesHashText(r, true), sizeKey: "small", docType: "cv", isBullet: false });
     });

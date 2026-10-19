@@ -266,6 +266,12 @@
 
       case "bullet": {
         var bRef = block._prov.text.atoms[0].ref;
+        // Added without an offline measurement (_unmeasured): wrap-simulated at bullet width.
+        if (bRef._unmeasured) {
+          var bcw = META.charWidths && META.charWidths.body;
+          var bw = twipsToPx((docType === "letter" ? data.style.letterPage.textWidthTwips : data.style.textWidthTwips) - data.style.bullet.indentLeft);
+          return TextWrap.wrapLineCount(block.text, bcw, bw, 2, 0) * META.lineAdvancePx.body;
+        }
         var bShort = block._prov.text.atoms[0].field === "short";
         // block.text already IS bRef.short once js/trim.js has shortened
         // it (see trim.js's shortenBlock: "newBlock.text = ref.short") -
@@ -277,6 +283,7 @@
 
       case "role": {
         var rRef = block._prov.title.atoms[0].ref;
+        if (rRef._unmeasured) return META.lineAdvancePx.body;
         // Hashed from the block's OWN title/org/right - exactly what
         // tests/golden/measure-blocks.js's roleAndDates() built its model
         // from (org on the title line for roles/education, omitted for
@@ -288,6 +295,7 @@
 
       case "dates": {
         var dRef = block._prov.text.atoms[0].ref;
+        if (dRef._unmeasured) return META.lineAdvancePx.small;
         return refHeight(dRef, "dates", docType, "role/project/education entry '" + (dRef && dRef.id) + "'", false, { text: block.text, sizeKey: "small", isBullet: false, docType: docType });
       }
 

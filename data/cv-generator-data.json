@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.40",
+  "_version": "1.41",
   "_changelog": [
+    {
+      "version": "1.41",
+      "date": "19 Oct 2026",
+      "summary": "Circle K added (Customer Store Representative, Clonshaugh, Dublin, part-time from September 2026, from Derin's LinkedIn): a role, two bullets, a letter paragraph, and the retail-parttime and customer-ops profiles and CVs now mention it. The retail and customer-ops second profiles were reworded to read more naturally and are listed ahead of the originals so they are the default. A role with no end date now counts up to today. Present-tense verbs added to actionVerbs for a current role. New entries carry _unmeasured."
+    },
     {
       "version": "1.40",
       "date": "19 Oct 2026",
@@ -322,6 +327,24 @@
             "hash": "55454d31"
           }
         }
+      },
+      {
+        "id": "role-circlek",
+        "title": "Customer Store Representative",
+        "org": "Circle K, Clonshaugh, Dublin",
+        "dates": "September 2026 - Present. Part-time.",
+        "bullets": [
+          "bul-circlek-till",
+          "bul-circlek-store"
+        ],
+        "employment": {
+          "startDate": "2026-09-01",
+          "endDate": null,
+          "fullTime": false,
+          "countsAsRelevant": false,
+          "_note": "From Derin's LinkedIn (Sep 2026 - Present). Month-only start, so the 1st is a convention. endDate null means still working there; js/experience.js counts to today. Part-time retail, so it counts only toward months_other_employment."
+        },
+        "_unmeasured": true
       },
       {
         "id": "role-dmart",
@@ -775,6 +798,48 @@
       "basis": {
         "strength": "support",
         "why": "Support - direct client-liaison fact, restored 19 Sept 2026. Drops before any quantified achievement but before nothing else (Derin's own framing)."
+      }
+    },
+    "bul-circlek-till": {
+      "variants": [
+        {
+          "id": "bul-circlek-till",
+          "tags": [
+            "customer service",
+            "cash handling",
+            "retail experience",
+            "complaint handling",
+            "convenience store"
+          ],
+          "text": "Serve customers on the till at a busy petrol station and convenience store, taking cash, card and contactless payments accurately and keeping the queue moving at peak times. Handle queries and complaints calmly and escalate when needed.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
+        }
+      ],
+      "basis": {
+        "strength": "core",
+        "why": "Core in customer-facing archetypes: the current till and customer-contact duties, taken from Derin's own LinkedIn entry (Oct 2026)."
+      }
+    },
+    "bul-circlek-store": {
+      "variants": [
+        {
+          "id": "bul-circlek-store",
+          "tags": [
+            "stock rotation",
+            "food hygiene",
+            "health and safety",
+            "store policy",
+            "convenience store"
+          ],
+          "text": "Rotate stock on a FIFO basis, face up shelves and follow HACCP food-safety, forecourt safety and fire and evacuation procedures to keep the store clean, safe and ready for customers.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
+        }
+      ],
+      "basis": {
+        "strength": "support",
+        "why": "Support: store operations and safety duties from Derin's LinkedIn entry; the first bullet to go if the page is full."
       }
     }
   },
@@ -1544,6 +1609,7 @@
         "role-dmart",
         "edu-msc",
         "edu-bms",
+        "role-circlek",
         "role-blarney",
         "cert-aicptr"
       ],
@@ -1591,6 +1657,7 @@
         "languages"
       ],
       "include": [
+        "role-circlek",
         "role-dmart",
         "role-blarney",
         "role-tcs",
@@ -1771,6 +1838,24 @@
       "linesSaved": 1
     },
     {
+      "id": "prof-customerops-b",
+      "archetypes": [
+        "customer-ops"
+      ],
+      "tags": [
+        "query resolution",
+        "complaint handling",
+        "client liaison",
+        "single point of contact"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. For a year at Tata Consultancy Services I was the person the client called: I took their queries and complaints directly and sorted out requirements that did not match what was being delivered. Before that I spent ten months on a busy supermarket floor in Mumbai, and I now work part-time on the tills at a Circle K in Dublin. I speak English at CEFR C1, along with Hindi and Malayalam.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
+    },
+    {
       "id": "prof-customerops",
       "archetypes": [
         "customer-ops"
@@ -1797,6 +1882,24 @@
       },
       "_rewriteNote19Sept": "Text replaced 19 Sept 2026 with Derin's own exact new wording, closing the 99%-scope and stale-SPOC violations he flagged. Both First Class Honours and 2:1 Honours are now named; which leads is archetype-driven per his own new rule.",
       "linesSaved": 1
+    },
+    {
+      "id": "prof-retail-b",
+      "archetypes": [
+        "retail-parttime"
+      ],
+      "tags": [
+        "customer service",
+        "supermarket retail",
+        "hospitality experience",
+        "convenience store"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and I am now looking for work in Dublin. I know what a busy shop floor feels like: I am on the tills at a Circle K petrol station and convenience store in Dublin, I handled billing and customer questions at a high-volume supermarket in Mumbai, and I worked full shifts in a hotel kitchen in Co. Cork while I studied. Evenings, weekends and nights are all hours I have worked.",
+      "basis": {
+        "strength": "required",
+        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
+      },
+      "_unmeasured": true
     },
     {
       "id": "prof-retail",
@@ -1893,42 +1996,6 @@
         "data visualisation"
       ],
       "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a finance degree with First Class Honours. I work best where analysis has to be usable by people who are not analysts: for the MSc group project I wrote the presentation that took our findings to a non-technical audience and built the live alert console in Power BI. Power BI with DAX, Python, R and Advanced Excel certified at 100%.",
-      "basis": {
-        "strength": "required",
-        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
-      },
-      "_unmeasured": true
-    },
-    {
-      "id": "prof-retail-b",
-      "archetypes": [
-        "retail-parttime"
-      ],
-      "tags": [
-        "customer service",
-        "supermarket retail",
-        "hospitality experience",
-        "full attendance"
-      ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork, and I am now looking for work in Dublin. I know what a busy shop floor feels like: tills, billing and customer questions at a high-volume supermarket in Mumbai, then full shifts in a hotel kitchen in Co. Cork while I studied. I have worked evenings, weekends and nights, so those hours are not a problem for me.",
-      "basis": {
-        "strength": "required",
-        "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
-      },
-      "_unmeasured": true
-    },
-    {
-      "id": "prof-customerops-b",
-      "archetypes": [
-        "customer-ops"
-      ],
-      "tags": [
-        "query resolution",
-        "complaint handling",
-        "client liaison",
-        "single point of contact"
-      ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. For a year at Tata Consultancy Services I was the person the client called: I took their queries and complaints directly and sorted out requirements that did not match what was being delivered. Before that I spent ten months on a busy supermarket floor in Mumbai, dealing with customer questions and first-line complaints through peak trade. I speak English at CEFR C1, along with Hindi and Malayalam.",
       "basis": {
         "strength": "required",
         "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
@@ -2359,6 +2426,20 @@
           "full attendance"
         ],
         "text": "Reliability is easy to claim and harder to show, so here is the record. From January to August 2026 I worked full shifts in a busy hotel kitchen alongside full-time postgraduate study, with no absences in seven months, and my written reference cites consistency and accuracy.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-circlek",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "customer service",
+          "cash handling",
+          "retail experience",
+          "convenience store"
+        ],
+        "text": "I work part-time at a Circle K petrol station and convenience store in Clonshaugh. I serve customers on the till at busy times, take cash, card and contactless payments accurately, and handle queries and complaints calmly, escalating when something needs it. It has also taught me to follow store procedure properly: FIFO stock rotation, HACCP food safety and forecourt safety.",
         "_unmeasured": true
       },
       {
@@ -3000,7 +3081,14 @@
       "validated",
       "verified",
       "worked",
-      "wrote"
+      "wrote",
+      "serve",
+      "process",
+      "handle",
+      "rotate",
+      "maintain",
+      "follow",
+      "work"
     ]
   },
   "formAnswers": {

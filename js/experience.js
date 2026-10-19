@@ -53,7 +53,8 @@
     (data.facts.roles || []).forEach(function (role) {
       var emp = role.employment;
       if (!emp) return;
-      var months = monthsBetween(emp.startDate, emp.endDate);
+      // endDate null = still working there: counted up to today.
+      var months = monthsBetween(emp.startDate, emp.endDate || new Date().toISOString().slice(0, 10));
       if (emp.fullTime) {
         monthsProfessional += months;
         if (emp.countsAsRelevant) monthsRelevant += months;
