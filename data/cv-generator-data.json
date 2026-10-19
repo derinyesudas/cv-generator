@@ -5,7 +5,7 @@
     {
       "version": "1.39",
       "date": "19 Oct 2026",
-      "summary": "Letter bank widened: six new evidence paragraphs (clients, tools, report writing, reliability, customer service, claims) drafted from the approved bullets and flagged _pendingReview; two extra wording variants for the plain opening (with and without team), the company closing and the quoted-line frame, picked by a fixed rule on company and role; a third evidence paragraph is added when it fits one page. New entries carry _unmeasured (page fit is wrap-simulated, not measured offline)."
+      "summary": "Letter bank widened: six new evidence paragraphs (clients, tools, report writing, reliability, customer service, claims) drafted from the approved bullets and flagged _pendingReview; two extra wording variants for the plain opening (with and without team), the company closing and the quoted-line frame, picked by a fixed rule on company and role; a third evidence paragraph is added when it fits one page. New entries carry _unmeasured (page fit is wrap-simulated, not measured offline). Approved by Derin 19 Oct 2026 after reading them; the review flags are cleared."
     },
     {
       "version": "1.38",
@@ -2112,7 +2112,6 @@
           "client calls"
         ],
         "text": "At Tata Consultancy Services I dealt with the client directly. I acted as the single point of contact between the client and our internal teams, taking queries and complaints directly and resolving requirements that did not match what was being delivered, so that delivery stayed inside the agreed deadlines. I also joined client calls with my team lead and briefed the team on every change that came out of them.",
-        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
         "_unmeasured": true
       },
       {
@@ -2127,7 +2126,6 @@
           "interactive dashboard"
         ],
         "text": "At Tata Consultancy Services the verification work ran in Excel, on files of 30 to 50 columns and several thousand records. Since then I have added a certified Advanced Excel qualification at 100%, covering Power Query, pivot tables, lookups and conditional logic. I also work in Power BI with DAX and Power Query, and I have used Tableau, Python and R.",
-        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
         "_unmeasured": true
       },
       {
@@ -2143,7 +2141,6 @@
           "technical documentation"
         ],
         "text": "For my MSc group project, a six-member team working on stock market manipulation detection, I sourced the project data, wrote several sections of the 38-page report and wrote the presentation that took our findings to a non-technical audience. Explaining analysis to people who need the answer rather than the method is something I have practised.",
-        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
         "_unmeasured": true
       },
       {
@@ -2157,7 +2154,6 @@
           "full attendance"
         ],
         "text": "Reliability is easy to claim and harder to show, so here is the record. From January to August 2026 I worked full shifts in a busy hotel kitchen alongside full-time postgraduate study, with no absences in seven months, and my written reference cites consistency and accuracy.",
-        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
         "_unmeasured": true
       },
       {
@@ -2173,7 +2169,6 @@
           "supermarket retail"
         ],
         "text": "Alongside my first year of study I worked at D-Mart in Mumbai, a job I took on to fund my own college tuition. I rotated across the shop floor, billing and replenishment in a high-volume store through peak evening and weekend trade, answered questions on prices, offers and policy, and handled first-line complaints, escalating where needed.",
-        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
         "_unmeasured": true
       },
       {
@@ -2189,7 +2184,6 @@
           "insurance operations"
         ],
         "text": "At Tata Consultancy Services I first processed claims for a US pensions provider on the OMNI and Legacy systems. I was fully licensed and carrying the same SLAs and targets as colleagues with far more experience within one month of joining, working permanent night shifts.",
-        "_pendingReview": "New wording drafted 19 Oct 2026 from the approved bullets and facts; Derin to read before relying on it.",
         "_unmeasured": true
       }
     ],

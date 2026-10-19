@@ -6,7 +6,7 @@ Static site (GitHub Pages, no server). Paste a job ad, get a verdict on whether 
 
 No AI, no network, no key. It selects, orders and trims sentences that already exist in `data/cv-generator-data.json`, with page fit measured offline or, for entries marked `_unmeasured`, wrap-simulated (`js/pagefit.js`).
 
-- **Letter:** opening (wording picked by a fixed rule on company and role), why-this-role (quotes a line from the ad), up to three evidence paragraphs chosen by how well their tags match the ad (the third only if it fits one page), the approved gap sentence if needed, then the closing paragraph and signature. New wording awaiting your read is listed in `LETTER-BANK-REVIEW.md` and flagged `_pendingReview` in the data file.
+- **Letter:** opening (wording picked by a fixed rule on company and role), why-this-role (quotes a line from the ad), up to three evidence paragraphs chosen by how well their tags match the ad (the third only if it fits one page), the approved gap sentence if needed, then the closing paragraph and signature.
 - **Edit the text** (sidebar): type over the CV profile or the letter body. `js/edits.js` holds the edit; `js/verify.js` gate 6 rejects any figure or capitalised name not in the fact bank or the ad, and the never-claim, dash and one-page checks still run. "Back to automatic" drops the edit.
 
 ## Layout
