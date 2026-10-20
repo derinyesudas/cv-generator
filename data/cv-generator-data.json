@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.42",
+  "_version": "1.43",
   "_changelog": [
+    {
+      "version": "1.43",
+      "date": "20 Oct 2026",
+      "summary": "Analyst CV model (Derin's attached CV): business-analyst and analyst-bi now run profile, skills, projects, experience, education, certifications, with three projects (Ireland Job Tracker, CV and Cover Letter Generator, the MSc project, now naming the Deloitte mentor and the 467,799-record framework) and an analyst profile that presents the AI work as skill and control. Part-time roles appear on those CVs only when the ad asks for customer-facing or shift work. SQL is now a held skill (removed from neverClaim, knownAbsentTools, the SQL warning; hardreq marked held). Stable figures only (335 employers, 467,799 records). New entries carry _unmeasured. Analyst CVs use compact skill lines (Data and BI, Programming, Analytics, Ways of working) as in the attached CV; the analyst profile is the default (preferred) for analyst roles and the older analyst profiles stay selectable; short versions added for the new bullets and the profile."
+    },
     {
       "version": "1.42",
       "date": "19 Oct 2026",
@@ -408,23 +413,14 @@
     "project": {
       "id": "proj-smmd",
       "title": "Stock Market Manipulation Detection",
-      "org": "MSc group project, six members, University College Cork",
+      "org": "MSc applied research project, team of six, with an industry mentor from Deloitte",
       "stack": "Power BI | Data Sourcing | Technical Writing",
       "bullets": [
         "b-console",
         "b-report"
       ],
       "_neverClaim": "Never claim: writing the Python, developing or tuning the Isolation Forest or FinBERT models, building the SSIS pipeline, building the Compliance, Executive or Trader dashboards, leading any workstream, authoring the full report, or the F1/precision/recall figures as a personal achievement.",
-      "heightPx": {
-        "role": {
-          "cv": 16.73,
-          "hash": "7bc8cfd8"
-        },
-        "dates": {
-          "cv": 14.93,
-          "hash": "cc5d9c75"
-        }
-      }
+      "_unmeasured": true
     },
     "certifications": [
       {
@@ -507,11 +503,49 @@
         "hash": "2a7dd24e"
       }
     },
-    "languages": "English, CEFR C1 (Duolingo 140/160) | Hindi | Malayalam"
+    "languages": "English, CEFR C1 (Duolingo 140/160) | Hindi | Malayalam",
+    "projects": [
+      {
+        "id": "proj-jobtracker",
+        "title": "Ireland Job Tracker",
+        "org": "Personal project built with Claude Code. github.com/derinyesudas/ireland-job-tracker",
+        "stack": "GitHub Actions | Data Sourcing | Automation",
+        "bullets": [
+          "bul-tracker-build",
+          "bul-tracker-register"
+        ],
+        "_unmeasured": true
+      },
+      {
+        "id": "proj-cvgen",
+        "title": "CV and Cover Letter Generator",
+        "org": "Personal project, built with Claude Code. derinyesudas.github.io/cv-generator",
+        "stack": "JavaScript | Rule-based | Automated Testing",
+        "bullets": [
+          "bul-cvgen-build",
+          "bul-cvgen-test"
+        ],
+        "_unmeasured": true
+      }
+    ]
   },
   "bulletVariants": {
     "b-console": {
       "variants": [
+        {
+          "id": "b-console-scale",
+          "tags": [
+            "power bi",
+            "interactive dashboard",
+            "data visualisation",
+            "decision support",
+            "market surveillance"
+          ],
+          "text": "Built the Live Alert Console in Power BI for a framework covering 467,799 real 2024 Russell 2000 trading records, ranking critical-risk events with the reason each was flagged, so reviewers could triage without the full dashboard.",
+          "verifiedBy": "stated",
+          "_unmeasured": true,
+          "short": "Built the Live Alert Console in Power BI for a framework covering 467,799 real 2024 Russell 2000 trading records, ranking critical-risk events with the reason each was flagged."
+        },
         {
           "id": "b-console-triage",
           "tags": [
@@ -556,6 +590,20 @@
     },
     "b-report": {
       "variants": [
+        {
+          "id": "b-report-scenario",
+          "tags": [
+            "report writing",
+            "technical documentation",
+            "presentation skills",
+            "stakeholder communication",
+            "data storytelling"
+          ],
+          "text": "Helped source the trading data, wrote several sections of the 38-page report and structured the presentation, including a short scenario that explained the pump-and-dump cycle to non-specialists.",
+          "verifiedBy": "stated",
+          "_unmeasured": true,
+          "short": "Helped source the trading data, wrote several sections of the 38-page report and structured the presentation."
+        },
         {
           "id": "b-report-full",
           "tags": [
@@ -848,6 +896,87 @@
         "strength": "support",
         "why": "Support: store operations and safety duties from Derin's LinkedIn entry; the first bullet to go if the page is full."
       }
+    },
+    "bul-tracker-build": {
+      "variants": [
+        {
+          "id": "bul-tracker-build",
+          "tags": [
+            "web scraping",
+            "task automation",
+            "data sourcing",
+            "scheduled workflows",
+            "github actions"
+          ],
+          "text": "Designed an automated tracker that checks 335 Irish employers' own career sites on a schedule, rather than job boards, so new entry-level roles reach a live board as early as possible. Wrote the specification, built it with Claude Code and checked its output; it runs unattended on GitHub Actions.",
+          "verifiedBy": "stated",
+          "_unmeasured": true,
+          "short": "Designed an automated tracker that checks 335 Irish employers' own career sites on a schedule, rather than job boards, so new entry-level roles reach a live board early. Built it with Claude Code; it runs unattended on GitHub Actions."
+        }
+      ],
+      "basis": {
+        "strength": "core",
+        "why": "Core on analyst CVs: data sourcing and automation, in Derin's own words from the Oct 2026 CV. Stable figure only (335 employers)."
+      }
+    },
+    "bul-tracker-register": {
+      "variants": [
+        {
+          "id": "bul-tracker-register",
+          "tags": [
+            "employer register",
+            "research compilation"
+          ],
+          "text": "Researched and compiled the employer register behind it, with the careers page, sector, entry routes and hiring system for each company, and kept the research files encrypted.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
+        }
+      ],
+      "basis": {
+        "strength": "support",
+        "why": "Support: the data-sourcing detail behind the tracker."
+      }
+    },
+    "bul-cvgen-build": {
+      "variants": [
+        {
+          "id": "bul-cvgen-build",
+          "tags": [
+            "rule-based automation",
+            "data validation",
+            "process automation",
+            "document automation"
+          ],
+          "text": "Designed a rule-based web app that turns a pasted job ad into a tailored one-page CV and cover letter using only an approved fact bank, so nothing can be invented. It runs entirely in the browser, with no AI at runtime.",
+          "verifiedBy": "stated",
+          "_unmeasured": true,
+          "short": "Designed a rule-based web app that turns a pasted job ad into a tailored one-page CV and cover letter from an approved fact bank only, so nothing can be invented."
+        }
+      ],
+      "basis": {
+        "strength": "core",
+        "why": "Core on analyst CVs: shows control over AI-built output (nothing invented, rules and tests), the point Derin wants recruiters to take."
+      }
+    },
+    "bul-cvgen-test": {
+      "variants": [
+        {
+          "id": "bul-cvgen-test",
+          "tags": [
+            "automated testing",
+            "quality assurance",
+            "test cases",
+            "release checks"
+          ],
+          "text": "Specified its matching, page-fit and safety rules, built it with Claude Code, and tested it against real Irish job ads with automated checks on every release.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
+        }
+      ],
+      "basis": {
+        "strength": "support",
+        "why": "Support: how it was built and checked."
+      }
     }
   },
   "skillLines": {
@@ -948,6 +1077,14 @@
             "tally prime",
             "gst bookkeeping",
             "GST"
+          ]
+        },
+        {
+          "text": "SQL",
+          "tags": [
+            "SQL",
+            "relational databases",
+            "data querying"
           ]
         }
       ],
@@ -1213,6 +1350,153 @@
         "cv": 16.73,
         "dataVersion": "1.15"
       }
+    },
+    "analystBI": {
+      "label": "Data and BI",
+      "terms": [
+        {
+          "text": "Microsoft Excel, advanced (certified at 100%)",
+          "tags": [
+            "excel skills",
+            "microsoft excel",
+            "advanced excel",
+            "power query",
+            "pivot tables",
+            "spreadsheet skills"
+          ]
+        },
+        {
+          "text": "Power Query",
+          "tags": [
+            "power query",
+            "data cleaning",
+            "data transformation"
+          ]
+        },
+        {
+          "text": "Power BI with DAX",
+          "tags": [
+            "power bi",
+            "BI",
+            "business intelligence",
+            "interactive dashboard",
+            "data visualisation",
+            "DAX",
+            "power query",
+            "dax measures",
+            "data modelling"
+          ]
+        },
+        {
+          "text": "Tableau",
+          "tags": [
+            "tableau reporting",
+            "BI",
+            "data visualisation"
+          ]
+        },
+        {
+          "text": "SQL",
+          "tags": [
+            "SQL",
+            "relational databases",
+            "data querying"
+          ]
+        }
+      ]
+    },
+    "analystProg": {
+      "label": "Programming",
+      "terms": [
+        {
+          "text": "Python",
+          "tags": [
+            "python programming",
+            "process scripting",
+            "task automation"
+          ]
+        },
+        {
+          "text": "R (regression, ARIMA forecasting, stationarity and cointegration testing)",
+          "tags": [
+            "r programming",
+            "statistical analysis",
+            "business forecasting",
+            "time series",
+            "regression analysis"
+          ]
+        }
+      ]
+    },
+    "analystMethods": {
+      "label": "Analytics",
+      "terms": [
+        {
+          "text": "Predictive analytics",
+          "tags": [
+            "predictive analytics",
+            "data modelling"
+          ]
+        },
+        {
+          "text": "Business forecasting",
+          "tags": [
+            "business forecasting",
+            "business planning"
+          ]
+        },
+        {
+          "text": "Data validation and migration",
+          "tags": [
+            "data validation",
+            "data quality",
+            "data migration"
+          ]
+        },
+        {
+          "text": "Dashboard and report design",
+          "tags": [
+            "interactive dashboard",
+            "data visualisation",
+            "management reporting"
+          ]
+        }
+      ]
+    },
+    "analystWays": {
+      "label": "Ways of working",
+      "terms": [
+        {
+          "text": "SOP writing",
+          "tags": [
+            "standard operating procedure",
+            "process documentation"
+          ]
+        },
+        {
+          "text": "Maker-checker review",
+          "tags": [
+            "maker checker",
+            "peer review",
+            "quality assurance"
+          ]
+        },
+        {
+          "text": "Stakeholder communication",
+          "tags": [
+            "stakeholder communication",
+            "stakeholder management"
+          ]
+        },
+        {
+          "text": "AI-assisted building with Claude",
+          "tags": [
+            "ai-assisted building",
+            "task automation",
+            "ai tooling"
+          ]
+        }
+      ]
     }
   },
   "archetypes": [
@@ -1368,12 +1652,12 @@
           "heading": "SKILLS"
         },
         {
-          "type": "experience",
-          "heading": "EXPERIENCE"
+          "type": "project",
+          "heading": "PROJECTS"
         },
         {
-          "type": "project",
-          "heading": "ANALYTICS PROJECT"
+          "type": "experience",
+          "heading": "EXPERIENCE"
         },
         {
           "type": "education",
@@ -1385,21 +1669,36 @@
         }
       ],
       "skillCategories": [
-        "technical",
-        "analytical",
-        "business",
-        "domain",
-        "languages"
+        "analystBI",
+        "analystProg",
+        "analystMethods",
+        "analystWays"
       ],
       "include": [
-        "role-tcs",
+        "proj-jobtracker",
+        "proj-cvgen",
         "proj-smmd",
+        "role-tcs",
         "edu-msc",
         "edu-bms",
         "cert-aicptr",
         "cert-anthropic"
       ],
-      "_why": "Experience first - they asked for previous experience in an analytical role. Blarney omitted; it dilutes a professional CV."
+      "_why": "Experience first - they asked for previous experience in an analytical role. Blarney omitted; it dilutes a professional CV.",
+      "conditionalInclude": [
+        {
+          "ids": [
+            "role-circlek"
+          ],
+          "whenTags": [
+            "customer service",
+            "retail experience",
+            "complaint handling",
+            "shift work"
+          ],
+          "_why": "Part-time work only when the ad asks for customer-facing or shift work (Derin, 20 Oct 2026)."
+        }
+      ]
     },
     {
       "id": "analyst-bi",
@@ -1427,7 +1726,7 @@
         },
         {
           "type": "project",
-          "heading": "ANALYTICS PROJECT"
+          "heading": "PROJECTS"
         },
         {
           "type": "experience",
@@ -1443,18 +1742,34 @@
         }
       ],
       "skillCategories": [
-        "technical",
-        "analytical",
-        "business",
-        "languages"
+        "analystBI",
+        "analystProg",
+        "analystMethods",
+        "analystWays"
       ],
       "include": [
+        "proj-jobtracker",
+        "proj-cvgen",
+        "proj-smmd",
         "edu-msc",
         "edu-bms",
-        "proj-smmd",
         "role-tcs",
         "cert-aicptr",
         "cert-anthropic"
+      ],
+      "conditionalInclude": [
+        {
+          "ids": [
+            "role-circlek"
+          ],
+          "whenTags": [
+            "customer service",
+            "retail experience",
+            "complaint handling",
+            "shift work"
+          ],
+          "_why": "Part-time work only when the ad asks for customer-facing or shift work (Derin, 20 Oct 2026)."
+        }
       ]
     },
     {
@@ -1732,6 +2047,27 @@
       "_rewriteNote19Sept": "Text replaced 19 Sept 2026 with Derin's own exact new wording, closing the 99%-scope and stale-SPOC violations he flagged. Both First Class Honours and 2:1 Honours are now named; which leads is archetype-driven per his own new rule.",
       "linesSaved": 1,
       "_rewriteNote25Sept": "Text edited 25 Sept 2026: the Excel-data-extraction-filter sentence removed per Derin's explicit instruction (never claim it, in any block) - the clause was excised, nothing else rewritten or added. Short variant rebuilt as a strict sentence-subset of the new text (drops the MSc-project sentence), not composed."
+    },
+    {
+      "id": "prof-analyst-ai",
+      "archetypes": [
+        "business-analyst",
+        "analyst-bi"
+      ],
+      "tags": [
+        "ai-assisted building",
+        "task automation",
+        "data sourcing",
+        "automated testing"
+      ],
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate, setting the problem, sourcing and checking the data and testing the output myself. Projects so far: a tracker watching 335 Irish employers' career sites, and a Power BI alert console for an MSc market surveillance project. Before that, a year at Tata Consultancy Services validating US insurance and pensions data, where I held 99% accuracy on a ten-person pilot team, the highest of the ten. Work in Excel (certified at 100%), Power BI, Tableau, Python, R and SQL.",
+      "basis": {
+        "strength": "required",
+        "why": "The analyst CV model Derin supplied (Oct 2026), reworded so the AI work reads as skill and control."
+      },
+      "_unmeasured": true,
+      "preferred": true,
+      "short": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate, setting the problem, sourcing and checking the data and testing the output myself. Before that, a year at Tata Consultancy Services validating US insurance and pensions data, at 99% accuracy on a ten-person pilot team, the highest of the ten."
     },
     {
       "id": "prof-ba",
@@ -2276,6 +2612,26 @@
         ]
       },
       {
+        "id": "let-ev-x-builds",
+        "archetypes": [
+          "business-analyst",
+          "analyst-bi",
+          "consulting-tech"
+        ],
+        "tags": [
+          "task automation",
+          "data sourcing",
+          "automation",
+          "process automation",
+          "data analysis",
+          "reporting",
+          "dashboard",
+          "tooling"
+        ],
+        "text": "Outside my degree I build things that save time, and I treat each one as a data project: where the data comes from, how I know it is right, and who uses the result. I built a tracker that checks 335 Irish employers' own career sites on a schedule, and a rule-based CV and cover letter generator that can only use facts I have approved, with automated tests behind it. I use AI to build faster, and I wrote the rules, checked the output and tested it against real ads.",
+        "_unmeasured": true
+      },
+      {
         "id": "let-ev-tcs-pilot",
         "archetypes": [
           "graduate-programme",
@@ -2433,7 +2789,14 @@
           "full attendance"
         ],
         "text": "Reliability is easy to claim and harder to show, so here is the record. From January to August 2026 I worked full shifts in a busy hotel kitchen alongside full-time postgraduate study, with no absences in seven months, and my written reference cites consistency and accuracy.",
-        "_unmeasured": true
+        "_unmeasured": true,
+        "requiresTags": [
+          "proven reliability",
+          "work ethic",
+          "full attendance",
+          "shift work"
+        ],
+        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed."
       },
       {
         "id": "let-ev-x-circlek",
@@ -2448,7 +2811,15 @@
           "high volume"
         ],
         "text": "I work part-time at one of the busiest Circle K stores in Dublin, a petrol station and convenience store. I serve customers on the till at busy times, take cash, card and contactless payments accurately, and handle queries and complaints calmly, escalating when something needs it. It has also taught me to follow store procedure properly: FIFO stock rotation, HACCP food safety and forecourt safety.",
-        "_unmeasured": true
+        "_unmeasured": true,
+        "requiresTags": [
+          "customer service",
+          "retail experience",
+          "complaint handling",
+          "shift work",
+          "cash handling"
+        ],
+        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed."
       },
       {
         "id": "let-ev-x-customer",
@@ -2463,7 +2834,15 @@
           "supermarket retail"
         ],
         "text": "Alongside my first year of study I worked at D-Mart in Mumbai, a job I took on to fund my own college tuition. I rotated across the shop floor, billing and replenishment in a high-volume store through peak evening and weekend trade, answered questions on prices, offers and policy, and handled first-line complaints, escalating where needed.",
-        "_unmeasured": true
+        "_unmeasured": true,
+        "requiresTags": [
+          "customer service",
+          "retail experience",
+          "complaint handling",
+          "store policy",
+          "supermarket retail"
+        ],
+        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed."
       },
       {
         "id": "let-ev-x-claims",
@@ -2760,12 +3139,6 @@
       "message": "Years of experience demanded. You have one."
     },
     {
-      "id": "w-sql",
-      "severity": "warn",
-      "pattern": "\\bsql\\b",
-      "message": "SQL required or preferred. Started September 2026, not yet claimable on the CV. Revisit October 2026."
-    },
-    {
       "id": "w-qualification",
       "pattern": "\\b(ACA|ACCA|CIMA|CFA|QFA|qualified accountant|chartered)s?\\b",
       "_wholeWords8Oct2026": "Whole words only since data 1.33: without \\b the pattern matched 'aca' inside academy, academic and vacancy, and 'cima' inside decimal, so ads using those words were marked BLOCKED (Salesforce graduate, Intact, Allianz graduate). The optional s keeps plurals (qualified accountants, ACAs).",
@@ -2896,7 +3269,6 @@
     "month-end close",
     "month end close",
     "management account*",
-    "sql",
     "corep",
     "finrep",
     "lcr",
@@ -2920,7 +3292,6 @@
     "xml"
   ],
   "_neverClaimNotes": {
-    "SQL": "Started learning Sept 2026. May be named in a cover letter as in progress; never a CV skill until genuinely usable. Revisit Oct 2026.",
     "TCS clients": "TCS clients are never named in any output: write 'a US pensions provider' and 'a US life insurer'. The names themselves are on the private never-claim list (private settings file), not in this public file.",
     "_stems": "Terms are now STEMS matched with matchRule, not exact strings. 'reconcil' replaces three separate entries and additionally catches 'reconciling', which the old exact list missed - the boundary fix makes this gate STRONGER, not just tidier. Re-run the collision test (every term against every approved string) on every change to this list; it belongs in the golden tests, not as a one-off check.",
     "reconciliation": "End-of-shift cash counting (e.g. role-dmart's till work) is a standard till duty, and it will be tempting to write 'cash reconciliation' for it. Do not - reconcil* stays banned, no exceptions. The ban is not about whether the activity happened, it is about what the word does to the reader: on a CV that also carries a finance degree and a financial-services year, 'reconciliation' reads as account reconciliation and month-end work, which Derin has never done. never-claim governs the reader's interpretation, not the literal fact. If the till detail is ever wanted, 'balanced the till at end of shift' is available and carries no finance reading - not used in bul-dmart-till today because Derin did not state it himself. Added 17 Sept 2026."
@@ -3096,7 +3467,11 @@
       "rotate",
       "maintain",
       "follow",
-      "work"
+      "work",
+      "specified",
+      "compiled",
+      "tested",
+      "helped"
     ]
   },
   "formAnswers": {
@@ -3181,7 +3556,6 @@
   "knownAbsentTools": {
     "_why": "NOT derivable from neverClaim. neverClaim means 'never emit this text'. knownAbsentTools means 'if the ad asks for this, report it as a gap in the fit check'. They overlap but are not the same set: a private never-claim term is not a tool; 'Tableau' is a tool he HAS. Hand-deriving one from the other was a false claim in a code comment. Keep both lists here, in data, and delete the comment.",
     "tools": [
-      "SQL",
       "Alteryx",
       "Salesforce",
       "Power Query for Dataflows",
@@ -3202,8 +3576,7 @@
       "Databricks",
       "Scikit-learn",
       "TensorFlow"
-    ],
-    "_sqlNote": "SQL is in progress since Sept 2026. Report it as a gap on the CV, but the fit check should say 'in progress' rather than 'absent'."
+    ]
   },
   "_blockHeightMeta": {
     "_readme": "Authoring-time measured block heights (14 Sept 2026, third-review-pass redesign - see trimPolicy.basisRule's sibling note and the decision log's 'measure once, sum at runtime' section). Generated by tests/golden/measure-blocks.js, NOT hand-typed. Every measured block (this bundle's own identity/headings, and every heightPx/shortHeightPx elsewhere in this file) carries a hash of its own text plus the style values it depends on (font, size, page width, line-advance - see js/blockhash.js), not a data._version stamp (27 Sept 2026, item 6 - a single file-wide version stamp invalidated all ~60 measured blocks on ANY version bump, even one that touched neither their text nor their style dependencies; validate.js now recomputes each hash and flags only the block that actually needs remeasuring). This bundle's own freshness stamp is styleHash, just below - a pure function of data.style, re-stamped automatically by measure-blocks.js --apply every time it runs. lineAdvancePx is the real per-size line-to-line advance in LibreOffice's actual Times New Roman rendering, measured empirically (NOT font-size * 1.15 - that formula was tried first, copied preview.js's CSS approximation, and undershot the real renderer by ~13-15%, confirmed by cross-checking predicted sums against five whole, real documents). The runtime page-fit gate holds back one line of body-size lineAdvancePx as its only safety allowance, replacing the old 120px guessed buffer.",
@@ -3230,7 +3603,8 @@
       "CERTIFICATIONS AND VOLUNTEERING": 17.67,
       "CERTIFICATIONS": 17.67,
       "PROJECT": 17.67,
-      "KEY SKILLS": 17.67
+      "KEY SKILLS": 17.67,
+      "PROJECTS": 17.67
     },
     "charWidths": {
       "body": {
@@ -3554,9 +3928,9 @@
         "patterns": [
           "sql"
         ],
-        "held": false,
+        "held": true,
         "qualification": false,
-        "_why": "Until Derin updates it (Derin's own note, 30 Sept 2026)."
+        "_why": "Derin, 20 Oct 2026: SQL is learned and now a held skill."
       },
       {
         "id": "hr-sap",

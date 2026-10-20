@@ -2173,7 +2173,7 @@
         groupsSeen[gid] = true;
         var group = data.bulletVariants[gid];
         if (!group || !group.variants || group.variants.length < 2) return;
-        var owner = b._group.kind === 'project' ? data.facts.project : CVAssemble.findById(data.facts.roles, b._group.id);
+        var owner = b._group.kind === 'project' ? [data.facts.project].concat(data.facts.projects || []).filter(function (p) { return p && p.id === b._group.id; })[0] : CVAssemble.findById(data.facts.roles, b._group.id);
         var ownerName = owner ? owner.title : b._group.id;
         var position = owner && owner.bullets ? owner.bullets.indexOf(gid) + 1 : 0;
         var autoV = auto.bullets[gid];

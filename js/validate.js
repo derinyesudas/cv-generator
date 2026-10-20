@@ -743,6 +743,7 @@
     if (data.facts.project) projectFacts.push(data.facts.project);
     projectFacts.forEach(function (p) {
       var label = "facts.project(s)['" + p.id + "']";
+      if (p._unmeasured) return;
       checkHeight(p.heightPx, "role", label, { text: roleHashText(p, false), sizeKey: "body", docType: "cv", isBullet: false });
       checkHeight(p.heightPx, "dates", label, { text: datesHashText(p, false), sizeKey: "small", docType: "cv", isBullet: false });
     });

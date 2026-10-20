@@ -347,6 +347,9 @@
     var candidates = cleanVariants(data, data.profileVariants.filter(function (p) {
       return p.archetypes.indexOf(archetype.id) !== -1;
     }));
+    // A variant marked preferred is the default for its role types whatever the tags score.
+    var preferred = candidates.filter(function (p) { return p.preferred; })[0];
+    if (preferred) return preferred;
     if (!candidates.length) {
       throw new Error("assemble.js: no profileVariants entry lists archetype '" + archetype.id + "'");
     }
@@ -623,6 +626,13 @@
 
     var includeIds = archetype.include.filter(function (id) {
       return excludeFactIds.indexOf(id) === -1;
+    });
+    // Roles an archetype lists only when the ad hits one of the tags (e.g. a
+    // part-time job on an analyst CV when the ad asks for customer service).
+    (archetype.conditionalInclude || []).forEach(function (rule) {
+      var hits = (extraction && extraction.keywordHits) || {};
+      if (!rule.whenTags.some(function (t) { return hits[String(t).toLowerCase()]; })) return;
+      rule.ids.forEach(function (id) { if (includeIds.indexOf(id) === -1 && excludeFactIds.indexOf(id) === -1) includeIds.push(id); });
     });
     var roleSource = choices && choices.roles ? findById(data.archetypes, choices.roles) : null;
     if (roleSource) {
