@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.43",
+  "_version": "1.44",
   "_changelog": [
+    {
+      "version": "1.44",
+      "date": "20 Oct 2026",
+      "summary": "Analyst CVs (business-analyst, analyst-bi) carry a second header line with Portfolio and GitHub links, as in Derin's attached CV."
+    },
     {
       "version": "1.43",
       "date": "20 Oct 2026",
@@ -201,7 +206,17 @@
     "rightToWorkExtendedTemplate": "Eligible to work in Ireland. No visa sponsorship required. Available from 1 November 2026 and for a {{ADSTARTDATE}} start.",
     "_rightToWorkNote": "RESOLVED 26 Sept 2026 (item 2b, Derin's own instruction, verbatim): 'When the ad names a start date later than 1 November 2026, the auth line becomes: \"Eligible to work in Ireland. No visa sponsorship required. Available from 1 November 2026 and for a September 2027 start.\" Take the date from the ad and validate it verbatim, the same way as TEAM.' The old rightToWorkVariants array (three hand-typed alternative sentences, added earlier, never once read by any renderer or by js/assemble.js's buildModel, which always printed rightToWork alone) is REMOVED, not kept alongside the new mechanism - it was dead data describing a feature that was never actually wired up, and keeping it next to the real implementation would be exactly the 'two readings of one truth' problem this project keeps flagging elsewhere. The real mechanism: js/letterbuild.js's validateStartDate() constrains the typed ad-start-date to a verbatim JD substring (identical shape to validateTeam), js/letterbuild.js's startDateTriggersExtendedAuth() parses it as Month+YYYY and compares against 1 Nov 2026, and only when both checks pass does js/assemble.js's buildAuthLine() substitute {{ADSTARTDATE}} into rightToWorkExtendedTemplate above - never into rightToWork itself, which stays the untouched, always-true base sentence. HEIGHT, MEASURED NOT ASSUMED: the extended line is longer than the base sentence, which could in principle wrap to a second line and silently under-count in js/pagefit.js (identityHeight('rightToWork') is a single stored constant, not a live simulation, unlike letterBlocks templated content). Checked for real, against the actual renderer, before shipping rather than assumed safe: rendered the extended line through the app's own render-docx.js + LibreOffice + pdftotext (the same measurement method as everywhere else in this file) with both 'September 2027' (Derin's own example, tied for the longest month name) and 'May 2027' substituted for {{ADSTARTDATE}} - both measured at exactly 1 line, same as the base sentence, at the real CV page width and the rightToWork font size. So the existing single stored heightPx.identity.rightToWork constant (14.07px, 1 line) is correct for the extended line too, for every value startDateTriggersExtendedAuth can actually produce (parseMonthYear only accepts full month names, so no longer string is possible) - no pagefit.js change was needed, and this was proven, not assumed.",
     "_note": "GitHub is deliberately NOT in the contact list. Add github.com/derinyesudas only once the profile has a README, a bio and a pinned repository. An empty GitHub link is worse than none.",
-    "signatureName": "Derin Yesudas"
+    "signatureName": "Derin Yesudas",
+    "analystLinks": [
+      {
+        "text": "Portfolio: derinyesudas.github.io",
+        "link": "https://derinyesudas.github.io"
+      },
+      {
+        "text": "GitHub: github.com/derinyesudas",
+        "link": "https://github.com/derinyesudas"
+      }
+    ]
   },
   "availability": {
     "fullTimeFrom": "1 November 2026",
@@ -1698,7 +1713,8 @@
           ],
           "_why": "Part-time work only when the ad asks for customer-facing or shift work (Derin, 20 Oct 2026)."
         }
-      ]
+      ],
+      "extraContactKey": "analystLinks"
     },
     {
       "id": "analyst-bi",
@@ -1770,7 +1786,8 @@
           ],
           "_why": "Part-time work only when the ad asks for customer-facing or shift work (Derin, 20 Oct 2026)."
         }
-      ]
+      ],
+      "extraContactKey": "analystLinks"
     },
     {
       "id": "finance-ops",

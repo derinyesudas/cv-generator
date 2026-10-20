@@ -651,6 +651,11 @@
       { t: "auth", text: authLine.text, _prov: { text: authLine.prov } },
       { t: "spacer" }
     ];
+    // Optional second contact line (Portfolio and GitHub on analyst CVs).
+    var extra = archetype.extraContactKey && data.identity[archetype.extraContactKey];
+    if (extra && extra.length) {
+      model.splice(2, 0, { t: "contact", items: extra, _prov: { items: extra.map(function (it) { return oneProv(it, "text"); }) } });
+    }
 
     archetype.sectionOrder.forEach(function (so) {
       var section = buildSection(data, archetype, includeIds, so.type, so.heading, extraction, choices);
