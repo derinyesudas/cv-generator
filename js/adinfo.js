@@ -359,6 +359,8 @@
       t = t.trim();
       if (t === before) break;
     }
+    // "RETAIL ASSISTANT": a title in capitals is set in title case.
+    if (/[A-Z]{4,}/.test(t) && t === t.toUpperCase() && wordCount(t) >= 2) t = titleCase(t.toLowerCase());
     // "Pensions Administrator Role" -> the letter already says "the ... role".
     t = t.replace(/\s+(?:role|position|vacancy|job|opportunity)$/i, "");
     t = t.replace(/[\s,;:.]+$/, "");

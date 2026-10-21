@@ -5,7 +5,7 @@
     {
       "version": "1.46",
       "date": "21 Oct 2026",
-      "summary": "Sentence bank widened from approved facts only: 24 theme-matched why paragraphs (accuracy, data and reporting, clients, graduate training, process improvement, financial services, pensions and insurance, retail, technology, operations), one chosen per letter by the ad's words; two more quote frames; alternative wordings of the console and every TCS paragraph (letterBlocks.evidenceVariants), picked by a fixed rule on company and role; three new evidence paragraphs (forecasting, teamwork, languages); more closings and sign-offs; five alternative TCS bullets that follow the ad's words; second profiles for consulting-tech and graduate-programme; the tracker and generator projects on consulting CVs and the tracker on graduate CVs. All new entries carry _unmeasured. Consulting and graduate CVs use the compact analyst skill lines so the projects fit; the languages paragraph needs the ad to name Hindi, Malayalam or multilingual. Quote frames that say Derin has done the work (echo a, d, f; claimsExperience) are hand-pick only: a sweep showed tag matches too loose for that claim ('promote financial products', 'FX experience is essential'); only duty lines are quoted automatically; long or 'You will...' lines are no longer quoted automatically; 'the Graduate Programme role' reads 'the Graduate Programme'. Insurance-pensions and finance-ops CVs no longer always carry D-Mart: Circle K (current) appears when the ad asks for customer-facing work."
+      "summary": "Sentence bank widened from approved facts only: 24 theme-matched why paragraphs (accuracy, data and reporting, clients, graduate training, process improvement, financial services, pensions and insurance, retail, technology, operations), one chosen per letter by the ad's words; two more quote frames; alternative wordings of the console and every TCS paragraph (letterBlocks.evidenceVariants), picked by a fixed rule on company and role; three new evidence paragraphs (forecasting, teamwork, languages); more closings and sign-offs; five alternative TCS bullets that follow the ad's words; second profiles for consulting-tech and graduate-programme; the tracker and generator projects on consulting CVs and the tracker on graduate CVs. All new entries carry _unmeasured. Consulting and graduate CVs use the compact analyst skill lines so the projects fit; the languages paragraph needs the ad to name Hindi, Malayalam or multilingual. Quote frames that say Derin has done the work (echo a, d, f; claimsExperience) are hand-pick only: a sweep showed tag matches too loose for that claim ('promote financial products', 'FX experience is essential'); only duty lines are quoted automatically; long or 'You will...' lines are no longer quoted automatically; 'the Graduate Programme role' reads 'the Graduate Programme'. Insurance-pensions and finance-ops CVs no longer always carry D-Mart: Circle K (current) appears when the ad asks for customer-facing work. Round 2 (reading letters as a recruiter): a letter no longer tells the same fact twice (FACT_MARKERS in js/letterbuild.js); graduate-programme why lines only on graduate CVs, with two training why paragraphs for other roles; the alert-console paragraph is no longer used for retail or contact-centre letters; titles in capitals are set in title case. Round 3 (reading CVs as a recruiter): experience lists relevant full-time work first, then the rest newest first; the graduate and consulting certification heading no longer says 'and volunteering', which the page never prints."
     },
     {
       "version": "1.45",
@@ -1626,7 +1626,7 @@
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS AND VOLUNTEERING"
+          "heading": "CERTIFICATIONS"
         }
       ],
       "skillCategories": [
@@ -1703,7 +1703,7 @@
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS AND VOLUNTEERING"
+          "heading": "CERTIFICATIONS"
         }
       ],
       "skillCategories": [
@@ -3035,10 +3035,7 @@
       {
         "id": "let-why-grad-a",
         "archetypes": [
-          "graduate-programme",
-          "consulting-tech",
-          "finance-ops",
-          "insurance-pensions"
+          "graduate-programme"
         ],
         "tags": [
           "graduate programme",
@@ -3056,10 +3053,7 @@
       {
         "id": "let-why-grad-b",
         "archetypes": [
-          "graduate-programme",
-          "consulting-tech",
-          "finance-ops",
-          "insurance-pensions"
+          "graduate-programme"
         ],
         "tags": [
           "graduate programme",
@@ -3077,10 +3071,7 @@
       {
         "id": "let-why-grad-c",
         "archetypes": [
-          "graduate-programme",
-          "consulting-tech",
-          "finance-ops",
-          "insurance-pensions"
+          "graduate-programme"
         ],
         "tags": [
           "graduate programme",
@@ -3319,6 +3310,46 @@
         "isEchoFrame": true,
         "text": "One line in the ad stood out: \"{{ECHO}}.\" That is the part of the job I would enjoy most.",
         "_unmeasured": true
+      },
+      {
+        "_unmeasured": true,
+        "id": "let-why-training-a",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "customer-ops",
+          "consulting-tech",
+          "business-analyst",
+          "analyst-bi"
+        ],
+        "tags": [
+          "structured training",
+          "mentoring",
+          "professional development",
+          "training programme",
+          "professional qualification"
+        ],
+        "text": "The training that comes with this role is a big part of why I am applying. I learn quickly when the standard is clear, which I showed at Tata Consultancy Services by carrying full targets within a month, and I would rather build on proper training than pick things up by chance."
+      },
+      {
+        "_unmeasured": true,
+        "id": "let-why-training-b",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "customer-ops",
+          "consulting-tech",
+          "business-analyst",
+          "analyst-bi"
+        ],
+        "tags": [
+          "structured training",
+          "mentoring",
+          "professional development",
+          "training programme",
+          "professional qualification"
+        ],
+        "text": "I am looking for a role where I can learn the work properly from people who know it well. I came to Ireland for my MSc to build a career here, and a team that invests in training is where I would do my best work."
       }
     ],
     "evidence": [
@@ -3337,7 +3368,12 @@
           "hash": "630419c3"
         },
         "archetypes": [
-          "*"
+          "graduate-programme",
+          "consulting-tech",
+          "business-analyst",
+          "analyst-bi",
+          "finance-ops",
+          "insurance-pensions"
         ]
       },
       {

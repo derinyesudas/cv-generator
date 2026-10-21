@@ -458,8 +458,21 @@
     return { headingText: headingText, blocks: blocks };
   }
 
+  // Relevant full-time work first, then everything else newest first, so a
+  // current part-time job never sits under one from 2021 (21 Oct 2026).
+  function roleOrder(roles) {
+    return roles.map(function (r, i) { return { r: r, i: i }; }).sort(function (a, b) {
+      var ea = a.r.employment || {}, eb = b.r.employment || {};
+      var ra = ea.countsAsRelevant ? 1 : 0, rb = eb.countsAsRelevant ? 1 : 0;
+      if (ra !== rb) return rb - ra;
+      var sa = ea.startDate || "", sb = eb.startDate || "";
+      if (sa !== sb) return sa < sb ? 1 : -1;
+      return a.i - b.i;
+    }).map(function (x) { return x.r; });
+  }
+
   function buildExperience(data, includeIds, headingText, extraction, choices) {
-    var roles = selectInOrder(data.facts.roles, includeIds);
+    var roles = roleOrder(selectInOrder(data.facts.roles, includeIds));
     if (!roles.length) return null;
     var blocks = [];
     roles.forEach(function (role) {

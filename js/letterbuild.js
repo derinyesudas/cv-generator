@@ -613,6 +613,23 @@
     return list[h % list.length];
   }
 
+  // The facts a paragraph tells, by marker phrase (21 Oct 2026): a letter
+  // should not tell the same fact twice (the single point of contact in both
+  // the why and an evidence paragraph, the degrees in the opening and the
+  // why, the Claude certificates twice).
+  var FACT_MARKERS = {
+    spoc: /single point of contact/i, sop: /operating procedure/i, accuracy: /99%/, console: /alert console/i,
+    nights: /night shifts?/i, certs: /Claude Academy|certifications\b/i, tracker: /\btracker\b/i, circlek: /Circle K/i,
+    dmart: /D-Mart|supermarket/i, kitchen: /kitchen/i, licence: /licen[cs]/i, targets: /(?:same|full) targets/i,
+    degrees: /MSc in Business Analytics|finance degree|degree in Finance|studied finance/i
+  };
+  function markersOf(text) {
+    var m = {};
+    Object.keys(FACT_MARKERS).forEach(function (k) { if (FACT_MARKERS[k].test(String(text || ""))) m[k] = true; });
+    return m;
+  }
+  function sharesFact(a, b) { return Object.keys(a).some(function (k) { return b[k]; }); }
+
   function isTcsEvidence(entry) {
     return !!entry && /^let-ev-tcs-/.test(entry.id);
   }
@@ -907,13 +924,17 @@
       if (!first) return null;
       if (!isTcsEvidence(first) && tcsCandidate) return tcsCandidate;
       return bestByTags(evidenceCandidates.filter(function (e) {
-        return e.id !== first.id && !(isTcsEvidence(e) && isTcsEvidence(first));
+        return e.id !== first.id && !(isTcsEvidence(e) && isTcsEvidence(first)) && !sharesFact(markersOf(e.text), markersOf(first.text));
       }), extraction);
     };
     var autoPrimary = null;
     var autoSecond = null;
     if (!closeMatchUsed) {
-      autoPrimary = bestByTags(evidenceCandidates, extraction);
+      // The TCS paragraph is the usual partner, so the first pick should not
+      // tell a fact it already tells (both describing the operating procedure).
+      var tcsMarks = tcsCandidate ? markersOf(tcsCandidate.text) : {};
+      var primaryPool = evidenceCandidates.filter(function (e) { return isTcsEvidence(e) || !sharesFact(markersOf(e.text), tcsMarks); });
+      autoPrimary = bestByTags(primaryPool.length ? primaryPool : evidenceCandidates, extraction);
       autoSecond = partnerFor(autoPrimary);
     }
     var evidenceOrder = (lb.evidence || []).map(function (e) { return e.id; });
@@ -970,8 +991,14 @@
     if (!closeMatchUsed && evidence && evidence2 && choices.evidence3 !== "none") {
       var taken = [evidence.id, evidence2.id];
       var hasPartTime = !!(evidence.partTime || evidence2.partTime);
+      var told = {};
+      blocks.concat([{ text: evidence.text }, { text: evidence2.text }]).forEach(function (b) {
+        var mk = markersOf(b.text);
+        Object.keys(mk).forEach(function (k) { told[k] = true; });
+      });
       var thirdPool = evidenceCandidates.filter(function (e) {
-        return taken.indexOf(e.id) === -1 && !isTcsEvidence(e) && !(hasPartTime && e.partTime) && Assemble.overlapScore(e.tags, extraction) > 0;
+        return taken.indexOf(e.id) === -1 && !isTcsEvidence(e) && !(hasPartTime && e.partTime) &&
+          Assemble.overlapScore(e.tags, extraction) > 0 && !sharesFact(markersOf(e.text), told);
       });
       evidence3 = bestByTags(thirdPool, extraction);
     }
@@ -1014,6 +1041,31 @@
         id: evidence.id, category: "evidence", evidenceRole: role, evidenceSlot: slot, text: fillTemplate(evidenceText, slots, wording.id), ref: wording,
         _prov: { text: templateProv(wording, evidenceField, slots) }
       });
+    }
+
+    // The automatic why paragraph must not repeat a fact the opening or an
+    // evidence paragraph already tells; if it does, the best-matching one
+    // that does not is used instead.
+    if (!choices.why && !closeMatchUsed) {
+      var whyIdx = -1;
+      blocks.forEach(function (b, i) { if (b.category === "why" && b.ref && !b.ref.isEchoFrame && !b.ref.isEchoFallback) whyIdx = i; });
+      if (whyIdx !== -1) {
+        var toldElsewhere = {};
+        blocks.forEach(function (b, i) {
+          if (i === whyIdx || b.category === "why") return;
+          var mk = markersOf(b.text);
+          Object.keys(mk).forEach(function (k) { toldElsewhere[k] = true; });
+        });
+        if (sharesFact(markersOf(blocks[whyIdx].text), toldElsewhere)) {
+          var whyPool = whyEntries.filter(function (e) { return !e.isEchoFrame && !e.isEchoFallback && !sharesFact(markersOf(e.text), toldElsewhere); });
+          if (whyPool.length) {
+            var bestAlt = -1;
+            whyPool.forEach(function (e) { bestAlt = Math.max(bestAlt, Assemble.overlapScore(e.tags, extraction)); });
+            var alt = rotate(whyPool.filter(function (e) { return Assemble.overlapScore(e.tags, extraction) === bestAlt; }), company, role);
+            blocks[whyIdx] = { id: alt.id, category: "why", text: fillTemplate(alt.text, slots, alt.id), ref: alt, _prov: { text: templateProv(alt, "text", slots) } };
+          }
+        }
+      }
     }
 
     // Gap: trigger-matched entry; "none"'s own text is "" and is dropped,
