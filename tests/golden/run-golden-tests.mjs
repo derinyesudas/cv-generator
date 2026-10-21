@@ -1268,6 +1268,7 @@ const secondEv = await page.evaluate(([data, fixtures]) => {
   // too tall - the automatic second paragraph is dropped and said so.
   var tall = JSON.parse(JSON.stringify(data));
   tall.letterBlocks.evidence.filter(function (e) { return e.id === 'let-ev-console'; })[0].heightPx.letter = 700;
+  tall.letterBlocks.evidenceVariants = (tall.letterBlocks.evidenceVariants || []).filter(function (v) { return v.variantOf !== 'let-ev-console'; });
   var wtw = fixtures.filter(function (f) { return f.name === 'wtw-pensions-administrator'; })[0];
   var wex = CVScore.extractFromJD(tall, wtw.text);
   var dropped = CVLetter.buildLetterContentModel(tall, { archetypeId: 'insurance-pensions', extraction: wex, rawJD: wtw.text, company: 'WTW', role: 'Pensions Administrator', echoText: '' });
@@ -1278,6 +1279,7 @@ const secondEv = await page.evaluate(([data, fixtures]) => {
   // tall one (Derin: "keep my tcs experience")
   var tallTcs = JSON.parse(JSON.stringify(data));
   tallTcs.letterBlocks.evidence.filter(function (e) { return e.id === 'let-ev-tcs-control'; })[0].heightPx.letter = 700;
+  tallTcs.letterBlocks.evidenceVariants = (tallTcs.letterBlocks.evidenceVariants || []).filter(function (v) { return v.variantOf !== 'let-ev-tcs-control'; });
   var keptTcs = CVLetter.buildLetterContentModel(tallTcs, { archetypeId: 'insurance-pensions', extraction: CVScore.extractFromJD(tallTcs, wtw.text), rawJD: wtw.text, company: 'WTW', role: 'Pensions Administrator', echoText: '' });
   out.keptTcs = { droppedForFit: keptTcs.letterResult.evidence2DroppedForFit || null,
     ids: keptTcs.letterResult.blocks.filter(function (b) { return b.category === 'evidence'; }).map(function (b) { return b.id; }) };

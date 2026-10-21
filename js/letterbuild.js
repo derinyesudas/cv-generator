@@ -618,7 +618,8 @@
   // the why and an evidence paragraph, the degrees in the opening and the
   // why, the Claude certificates twice).
   var FACT_MARKERS = {
-    spoc: /single point of contact/i, sop: /operating procedure/i, accuracy: /99%/, console: /alert console/i,
+    spoc: /single point of contact/i, sop: /operating procedure|team's procedure/i, accuracy: /99%/, console: /alert console|view a reviewer/i,
+    mscteam: /six-member/i, claims: /processing claims|processed claims|claims processing/i,
     nights: /night shifts?/i, certs: /Claude Academy|certifications\b/i, tracker: /\btracker\b/i, circlek: /Circle K/i,
     dmart: /D-Mart|supermarket/i, kitchen: /kitchen/i, licence: /licen[cs]/i, targets: /(?:same|full) targets/i,
     degrees: /MSc in Business Analytics|finance degree|degree in Finance|studied finance/i
@@ -920,6 +921,12 @@
     // position off: second off leaves one paragraph (the TCS one unless the
     // first was picked by hand), first off leaves none.
     var tcsCandidate = evidenceCandidates.filter(isTcsEvidence)[0] || null;
+    // The approved wording of an evidence story this letter prints: the
+    // entry itself or one of its letterBlocks.evidenceVariants, by the fixed
+    // company-and-role rule.
+    function wordingFor(entry) {
+      return rotate([entry].concat((lb.evidenceVariants || []).filter(function (v) { return v.variantOf === entry.id; })), company, role);
+    }
     var partnerFor = function (first) {
       if (!first) return null;
       if (!isTcsEvidence(first) && tcsCandidate) return tcsCandidate;
@@ -992,7 +999,7 @@
       var taken = [evidence.id, evidence2.id];
       var hasPartTime = !!(evidence.partTime || evidence2.partTime);
       var told = {};
-      blocks.concat([{ text: evidence.text }, { text: evidence2.text }]).forEach(function (b) {
+      blocks.concat([{ text: wordingFor(evidence).text }, { text: wordingFor(evidence2).text }]).forEach(function (b) {
         var mk = markersOf(b.text);
         Object.keys(mk).forEach(function (k) { told[k] = true; });
       });
@@ -1034,7 +1041,7 @@
       // Same story, another approved wording (letterBlocks.evidenceVariants),
       // by the fixed company-and-role rule. Selection logic above still runs
       // on the base entry, so its id is what the rest of the app sees.
-      var wording = rotate([evidence].concat((lb.evidenceVariants || []).filter(function (v) { return v.variantOf === evidence.id; })), company, role);
+      var wording = wordingFor(evidence);
       var evidenceField = (wording.noEchoText && (!echoText || echoQuotedInWhy)) ? "noEchoText" : "text";
       var evidenceText = wording[evidenceField];
       blocks.push({
