@@ -2776,7 +2776,10 @@ console.log('\n--- Build anyway: the letter adds the gap sentence and both lette
 {
   const errors = await page.evaluate((d) => {
     const copy = JSON.parse(JSON.stringify(d));
-    delete copy.hardRequirements.gapBlocks.find((g) => g.id === 'gap-apa').heightPx;
+    // An entry that is neither measured nor marked _unmeasured is the error.
+    const g = copy.hardRequirements.gapBlocks.find((x) => x.id === 'gap-apa');
+    delete g.heightPx;
+    delete g._unmeasured;
     return CVValidate.validateData(copy);
   }, dataJson);
   check('A gap sentence without a measured height fails the data file check, naming it', errors.some((e) => /gapBlocks\['gap-apa'\]: missing heightPx/.test(e)), JSON.stringify(errors).slice(0, 300));

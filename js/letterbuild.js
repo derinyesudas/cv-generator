@@ -619,7 +619,7 @@
   // why, the Claude certificates twice).
   var FACT_MARKERS = {
     spoc: /single point of contact/i, sop: /operating procedure|team's procedure/i, accuracy: /99%/, console: /alert console|view a reviewer/i,
-    mscteam: /six-member/i, claims: /processing claims|processed claims|claims processing/i,
+    mscteam: /six-member/i, claims: /processing claims|processed claims|claims processing/i, wages: /wages/i,
     nights: /night shifts?/i, certs: /Claude Academy|certifications\b/i, tracker: /\btracker\b/i, circlek: /Circle K/i,
     dmart: /D-Mart|supermarket/i, kitchen: /kitchen/i, licence: /licen[cs]/i, targets: /(?:same|full) targets/i,
     degrees: /MSc in Business Analytics|finance degree|degree in Finance|studied finance/i

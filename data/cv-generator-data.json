@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.46",
+  "_version": "1.47",
   "_changelog": [
+    {
+      "version": "1.47",
+      "date": "21 Oct 2026",
+      "summary": "Derin's review of the 1.46 sentences: 'for my master's'; 'wrote and maintained' the procedure; the pensions why paragraphs end positively and one says he was good at it (licensed with full targets within a month); the Excel certificate is dated to his first months at TCS. Everything reframed to leave a positive impression: the retail why paragraph and every gap sentence (letterBlocks.gap and hardRequirements.gapBlocks) now say what he would bring rather than what he lacks, still without claiming anything he does not have. New: the Blarney honesty story (wages overpaid by more than double, reported to the owner, thanked for his honesty) as a letter paragraph used when the ad asks for integrity or honesty (let-ev-x-honesty), a Blarney CV bullet the ad's words can pick (b-blarney-honesty) and a form answer (formAnswers.integrityExample). Headers: the portfolio derinyesudas.github.io is on every CV and letter, linked; the analyst second line keeps GitHub; a private phone number is now a tel: link. The Blarney honesty CV bullet is picked whenever the ad hits one of its preferWhenTags (integrity, honesty, trustworthy, ethics, accountability, cash handling). The years gap sentence needs no years figure (it read badly when the ad gave none and the sentence was picked by hand)."
+    },
     {
       "version": "1.46",
       "date": "21 Oct 2026",
@@ -210,6 +215,10 @@
       {
         "text": "linkedin.com/in/derinyesudas",
         "link": "https://www.linkedin.com/in/derinyesudas"
+      },
+      {
+        "text": "derinyesudas.github.io",
+        "link": "https://derinyesudas.github.io/"
       }
     ],
     "rightToWork": "Eligible to work in Ireland. No visa sponsorship required.",
@@ -218,10 +227,6 @@
     "_note": "GitHub is deliberately NOT in the contact list. Add github.com/derinyesudas only once the profile has a README, a bio and a pinned repository. An empty GitHub link is worse than none.",
     "signatureName": "Derin Yesudas",
     "analystLinks": [
-      {
-        "text": "Portfolio: derinyesudas.github.io",
-        "link": "https://derinyesudas.github.io"
-      },
       {
         "text": "GitHub: github.com/derinyesudas",
         "link": "https://github.com/derinyesudas"
@@ -690,6 +695,32 @@
             "cv": 33.47,
             "hash": "f93306cb"
           }
+        },
+        {
+          "id": "b-blarney-honesty",
+          "tags": [
+            "high integrity",
+            "honesty and integrity",
+            "trustworthy and reliable",
+            "strong ethics",
+            "cash handling"
+          ],
+          "verifiedBy": "stated",
+          "_unmeasured": true,
+          "_source": "Derin, 21 Oct 2026: at Blarney Castle Hotel one week's wages came through at about 450 euro instead of the 200 euro owed (more than two weeks' pay); he texted the owner that she had paid him someone else's wages; she was pleased, thanked him for his honesty and adjusted it from his next week's wages.",
+          "text": "Worked full shifts in a busy hotel kitchen alongside full-time study; when one week's wages came through at more than double what I was owed, I told the owner, who thanked me for my honesty.",
+          "preferWhenTags": [
+            "integrity",
+            "honesty",
+            "honest",
+            "trustworthy",
+            "ethics",
+            "ethical",
+            "accountability",
+            "cash handling",
+            "handling cash",
+            "high integrity"
+          ]
         }
       ],
       "basis": {
@@ -3083,7 +3114,7 @@
           "professional qualification",
           "training programme"
         ],
-        "text": "I came to Ireland for my MSc and I want to build my career here. A programme that combines training with real responsibility is the best way I can see to do that, and I would bring the same approach I took to my first job: learn the process properly, then help make it better.",
+        "text": "I came to Ireland for my master's and I want to build my career here. A programme that combines training with real responsibility is the best way I can see to do that, and I would bring the same approach I took to my first job: learn the process properly, then help make it better.",
         "_unmeasured": true
       },
       {
@@ -3102,7 +3133,7 @@
           "process documentation",
           "process automation"
         ],
-        "text": "I am at my best when a process can be made simpler. At Tata Consultancy Services I took over the team's operating procedure and kept it current every week, and outside work I build small tools that take repetitive work off people's plates. A role with room to improve how things are done is one I would get a lot out of.",
+        "text": "I am at my best when a process can be made simpler. At Tata Consultancy Services I wrote the team's operating procedure and maintained it every week, and outside work I build small tools that take repetitive work off people's plates. A role with room to improve how things are done is one I would get a lot out of.",
         "_unmeasured": true
       },
       {
@@ -3178,7 +3209,7 @@
           "claims assessor",
           "insurance systems"
         ],
-        "text": "Pensions and insurance administration is the work I already know. I processed claims for a US pensions provider and verified contract data for a US life insurer, and I would like to keep building on that here rather than start again somewhere unfamiliar.",
+        "text": "Pensions and insurance administration is work I already know well. I processed claims for a US pensions provider and verified contract data for a US life insurer, and this role is the natural place to build on that experience and keep growing.",
         "_unmeasured": true
       },
       {
@@ -3195,7 +3226,7 @@
           "claims assessor",
           "insurance systems"
         ],
-        "text": "I am applying because this is the area where I have real experience. Insurance and pensions work rewards care and patience over speed, and that suits the way I work: I would rather get a case right once than fix it twice.",
+        "text": "I am applying because this is the area where I have real experience, and I was good at it: within a month of joining I was fully licensed and carrying the same targets as far more experienced colleagues. Insurance and pensions work rewards care and patience over speed, and that suits the way I work: I would rather get a case right first time.",
         "_unmeasured": true
       },
       {
@@ -3213,7 +3244,7 @@
           "supermarket retail",
           "convenience store"
         ],
-        "text": "I am looking for work I can rely on and do well while I start my career in Dublin. I have worked tills, shop floors and a busy kitchen, and I know the job is mostly about being there on time, being friendly and keeping things moving when it gets busy.",
+        "text": "I want a role where reliability and good service matter, because that is what I do well. I have worked tills, shop floors and a busy kitchen, and I know the job is mostly about being there on time, being friendly and keeping things moving when it gets busy.",
         "_unmeasured": true
       },
       {
@@ -3349,7 +3380,7 @@
           "training programme",
           "professional qualification"
         ],
-        "text": "I am looking for a role where I can learn the work properly from people who know it well. I came to Ireland for my MSc to build a career here, and a team that invests in training is where I would do my best work."
+        "text": "I am looking for a role where I can learn the work properly from people who know it well. I came to Ireland for my master's to build a career here, and a team that invests in training is where I would do my best work."
       }
     ],
     "evidence": [
@@ -3525,7 +3556,7 @@
           "data visualisation",
           "interactive dashboard"
         ],
-        "text": "The verification work at Tata Consultancy Services ran in Excel, on files of 30 to 50 columns and several thousand records. Since then I have added a certified Advanced Excel qualification at 100%, covering Power Query, pivot tables, lookups and conditional logic. I also work in Power BI with DAX and Power Query, and I have used Tableau, Python and R.",
+        "text": "The verification work at Tata Consultancy Services ran in Excel, on files of 30 to 50 columns and several thousand records, and in my first months there I earned a certified Advanced Excel qualification at 100%, covering Power Query, pivot tables, lookups and conditional logic. Alongside Excel I work in Power BI with DAX and Power Query, and I have used Tableau, Python and R.",
         "_unmeasured": true
       },
       {
@@ -3674,6 +3705,40 @@
           "multilingual"
         ],
         "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-honesty",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "integrity",
+          "honesty",
+          "honest",
+          "trustworthy",
+          "ethics",
+          "ethical",
+          "accountability",
+          "cash handling",
+          "handling cash",
+          "high integrity"
+        ],
+        "partTime": true,
+        "requiresTags": [
+          "integrity",
+          "honesty",
+          "honest",
+          "trustworthy",
+          "ethics",
+          "ethical",
+          "accountability",
+          "cash handling",
+          "handling cash",
+          "high integrity"
+        ],
+        "_unmeasured": true,
+        "_source": "Derin, 21 Oct 2026: at Blarney Castle Hotel one week's wages came through at about 450 euro instead of the 200 euro owed (more than two weeks' pay); he texted the owner that she had paid him someone else's wages; she was pleased, thanked him for his honesty and adjusted it from his next week's wages.",
+        "text": "While I was working at Blarney Castle Hotel, one week's wages came through at more than double what I was owed, more than two weeks' pay. I texted the owner to let her know she had paid me someone else's wages. She thanked me for my honesty and adjusted it from my next week's pay. It was a small moment, but it is how I work: if something is not right, I say so, even when it is in my favour."
       }
     ],
     "_closeMatchWhy": "26 Sept 2026, item 4, new. Derin rejected a real letter today as generic, for an ad (SoftCo, Document Processing Administrator) whose responsibilities were almost exactly his TCS job - the standard single-evidence-paragraph letter undersold a genuinely unusual overlap. Trigger (CVLetterBuild.computeCloseMatchTrigger, js/letterbuild.js): 50% or more of the pasted ad's MATCHABLE-section lines (js/segment.js's own matchable/ignored split, already used everywhere else in this app) contain at least one of letterBlocks.closeMatch's own five entries' tags. When it fires, buildLetterModel replaces the normal opening+why+evidence+gap sequence with letterBlocks.opening's let-open-closematch-std/-team entry followed by every letterBlocks.closeMatch entry IN FILE ORDER, then the standard close - never a subset, never reordered, matching Derin's own fixed shape ('the opening paragraph states the match plainly, then one paragraph per matched cluster... Then the standard close'). Each entry's text is newly authored prose for this pass (letter voice, not a CV bullet), but every fact in it already exists elsewhere in this file, verbatim or as the same figure - see each entry's own basis.why for its exact source. FLAGGED FOR DERIN'S REVIEW: unlike let-ev-tcs-pilot/control/improve (which read as if Derin wrote them directly), these five paragraphs are Claude-authored under this work order's own instruction, from approved facts only - read them before the first close-match letter actually goes out. Fixture 8 (the SoftCo ad Derin will paste) is still pending as of this pass - the trigger and letter shape are built and unit-tested against synthetic JD text, not yet against the real ad.",
@@ -3787,22 +3852,24 @@
       {
         "id": "let-gap-years",
         "trigger": "yearsShort",
-        "text": "Now the gap, because you will see it anyway. I have one year of full-time experience against your {{YEARS}}. I am not going to dress that up as what you asked for.",
+        "text": "The role asks for more experience than my one full year, but in that year I reached full targets within a month and finished as the most accurate of a ten-person pilot team, so I would expect to get up to speed quickly.",
         "heightPx": {
           "letter": 37.07,
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "51b4929b"
-        }
+        },
+        "_unmeasured": true
       },
       {
         "id": "let-gap-title",
         "trigger": "titleMismatch",
-        "text": "I will be straight with you about the gap. My title was not {{ROLE}}, and I have not produced management information in a commercial setting. What I bring instead is a year of financial services discipline, Advanced Excel certified at 100%, Power BI and Tableau, and a finance degree behind the analytics, so the numbers carry meaning rather than being columns.",
+        "text": "My job title so far has not been {{ROLE}}, and management information in a commercial setting would be new to me. What I would bring to it is a year of financial services discipline, Advanced Excel certified at 100%, Power BI and Tableau, and a finance degree behind the analytics, so the numbers carry meaning rather than being columns.",
         "heightPx": {
           "letter": 74.13,
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "c9b153fd"
-        }
+        },
+        "_unmeasured": true
       },
       {
         "id": "let-gap-none",
@@ -3812,35 +3879,38 @@
       {
         "id": "let-gap-qfa",
         "trigger": "qfa",
-        "text": "The gap, named once. I am not QFA qualified and have not started it. It is learnable, and I would rather say so than imply otherwise.",
+        "text": "I am not QFA qualified yet, and I would be glad to start it straight away; I learn quickly when there is a clear standard to work to.",
         "_addedNote": "Added 21 Sept 2026, Derin's own exact wording (Suggestion A). Trigger 'qfa' is set by js/fitcheck.js's computeGapTrigger only when the ad's own quoted sentence for a w-qualification finding actually names QFA - never for a bare ACA/ACCA/CIMA/CFA/chartered mention, which this paragraph does not address.",
         "heightPx": {
           "letter": 37.07,
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "9523edd6"
-        }
+        },
+        "_unmeasured": true
       },
       {
         "id": "let-gap-irish-pensions",
         "trigger": "irishPensions",
-        "text": "The gap, named once. I do not yet have a working knowledge of Irish pensions legislation. The operational side I can do from day one; the regulatory frame is the part I would be learning.",
+        "text": "Irish pensions legislation would be new to me, and I would make learning it an early priority. The operational side I can do from day one.",
         "_addedNote": "Added 21 Sept 2026, Derin's own exact wording (Suggestion A). Trigger 'irishPensions' is set by js/fitcheck.js's computeGapTrigger when data.warnings['w-irish-pensions-legislation'] matches the pasted JD.",
         "heightPx": {
           "letter": 37.07,
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "bd057542"
-        }
+        },
+        "_unmeasured": true
       },
       {
         "id": "let-gap-sales",
         "trigger": "sales",
-        "text": "The gap, plainly. I have not worked in sales, recruiting or cold outreach, and I am not going to dress up a retail job as something it was not.",
+        "text": "Sales would be a new direction for me. What I would bring is direct client contact from my year at Tata Consultancy Services and front-line customer work in retail, where listening first and following through is what keeps people coming back.",
         "_addedNote": "Added 21 Sept 2026, Derin's own exact wording (Suggestion A). Trigger 'sales' is set by js/fitcheck.js's computeGapTrigger when the new data.warnings['w-sales-experience'] entry matches the pasted JD - see that entry's own note for why it was added.",
         "heightPx": {
           "letter": 37.07,
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "eb9cbfd1"
-        }
+        },
+        "_unmeasured": true
       }
     ],
     "close": [
@@ -4406,6 +4476,11 @@
     "retailAdvertisedRateAnswer": {
       "answer": "In line with your advertised rate for the role.",
       "_why": "Derin's own reasoning, verbatim in spirit (26 Sept 2026): hourly minimum rates for retail/part-time roles change every January, so a hardcoded figure would go stale within months of being written. Deliberately routed around the private-overrides salary-figure lookup entirely (see salaryBucketByArchetype._why) rather than given a bucket figure that would need re-typing every year."
+    },
+    "integrityExample": {
+      "question": "Describe a time you showed honesty or integrity.",
+      "_source": "Derin, 21 Oct 2026: at Blarney Castle Hotel one week's wages came through at about 450 euro instead of the 200 euro owed (more than two weeks' pay); he texted the owner that she had paid him someone else's wages; she was pleased, thanked him for his honesty and adjusted it from his next week's wages.",
+      "answer": "While working as a Kitchen Assistant at Blarney Castle Hotel alongside my MSc, one week's wages came through at more than double what I was owed, more than two weeks' pay. I texted the owner to let her know she had paid me someone else's wages. She thanked me for my honesty and adjusted it from my next week's pay. I would always rather raise something that is wrong, even when it is in my favour."
     }
   },
   "trimPolicy": {
@@ -5033,27 +5108,30 @@
     "gapBlocks": [
       {
         "id": "gap-apa",
-        "text": "I am not yet APA qualified and would begin it straight away with your support.",
+        "text": "I am not yet APA qualified and would be glad to begin it straight away with your support.",
         "heightPx": {
           "letter": 18.53,
           "hash": "3191ba12"
-        }
+        },
+        "_unmeasured": true
       },
       {
         "id": "gap-qfa",
-        "text": "I am not yet QFA qualified and would begin it straight away with your support.",
+        "text": "I am not yet QFA qualified and would be glad to begin it straight away with your support.",
         "heightPx": {
           "letter": 18.53,
           "hash": "a6ad6378"
-        }
+        },
+        "_unmeasured": true
       },
       {
         "id": "gap-supervisory",
-        "text": "I have not held a supervisory role; colleagues came to me when a case did not fit the pattern, and I wrote the procedure the team worked from.",
+        "text": "Colleagues came to me when a case did not fit the pattern, and I wrote the procedure the team worked from; a formal supervisory role would be my natural next step.",
         "heightPx": {
           "letter": 37.07,
           "hash": "ac701fcb"
-        }
+        },
+        "_unmeasured": true
       }
     ]
   },

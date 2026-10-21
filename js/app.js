@@ -148,7 +148,8 @@
     if (typeof ov.contactPhone === 'string' && ov.contactPhone.trim() && d.identity && Array.isArray(d.identity.contact)) {
       var at = -1;
       d.identity.contact.forEach(function (c, i) { if (c && typeof c.link === 'string' && c.link.indexOf('mailto:') === 0) at = i; });
-      d.identity.contact.splice(at === -1 ? d.identity.contact.length : at + 1, 0, { text: ov.contactPhone.trim(), link: null });
+      // A tel: link, so the number is clickable in the PDF and Word files like the email and LinkedIn.
+      d.identity.contact.splice(at === -1 ? d.identity.contact.length : at + 1, 0, { text: ov.contactPhone.trim(), link: 'tel:' + ov.contactPhone.replace(/[^+\d]/g, '') });
     }
     if (typeof ov.permission === 'string' && ov.permission.trim() && d.availability) d.availability.permission = ov.permission.trim();
     if (ov.formAnswers && typeof ov.formAnswers === 'object' && d.formAnswers) {
@@ -2596,6 +2597,7 @@
 
     addRow(fa.tcsRoleDescription.question, fa.tcsRoleDescription.answer, fa.tcsRoleDescription._pendingReview);
     addRow(fa.subjectsStudiedRelevance.question, fa.subjectsStudiedRelevance.answer, fa.subjectsStudiedRelevance._pendingReview);
+    if (fa.integrityExample) addRow(fa.integrityExample.question, fa.integrityExample.answer);
 
     // Salary resolution (26 Sept 2026, item 3 - "Decisions are final; no
     // need to ask back"). Priority order, each step short-circuiting the
@@ -3003,6 +3005,8 @@
       },
       // Rebuild straight away instead of waiting for the typing debounce.
       recomputeNow: function () { recompute(); },
+      // The committed CV and letter models, for building the real PDFs in a sweep.
+      getModels: function () { return { cv: currentModel, letter: currentLetterModel, data: loadedData }; },
       // Everything one build produced, for the real-ad sweep (tests/sweep).
       getRunSummary: function () {
         var failed = function (r) { return r ? r.gates.filter(function (g) { return !g.passed; }).map(function (g) { return g.name + ': ' + g.findings.join(' | '); }) : null; };

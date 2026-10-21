@@ -255,6 +255,19 @@
     return clean.length ? clean : variants;
   }
 
+  // A bullet variant with preferWhenTags is used whenever the ad hits one of
+  // those words (single words allowed: they only steer this choice, they are
+  // not matching tags), e.g. the Blarney honesty line for an ad that asks for
+  // integrity. Otherwise the usual tag-overlap pick.
+  function pickBulletVariant(data, group, extraction) {
+    var clean = cleanVariants(data, group.variants);
+    var hits = (extraction && extraction.keywordHits) || {};
+    var preferred = clean.filter(function (v) {
+      return (v.preferWhenTags || []).some(function (t) { return hits[String(t).toLowerCase()]; });
+    })[0];
+    return preferred || pickBestVariant(clean, function (v) { return v.tags; }, extraction);
+  }
+
   function pickBestVariant(candidates, tagsOf, extraction) {
     var best = candidates[0];
     var bestScore = overlapScore(tagsOf(best), extraction);
@@ -324,7 +337,7 @@
       // when it names one of the group's own approved variants; anything
       // else (no pick, a stale id) falls back to the tag-overlap pick.
       var picked = bulletChoices && bulletChoices[gid] ? findById(group.variants, bulletChoices[gid]) : null;
-      var variant = picked || pickBestVariant(cleanVariants(data, group.variants), function (v) { return v.tags; }, extraction);
+      var variant = picked || pickBulletVariant(data, group, extraction);
       return { variant: variant, score: overlapScore(variant.tags, extraction), gid: gid, strength: group.basis.strength };
     });
     return stableSortDesc(scored, function (x) { return x.score; }).map(function (x) {
@@ -745,7 +758,7 @@
     Object.keys(data.bulletVariants).forEach(function (gid) {
       var group = data.bulletVariants[gid];
       if (group && group.variants && group.variants.length) {
-        bullets[gid] = pickBestVariant(cleanVariants(data, group.variants), function (v) { return v.tags; }, extraction).id;
+        bullets[gid] = pickBulletVariant(data, group, extraction).id;
       }
     });
     return {

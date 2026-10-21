@@ -138,6 +138,15 @@
       default: return { before: 0, after: 0 };
     }
   }
+  // Project lines carry web addresses (21 Oct 2026): those become live links.
+  // Only Derin's own hosts are linked, so nothing else is ever turned into one.
+  var URL_PART_RE = /((?:https?:\/\/)?(?:github\.com\/[\w.\-\/]*[\w\/]|[\w-]+\.github\.io(?:\/[\w.\-\/]*[\w\/])?))/;
+  function urlParts(text) {
+    return String(text || "").split(URL_PART_RE).filter(function (s) { return s !== ""; }).map(function (s) {
+      return URL_PART_RE.test(s) && s.match(URL_PART_RE)[0] === s ? { text: s, link: /^https?:/.test(s) ? s : "https://" + s } : { text: s, link: null };
+    });
+  }
+
   function paragraphFor(b) {
     var body = halfPointsToPt(S.sizes.body);
     var small = halfPointsToPt(S.sizes.small);
@@ -178,7 +187,9 @@
         if (b.right) p.right = run(b.right, { italic: true, size: small, color: grey });
         break;
       case "dates":
-        p.runs = [run(b.text, { italic: true, size: small, color: grey })];
+        p.runs = urlParts(b.text).map(function (part) {
+          return run(part.text, { italic: true, size: small, color: part.link ? S.hyperlinkColour : grey, link: part.link });
+        });
         break;
       case "bullet":
         p.indent = twipsToPt(S.bullet.indentLeft);

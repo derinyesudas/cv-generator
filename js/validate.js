@@ -786,7 +786,7 @@
     // letter's page-fit check reads their heights like any letter
     // paragraph's, and cannot build the letter without one.
     ((data.hardRequirements && data.hardRequirements.gapBlocks) || []).forEach(function (b) {
-      if (!b.text) return;
+      if (!b.text || b._unmeasured) return;
       var baseline = String(b.text).replace(/\{\{[A-Z]+\}\}/g, "");
       checkHeight(b.heightPx, null, "hardRequirements.gapBlocks['" + b.id + "']", { text: baseline, sizeKey: "letterBody", docType: "letter", isBullet: false });
     });
@@ -932,7 +932,8 @@
       });
       var phones = whole.match(/\+\d[\d\s\-()]{6,}\d/g) || [];
       phones.forEach(function (p) {
-        if (!allowedContacts[p]) {
+        // Derin's own number also appears as its tel: link (21 Oct 2026).
+        if (!allowedContacts[p] && !allowedContacts["tel:" + p]) {
           errors.push("PRIVACY: a phone number not in identity.contact appears in the data file: " + p + " - referee/third-party contact details must not ship.");
         }
       });
