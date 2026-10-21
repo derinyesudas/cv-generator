@@ -1111,6 +1111,7 @@
   // PDF buttons, which carry every download rule), so it can never disagree
   // with them.
   var READY_MOODS = [['🎯', 'Ready to send'], ['🚀', 'All set'], ['✅', 'Good to go'], ['✨', 'Looking sharp']];
+  function lowerFirst(s) { return s.charAt(0).toLowerCase() + s.slice(1); } // keeps "BI", "AI"
   function withArticle(words) { return (/^[aeiou]/i.test(words) ? 'an ' : 'a ') + words; }
   function plainReason(btn) {
     var t = (btn && btn.title) || 'not ready yet.';
@@ -1137,7 +1138,7 @@
     document.getElementById('ready-emoji').textContent = both ? mood[0] : '🛠️';
     document.getElementById('ready-title').textContent = both ? mood[1] : 'Almost there';
     var who = [li.role, li.company].filter(Boolean).join(' at ');
-    document.getElementById('ready-sub').textContent = (who || 'This ad') + ' · built as ' + withArticle(archetypeLabel(currentArchetypeId).toLowerCase()) + ' CV';
+    document.getElementById('ready-sub').textContent = (who || 'This ad') + ' · built as ' + withArticle(lowerFirst(archetypeLabel(currentArchetypeId))) + ' CV';
     var list = document.getElementById('ready-checks');
     list.textContent = '';
     items.forEach(function (it) {
@@ -1786,7 +1787,7 @@
     if (lastPick.guessed && !inputs.overridden) {
       var guessEl = document.getElementById('archetype-notice');
       if (guessEl) {
-        guessEl.textContent = 'This ad did not clearly match one of your role types, so it is built as ' + withArticle(archetypeLabel(candidateArchetypeId).toLowerCase()) + ' CV. Pick another under Role type if that is wrong.';
+        guessEl.textContent = 'This ad did not clearly match one of your role types, so it is built as ' + withArticle(lowerFirst(archetypeLabel(candidateArchetypeId))) + ' CV. Pick another under Role type if that is wrong.';
         guessEl.hidden = false;
       }
     }
