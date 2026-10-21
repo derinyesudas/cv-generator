@@ -1,7 +1,17 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.44",
+  "_version": "1.46",
   "_changelog": [
+    {
+      "version": "1.46",
+      "date": "21 Oct 2026",
+      "summary": "Sentence bank widened from approved facts only: 24 theme-matched why paragraphs (accuracy, data and reporting, clients, graduate training, process improvement, financial services, pensions and insurance, retail, technology, operations), one chosen per letter by the ad's words; two more quote frames; alternative wordings of the console and every TCS paragraph (letterBlocks.evidenceVariants), picked by a fixed rule on company and role; three new evidence paragraphs (forecasting, teamwork, languages); more closings and sign-offs; five alternative TCS bullets that follow the ad's words; second profiles for consulting-tech and graduate-programme; the tracker and generator projects on consulting CVs and the tracker on graduate CVs. All new entries carry _unmeasured. Consulting and graduate CVs use the compact analyst skill lines so the projects fit; the languages paragraph needs the ad to name Hindi, Malayalam or multilingual. Quote frames that say Derin has done the work (echo a, d, f; claimsExperience) are hand-pick only: a sweep showed tag matches too loose for that claim ('promote financial products', 'FX experience is essential'); only duty lines are quoted automatically; long or 'You will...' lines are no longer quoted automatically; 'the Graduate Programme role' reads 'the Graduate Programme'. Insurance-pensions and finance-ops CVs no longer always carry D-Mart: Circle K (current) appears when the ad asks for customer-facing work."
+    },
+    {
+      "version": "1.45",
+      "date": "21 Oct 2026",
+      "summary": "Role type now weighs the job title (archetypes[].titleKeywords), which a sweep of 576 real ads from the Ireland Job Tracker showed is the strongest signal (payroll, banking and KYC ads were landing on the retail CV, audit graduate programmes on the business-analyst CV). An ad that matches nothing now builds with fallbackArchetype and says so, instead of refusing."
+    },
     {
       "version": "1.44",
       "date": "20 Oct 2026",
@@ -741,6 +751,18 @@
             "hash": "3c3157f3"
           },
           "linesSaved": 1
+        },
+        {
+          "id": "bul-tcs-lng-scale-b",
+          "tags": [
+            "data migration",
+            "large datasets",
+            "excel skills",
+            "data validation"
+          ],
+          "text": "Verified data for 140 contract types ahead of a system migration for a US life insurer, working through Excel files of 30 to 50 columns and several thousand records on a three-hour turnaround per contract.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
         }
       ],
       "basis": {
@@ -771,6 +793,19 @@
             "hash": "1294acbf"
           },
           "linesSaved": 1
+        },
+        {
+          "id": "bul-tcs-accuracy-b",
+          "tags": [
+            "quality control",
+            "internal controls",
+            "data quality",
+            "attention to detail",
+            "data accuracy"
+          ],
+          "text": "Held 99% accuracy across every contract processed, the highest of the ten, with every contract checked by a colleague and the results reviewed with the client weekly.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
         }
       ],
       "basis": {
@@ -801,6 +836,18 @@
             "hash": "7c8c35b"
           },
           "linesSaved": 0
+        },
+        {
+          "id": "bul-tcs-sop-b",
+          "tags": [
+            "process improvement",
+            "continuous improvement",
+            "change management",
+            "process documentation"
+          ],
+          "text": "Kept the team's operating procedure current through near-weekly client changes, so all ten processors worked from one standard, and briefed the team on each change after client calls.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
         }
       ],
       "basis": {
@@ -831,6 +878,18 @@
             "hash": "dc59bc20"
           },
           "linesSaved": 0
+        },
+        {
+          "id": "bul-tcs-claims-b",
+          "tags": [
+            "SLA",
+            "performance targets",
+            "high volume",
+            "claims processing"
+          ],
+          "text": "Gained a full processing licence within a month and carried the same SLAs and targets as far more experienced colleagues, processing claims for a US pensions provider on OMNI and Legacy.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
         }
       ],
       "_why": "strength: support (Derin, 19 Sept 2026) - 'before that' scene-setting for the second TCS client programme, not itself the match. No short variant supplied for this one.",
@@ -862,6 +921,18 @@
             "hash": "7d9228b4"
           },
           "linesSaved": 0
+        },
+        {
+          "id": "bul-tcs-spoc-b",
+          "tags": [
+            "stakeholder management",
+            "client relationship",
+            "escalation handling",
+            "query resolution"
+          ],
+          "text": "Handled client queries and complaints as the single point of contact with internal teams, resolving mismatched requirements so delivery stayed on schedule.",
+          "verifiedBy": "stated",
+          "_unmeasured": true
         }
       ],
       "basis": {
@@ -1543,7 +1614,7 @@
         },
         {
           "type": "project",
-          "heading": "ANALYTICS PROJECT"
+          "heading": "PROJECTS"
         },
         {
           "type": "experience",
@@ -1559,15 +1630,15 @@
         }
       ],
       "skillCategories": [
-        "aiTooling",
-        "technical",
-        "analytical",
-        "business",
-        "languages"
+        "analystBI",
+        "analystProg",
+        "analystMethods",
+        "analystWays"
       ],
       "include": [
         "edu-msc",
         "edu-bms",
+        "proj-jobtracker",
         "proj-smmd",
         "role-tcs",
         "role-blarney",
@@ -1575,7 +1646,22 @@
         "cert-aicptr",
         "vol"
       ],
-      "_why": "Education leads because they recruit on qualification and potential. Blarney earns its place as evidence of drive and fills 2026. Volunteering counts here and nowhere else."
+      "_why": "Education leads because they recruit on qualification and potential. Blarney earns its place as evidence of drive and fills 2026. Volunteering counts here and nowhere else.",
+      "titleKeywords": {
+        "graduate": 25,
+        "graduates": 25,
+        "programme": 12,
+        "program": 12,
+        "intern": 16,
+        "internship": 16,
+        "trainee": 14,
+        "early careers": 20,
+        "placement": 16,
+        "apprentice": 10,
+        "apprenticeship": 10,
+        "scholarship": 10,
+        "summer": 8
+      }
     },
     {
       "id": "consulting-tech",
@@ -1605,7 +1691,7 @@
         },
         {
           "type": "project",
-          "heading": "ANALYTICS PROJECT"
+          "heading": "PROJECTS"
         },
         {
           "type": "experience",
@@ -1621,15 +1707,16 @@
         }
       ],
       "skillCategories": [
-        "aiTooling",
-        "technical",
-        "analytical",
-        "business",
-        "languages"
+        "analystBI",
+        "analystProg",
+        "analystMethods",
+        "analystWays"
       ],
       "include": [
         "edu-msc",
         "edu-bms",
+        "proj-cvgen",
+        "proj-jobtracker",
         "proj-smmd",
         "role-tcs",
         "role-blarney",
@@ -1638,7 +1725,15 @@
         "vol"
       ],
       "_why": "AI tooling leads the skills block. Anthropic certifications go above AICPTR. Blarney and volunteering both stay, each on its own stated basis for THIS archetype, resolved 14 Sept 2026 (was flagged _pendingReview below - see git history for the original flag text): Blarney earns its place on three grounds - verifiable Irish work with a written reference; full shifts held alongside full-time postgraduate study with no absences across seven months, evidenced stamina and reliability; and it closes the visible employment gap after TCS ended in August 2025. It is NOT included as relevant experience and must never be framed that way. Volunteering earns its place because consulting/technology graduate programmes score community involvement and work ethic directly in their assessment frameworks - the same reason it appears in graduate-programme. Neither ground applies to a senior or specialist analytical role, which is why neither item belongs there - see trimPolicy.basisRule for the general rule this resolves.",
-      "_pendingReviewResolved": "14 Sept 2026 - this archetype's own basis for role-blarney/vol is now stated directly in _why above, closing the gap REVIEW-RESPONSE-3.md section 2 asked for. The archetype-notice banner this field used to drive no longer fires for consulting-tech."
+      "_pendingReviewResolved": "14 Sept 2026 - this archetype's own basis for role-blarney/vol is now stated directly in _why above, closing the gap REVIEW-RESPONSE-3.md section 2 asked for. The archetype-notice banner this field used to drive no longer fires for consulting-tech.",
+      "titleKeywords": {
+        "consultant": 24,
+        "consulting": 24,
+        "advisory": 22,
+        "technology": 12,
+        "transformation": 16,
+        "digital": 10
+      }
     },
     {
       "id": "business-analyst",
@@ -1714,7 +1809,22 @@
           "_why": "Part-time work only when the ad asks for customer-facing or shift work (Derin, 20 Oct 2026)."
         }
       ],
-      "extraContactKey": "analystLinks"
+      "extraContactKey": "analystLinks",
+      "titleKeywords": {
+        "business analyst": 40,
+        "reporting": 24,
+        "mi": 22,
+        "insight": 22,
+        "insights": 22,
+        "pmo": 22,
+        "wfm": 20,
+        "planning analyst": 22,
+        "commercial analyst": 26,
+        "business systems": 18,
+        "operations analyst": 18,
+        "performance analyst": 24,
+        "process analyst": 22
+      }
     },
     {
       "id": "analyst-bi",
@@ -1787,7 +1897,17 @@
           "_why": "Part-time work only when the ad asks for customer-facing or shift work (Derin, 20 Oct 2026)."
         }
       ],
-      "extraContactKey": "analystLinks"
+      "extraContactKey": "analystLinks",
+      "titleKeywords": {
+        "data analyst": 40,
+        "data": 16,
+        "analytics": 26,
+        "bi": 22,
+        "quantitative": 20,
+        "data quality": 26,
+        "insight analyst": 24,
+        "business intelligence": 30
+      }
     },
     {
       "id": "finance-ops",
@@ -1848,10 +1968,52 @@
         "edu-bms",
         "edu-msc",
         "role-tcs",
-        "role-dmart",
         "cert-aicptr"
       ],
-      "_why": "Finance degree leads. TallyPrime and accounting certification matter more than Power BI here. Never claim reconciliations, month-end or accruals."
+      "_why": "Finance degree leads. TallyPrime and accounting certification matter more than Power BI here. Never claim reconciliations, month-end or accruals.",
+      "titleKeywords": {
+        "finance": 24,
+        "financial": 16,
+        "accounting": 26,
+        "accounts": 26,
+        "accountant": 24,
+        "fund": 22,
+        "funds": 22,
+        "payroll": 26,
+        "payment": 22,
+        "payments": 22,
+        "transfer agency": 26,
+        "custody": 22,
+        "middle office": 24,
+        "banking": 18,
+        "bank": 10,
+        "kyc": 22,
+        "aml": 22,
+        "credit": 16,
+        "treasury": 20,
+        "audit": 16,
+        "tax": 16,
+        "investment": 12,
+        "asset servicing": 22,
+        "settlements": 22,
+        "billing": 18,
+        "procurement": 14
+      },
+      "conditionalInclude": [
+        {
+          "ids": [
+            "role-circlek"
+          ],
+          "whenTags": [
+            "customer service",
+            "client service",
+            "complaint handling",
+            "query resolution",
+            "retail experience"
+          ],
+          "_why": "Part-time work only when the ad asks for customer-facing work (Derin, 20 Oct 2026); Circle K is the current, more recent example."
+        }
+      ]
     },
     {
       "id": "insurance-pensions",
@@ -1896,10 +2058,37 @@
       ],
       "include": [
         "role-tcs",
-        "role-dmart",
         "edu-msc",
         "edu-bms",
         "cert-aicptr"
+      ],
+      "titleKeywords": {
+        "claims": 30,
+        "claim": 26,
+        "pension": 30,
+        "pensions": 30,
+        "insurance": 28,
+        "underwriter": 28,
+        "underwriting": 28,
+        "fnol": 26,
+        "retirement": 26,
+        "actuarial": 16,
+        "policy": 14
+      },
+      "conditionalInclude": [
+        {
+          "ids": [
+            "role-circlek"
+          ],
+          "whenTags": [
+            "customer service",
+            "client service",
+            "complaint handling",
+            "query resolution",
+            "retail experience"
+          ],
+          "_why": "Part-time work only when the ad asks for customer-facing work (Derin, 20 Oct 2026); Circle K is the current, more recent example."
+        }
       ]
     },
     {
@@ -1952,7 +2141,25 @@
         "role-blarney",
         "cert-aicptr"
       ],
-      "_why": "Back-office/contact-centre operations, not customer-facing sales - the skills block leads with transversal (reliability, process discipline) over technical, and the profile should read as steady and process-minded, not customer-facing. role-blarney (Kitchen Assistant, Blarney Castle Hotel) earns its place here, resolved 17 Sept 2026 (was flagged _pendingReview below - see git history for the original flag text), on Derin's own stated basis, verbatim in substance: Kitchen Assistant is BACK-OF-HOUSE, not customer-facing, and must never be framed as customer service or front-of-house experience. Its basis for THIS archetype is reliability/service-environment evidence, not relevant duties - high-volume service delivered to a fixed standard under time pressure, in a real Irish workplace, with a written reference, held alongside full-time postgraduate study with no absences across the shifts worked. That is what a back-office/operations reader is actually screening for (can this person hold a standard under pressure, show up reliably), not food service duties themselves, which are never claimed as transferable. role-dmart (Customer Service Assistant, D-Mart, Mumbai) is now RESOLVED, 17 Sept 2026, on Derin's own stated basis. Two provenance categories were separated first, because this is the point that matters more than the eventual bullets: what Derin stated himself (rotated across all the role's areas - shop-floor customer assistance, merchandising, billing/cashier, inventory/backroom, store standards and teamwork; ~10 months, Mar-Dec 2021; taken on to fund his own college tuition) is usable; everything scraped from job-board postings for that job title (specific duty bullets, a \"typical shift\" narrative, a skills list, anything about online order picking, cycle counts or pilferage procedures) is NOT usable, because a generic job description for a job title is not evidence of what this person did - see _sourceOfTruth. role-dmart's own basis for THIS archetype, unlike role-blarney's: direct, relevant duties - floor assistance, first-line complaints, POS and returns in a high-volume store is the closest thing on file to the job being applied for, not reliability-adjacent evidence the way Blarney is. Updated relative strengths, so role-blarney drops from customer-ops before role-dmart or role-tcs by connection to the reasoning above rather than by coincidence of priority numbers: role-dmart core (bul-dmart-floor, priority 2 - the direct-relevance bullet, never trimmed alone), role-tcs core (priority 1 throughout - see 19 Sept addendum below), role-blarney filler (not customer-facing; kept for Irish work reference, reliability alongside full-time study, and no employment gap - stays all-priority-5, the whole entry droppable first under trimPolicy.basisRule, correctly, now that it's the only one of the three with no direct-relevance claim). ADDENDUM, 19 Sept 2026 (Derin's six-decision content-gap spec): the real TCS content landed, replacing the placeholder b-spoc/b-excel-filter/etc. bullets this paragraph originally referred to - 'single point of contact' was never approved wording and is gone; role-tcs's five real bullets (bul-tcs-lng-scale/accuracy/sop/excel-filter, all core/priority 1; bul-tcs-claims, support/priority 4) now carry the actual TCS/the US life insurer/the US pensions client record. Derin's own basis text for role-dmart under THIS archetype, verbatim: 'Direct customer service: floor assistance, first-line complaints, POS and returns in a high-volume store. The closest thing to the job being applied for.' - unchanged from the resolution above, just restated in his own new words. Elsewhere (finance-ops, insurance-pensions, retail-parttime - any archetype including role-dmart that isn't this one), his own basis text is: 'ten months of paid people-facing work held alongside first-year study' - strength support, not core. bul-dmart-till is DELETED (Derin's own instruction, 19 Sept 2026: his content spec supplied only bul-dmart-floor, and asked, given the gap, for the till bullet to go rather than have content invented for it) - role-dmart now carries a single bullet. Note for whoever builds the basis-object schema (work-order item 4): the current schema has one priority number per bulletVariants GROUP, not per archetype-inclusion, so 'core here, support elsewhere' for the same bullet (bul-dmart-floor) cannot be literally encoded yet - it stays priority 2 globally (matching its core framing in customer-ops, which is the stronger claim) until basis objects can be scoped per archetype, if that turns out to be needed."
+      "_why": "Back-office/contact-centre operations, not customer-facing sales - the skills block leads with transversal (reliability, process discipline) over technical, and the profile should read as steady and process-minded, not customer-facing. role-blarney (Kitchen Assistant, Blarney Castle Hotel) earns its place here, resolved 17 Sept 2026 (was flagged _pendingReview below - see git history for the original flag text), on Derin's own stated basis, verbatim in substance: Kitchen Assistant is BACK-OF-HOUSE, not customer-facing, and must never be framed as customer service or front-of-house experience. Its basis for THIS archetype is reliability/service-environment evidence, not relevant duties - high-volume service delivered to a fixed standard under time pressure, in a real Irish workplace, with a written reference, held alongside full-time postgraduate study with no absences across the shifts worked. That is what a back-office/operations reader is actually screening for (can this person hold a standard under pressure, show up reliably), not food service duties themselves, which are never claimed as transferable. role-dmart (Customer Service Assistant, D-Mart, Mumbai) is now RESOLVED, 17 Sept 2026, on Derin's own stated basis. Two provenance categories were separated first, because this is the point that matters more than the eventual bullets: what Derin stated himself (rotated across all the role's areas - shop-floor customer assistance, merchandising, billing/cashier, inventory/backroom, store standards and teamwork; ~10 months, Mar-Dec 2021; taken on to fund his own college tuition) is usable; everything scraped from job-board postings for that job title (specific duty bullets, a \"typical shift\" narrative, a skills list, anything about online order picking, cycle counts or pilferage procedures) is NOT usable, because a generic job description for a job title is not evidence of what this person did - see _sourceOfTruth. role-dmart's own basis for THIS archetype, unlike role-blarney's: direct, relevant duties - floor assistance, first-line complaints, POS and returns in a high-volume store is the closest thing on file to the job being applied for, not reliability-adjacent evidence the way Blarney is. Updated relative strengths, so role-blarney drops from customer-ops before role-dmart or role-tcs by connection to the reasoning above rather than by coincidence of priority numbers: role-dmart core (bul-dmart-floor, priority 2 - the direct-relevance bullet, never trimmed alone), role-tcs core (priority 1 throughout - see 19 Sept addendum below), role-blarney filler (not customer-facing; kept for Irish work reference, reliability alongside full-time study, and no employment gap - stays all-priority-5, the whole entry droppable first under trimPolicy.basisRule, correctly, now that it's the only one of the three with no direct-relevance claim). ADDENDUM, 19 Sept 2026 (Derin's six-decision content-gap spec): the real TCS content landed, replacing the placeholder b-spoc/b-excel-filter/etc. bullets this paragraph originally referred to - 'single point of contact' was never approved wording and is gone; role-tcs's five real bullets (bul-tcs-lng-scale/accuracy/sop/excel-filter, all core/priority 1; bul-tcs-claims, support/priority 4) now carry the actual TCS/the US life insurer/the US pensions client record. Derin's own basis text for role-dmart under THIS archetype, verbatim: 'Direct customer service: floor assistance, first-line complaints, POS and returns in a high-volume store. The closest thing to the job being applied for.' - unchanged from the resolution above, just restated in his own new words. Elsewhere (finance-ops, insurance-pensions, retail-parttime - any archetype including role-dmart that isn't this one), his own basis text is: 'ten months of paid people-facing work held alongside first-year study' - strength support, not core. bul-dmart-till is DELETED (Derin's own instruction, 19 Sept 2026: his content spec supplied only bul-dmart-floor, and asked, given the gap, for the till bullet to go rather than have content invented for it) - role-dmart now carries a single bullet. Note for whoever builds the basis-object schema (work-order item 4): the current schema has one priority number per bulletVariants GROUP, not per archetype-inclusion, so 'core here, support elsewhere' for the same bullet (bul-dmart-floor) cannot be literally encoded yet - it stays priority 2 globally (matching its core framing in customer-ops, which is the stronger claim) until basis objects can be scoped per archetype, if that turns out to be needed.",
+      "titleKeywords": {
+        "customer service": 32,
+        "customer advisor": 30,
+        "customer support": 30,
+        "customer care": 30,
+        "client service": 26,
+        "client services": 26,
+        "contact centre": 30,
+        "receptionist": 24,
+        "administrator": 12,
+        "admin": 10,
+        "administrative": 10,
+        "coordinator": 10,
+        "operations": 10,
+        "support": 8,
+        "helpdesk": 20,
+        "service desk": 20
+      }
     },
     {
       "id": "retail-parttime",
@@ -2004,7 +2211,20 @@
         "edu-bms"
       ],
       "_why": "THE RETAIL RULE, and it is counterintuitive. Leading with an MSc reads as flight risk. The manager wants to know whether he will still be here in three months and can work a Sunday. Say less. Keep the profile to two sentences and put D-Mart and Blarney first.",
-      "_resolution20Sept2026": "Derin's own correction, 20 Sept 2026: the 19 Sept working-default mapping to let-ev-tcs-improve was wrong, not just unconfirmed - -improve is 'the most corporate of them' (writing/owning an SOP, building Excel tooling) and 'deepens the exact problem prof-retail was rewritten to solve' (two degrees plus a corporate showcase reads as flight risk to a shop-floor screener). retail-parttime now maps to its own dedicated let-ev-tcs-shift variant instead - deliberately plain, no showcase, no 99% figure, names the customer-facing gap directly rather than papering over it."
+      "_resolution20Sept2026": "Derin's own correction, 20 Sept 2026: the 19 Sept working-default mapping to let-ev-tcs-improve was wrong, not just unconfirmed - -improve is 'the most corporate of them' (writing/owning an SOP, building Excel tooling) and 'deepens the exact problem prof-retail was rewritten to solve' (two degrees plus a corporate showcase reads as flight risk to a shop-floor screener). retail-parttime now maps to its own dedicated let-ev-tcs-shift variant instead - deliberately plain, no showcase, no 99% figure, names the customer-facing gap directly rather than papering over it.",
+      "titleKeywords": {
+        "retail": 30,
+        "store": 24,
+        "shop": 22,
+        "sales assistant": 30,
+        "customer assistant": 30,
+        "cashier": 26,
+        "barista": 26,
+        "hospitality": 24,
+        "part time": 16,
+        "part-time": 16,
+        "warehouse": 14
+      }
     }
   ],
   "profileVariants": [
@@ -2361,6 +2581,44 @@
         "why": "Second approved profile for this role type, adapted from earlier CVs in the Ireland cv folder using only approved facts; opens with the degree sentence like every profile."
       },
       "_unmeasured": true
+    },
+    {
+      "id": "prof-consulting-b",
+      "archetypes": [
+        "consulting-tech"
+      ],
+      "tags": [
+        "ai-assisted building",
+        "task automation",
+        "management consulting",
+        "data sourcing"
+      ],
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate real work, and I own the parts that matter: the problem, the data and the testing. My projects include a tracker that watches 335 Irish employers' career sites and a Power BI alert console for an MSc market surveillance project, and before that I held 99% accuracy on a ten-person pilot team at Tata Consultancy Services, the highest of the ten.",
+      "basis": {
+        "strength": "required",
+        "why": "Additional approved profile (21 Oct 2026) built only from facts already in this file."
+      },
+      "_unmeasured": true,
+      "short": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate real work, and I own the problem, the data and the testing. At Tata Consultancy Services I held 99% accuracy on a ten-person pilot team, the highest of the ten."
+    },
+    {
+      "id": "prof-grad-b",
+      "archetypes": [
+        "graduate-programme"
+      ],
+      "tags": [
+        "graduate programme",
+        "structured training",
+        "task automation",
+        "data sourcing"
+      ],
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services on permanent night shifts taught me to work to fixed targets and procedures from my first month, and on a ten-person pilot team I held 99% accuracy, the highest in the team. Outside the degree I build data tools with AI, including a tracker that watches 335 Irish employers' career sites.",
+      "basis": {
+        "strength": "required",
+        "why": "Additional approved profile (21 Oct 2026) built only from facts already in this file."
+      },
+      "_unmeasured": true,
+      "short": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services working to fixed targets from my first month, with 99% accuracy on a ten-person pilot team, the highest in the team."
     }
   ],
   "letterBlocks": {
@@ -2536,7 +2794,19 @@
           "letter": 74.13,
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "6384e99e"
-        }
+        },
+        "tags": [
+          "data analysis",
+          "management reporting",
+          "interactive dashboard",
+          "power bi",
+          "data visualisation",
+          "business intelligence",
+          "trend analysis",
+          "decision support",
+          "business analytics",
+          "financial services"
+        ]
       },
       {
         "id": "let-why-echo-a",
@@ -2549,7 +2819,8 @@
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "812c23e1"
         },
-        "isEchoFrame": true
+        "isEchoFrame": true,
+        "claimsExperience": true
       },
       {
         "id": "let-why-echo-b",
@@ -2596,8 +2867,9 @@
           "*"
         ],
         "isEchoFrame": true,
-        "text": "Your description puts it as \"{{ECHO}}\". That is the kind of work I have done before and want to do more of.",
-        "_unmeasured": true
+        "text": "Your description puts it as \"{{ECHO}}\", and that is the kind of work I have done before and want to do more of.",
+        "_unmeasured": true,
+        "claimsExperience": true
       },
       {
         "id": "let-why-echo-e",
@@ -2606,6 +2878,446 @@
         ],
         "isEchoFrame": true,
         "text": "One line in your description stayed with me: \"{{ECHO}}.\" It describes the work I want to be doing.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-accuracy-a",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "customer-ops",
+          "business-analyst",
+          "graduate-programme"
+        ],
+        "tags": [
+          "attention to detail",
+          "high accuracy",
+          "data quality",
+          "quality standards",
+          "internal controls",
+          "quality assurance",
+          "data accuracy",
+          "data integrity"
+        ],
+        "text": "Most of what I have done well so far comes down to getting the detail right when nobody would notice if I did not. That is the part of this role that appeals to me: work where accuracy is the job, not a nice extra, and where a careful check today saves someone a problem next month.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-accuracy-b",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "customer-ops",
+          "business-analyst",
+          "graduate-programme"
+        ],
+        "tags": [
+          "attention to detail",
+          "high accuracy",
+          "data quality",
+          "quality standards",
+          "internal controls",
+          "quality assurance",
+          "data accuracy",
+          "data integrity"
+        ],
+        "text": "I like work where the standard is set by the checking. At Tata Consultancy Services every contract I processed was reviewed by a colleague and then with the client, and I did my best work when the bar was that visible. This role reads like the same kind of discipline.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-accuracy-c",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "customer-ops",
+          "business-analyst",
+          "graduate-programme"
+        ],
+        "tags": [
+          "attention to detail",
+          "high accuracy",
+          "data quality",
+          "quality standards",
+          "internal controls",
+          "quality assurance",
+          "data accuracy",
+          "data integrity"
+        ],
+        "text": "What I want next is a role where being careful is the point. I spent a year working to fixed procedures and checked targets, and I would rather be trusted with work that has to be right than with work that only has to be fast.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-data-b",
+        "archetypes": [
+          "analyst-bi",
+          "business-analyst",
+          "finance-ops",
+          "consulting-tech",
+          "graduate-programme"
+        ],
+        "tags": [
+          "data analysis",
+          "management reporting",
+          "interactive dashboard",
+          "power bi",
+          "data visualisation",
+          "business intelligence",
+          "trend analysis",
+          "decision support",
+          "business analytics"
+        ],
+        "text": "I want to work on the reporting side of a business because I have seen what it is worth when it is done well. On my MSc project the piece that mattered most was the view a reviewer actually opened, and that is the work I want to keep doing: numbers that someone uses to make a decision.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-data-c",
+        "archetypes": [
+          "analyst-bi",
+          "business-analyst",
+          "finance-ops",
+          "consulting-tech",
+          "graduate-programme"
+        ],
+        "tags": [
+          "data analysis",
+          "management reporting",
+          "interactive dashboard",
+          "power bi",
+          "data visualisation",
+          "business intelligence",
+          "trend analysis",
+          "decision support",
+          "business analytics"
+        ],
+        "text": "Data work is where my two degrees meet. The finance degree taught me what the numbers mean, and the MSc taught me how to get them into a shape people can act on, in Excel, Power BI, Python or SQL. A role built around reporting and analysis is the obvious place to use both.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-client-a",
+        "archetypes": [
+          "customer-ops",
+          "insurance-pensions",
+          "finance-ops",
+          "retail-parttime"
+        ],
+        "tags": [
+          "customer service",
+          "client liaison",
+          "query resolution",
+          "stakeholder management",
+          "complaint handling",
+          "client service",
+          "client relationship"
+        ],
+        "text": "I enjoy the part of a job where a person on the other end needs an answer. At Tata Consultancy Services I was the single point of contact between the client and our internal teams, and I learned that most problems get smaller the moment someone takes ownership of them. I would like to bring that to a team that looks after customers every day.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-client-b",
+        "archetypes": [
+          "customer-ops",
+          "insurance-pensions",
+          "finance-ops",
+          "retail-parttime"
+        ],
+        "tags": [
+          "customer service",
+          "client liaison",
+          "query resolution",
+          "stakeholder management",
+          "complaint handling",
+          "client service",
+          "client relationship"
+        ],
+        "text": "Good service, in my experience, is mostly about following through. Whether it was a client query at Tata Consultancy Services or a customer at the till, the work was the same: listen properly, find the real problem and make sure it is closed off. That is what I would want to do well in this role.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-grad-a",
+        "archetypes": [
+          "graduate-programme",
+          "consulting-tech",
+          "finance-ops",
+          "insurance-pensions"
+        ],
+        "tags": [
+          "graduate programme",
+          "structured training",
+          "mentoring",
+          "professional development",
+          "rotational programme",
+          "early careers",
+          "professional qualification",
+          "training programme"
+        ],
+        "text": "A structured programme is exactly what I am looking for at this stage. I have a strong academic base and a year of real operations work behind me, and what I want now is the training, the variety and the people around me that turn that into a career.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-grad-b",
+        "archetypes": [
+          "graduate-programme",
+          "consulting-tech",
+          "finance-ops",
+          "insurance-pensions"
+        ],
+        "tags": [
+          "graduate programme",
+          "structured training",
+          "mentoring",
+          "professional development",
+          "rotational programme",
+          "early careers",
+          "professional qualification",
+          "training programme"
+        ],
+        "text": "I am at the point where the most valuable thing an employer can give me is a proper start. I learn quickly when the standard is clear, which I showed at Tata Consultancy Services by carrying full targets within a month, and a graduate programme gives me that structure from day one.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-grad-c",
+        "archetypes": [
+          "graduate-programme",
+          "consulting-tech",
+          "finance-ops",
+          "insurance-pensions"
+        ],
+        "tags": [
+          "graduate programme",
+          "structured training",
+          "mentoring",
+          "professional development",
+          "rotational programme",
+          "early careers",
+          "professional qualification",
+          "training programme"
+        ],
+        "text": "I came to Ireland for my MSc and I want to build my career here. A programme that combines training with real responsibility is the best way I can see to do that, and I would bring the same approach I took to my first job: learn the process properly, then help make it better.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-process-a",
+        "archetypes": [
+          "business-analyst",
+          "analyst-bi",
+          "consulting-tech",
+          "customer-ops"
+        ],
+        "tags": [
+          "process improvement",
+          "task automation",
+          "efficiency gains",
+          "continuous improvement",
+          "process documentation",
+          "process automation"
+        ],
+        "text": "I am at my best when a process can be made simpler. At Tata Consultancy Services I took over the team's operating procedure and kept it current every week, and outside work I build small tools that take repetitive work off people's plates. A role with room to improve how things are done is one I would get a lot out of.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-process-b",
+        "archetypes": [
+          "business-analyst",
+          "analyst-bi",
+          "consulting-tech",
+          "customer-ops"
+        ],
+        "tags": [
+          "process improvement",
+          "task automation",
+          "efficiency gains",
+          "continuous improvement",
+          "process documentation",
+          "process automation"
+        ],
+        "text": "I like finding the step in a process that everyone quietly works around. Writing and owning my team's procedure taught me that a clear standard saves more time than working faster, and I would bring that habit to this role.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-fs-a",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "graduate-programme",
+          "business-analyst"
+        ],
+        "tags": [
+          "financial services",
+          "fund administration",
+          "banking",
+          "investment",
+          "asset management",
+          "transfer agency",
+          "financial data"
+        ],
+        "text": "I want to build my career in financial services operations. My finance degree gave me the theory, and a year in the insurance vertical at Tata Consultancy Services showed me how much the industry depends on operations people who get the detail right. This role is a natural next step from there.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-fs-b",
+        "archetypes": [
+          "finance-ops",
+          "insurance-pensions",
+          "graduate-programme",
+          "business-analyst"
+        ],
+        "tags": [
+          "financial services",
+          "fund administration",
+          "banking",
+          "investment",
+          "asset management",
+          "transfer agency",
+          "financial data"
+        ],
+        "text": "Financial services is where I have always wanted to work. I studied finance first, added an MSc in Business Analytics, and spent my year at Tata Consultancy Services on financial services clients, so this is a sector I already understand from the inside.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-pensions-a",
+        "archetypes": [
+          "insurance-pensions"
+        ],
+        "tags": [
+          "insurance operations",
+          "claims processing",
+          "policy administration",
+          "pension administration",
+          "life and pensions",
+          "claims assessor",
+          "insurance systems"
+        ],
+        "text": "Pensions and insurance administration is the work I already know. I processed claims for a US pensions provider and verified contract data for a US life insurer, and I would like to keep building on that here rather than start again somewhere unfamiliar.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-pensions-b",
+        "archetypes": [
+          "insurance-pensions"
+        ],
+        "tags": [
+          "insurance operations",
+          "claims processing",
+          "policy administration",
+          "pension administration",
+          "life and pensions",
+          "claims assessor",
+          "insurance systems"
+        ],
+        "text": "I am applying because this is the area where I have real experience. Insurance and pensions work rewards care and patience over speed, and that suits the way I work: I would rather get a case right once than fix it twice.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-retail-a",
+        "archetypes": [
+          "retail-parttime",
+          "customer-ops"
+        ],
+        "tags": [
+          "retail experience",
+          "hospitality experience",
+          "shift work",
+          "proven reliability",
+          "customer service",
+          "supermarket retail",
+          "convenience store"
+        ],
+        "text": "I am looking for work I can rely on and do well while I start my career in Dublin. I have worked tills, shop floors and a busy kitchen, and I know the job is mostly about being there on time, being friendly and keeping things moving when it gets busy.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-retail-b",
+        "archetypes": [
+          "retail-parttime",
+          "customer-ops"
+        ],
+        "tags": [
+          "retail experience",
+          "hospitality experience",
+          "shift work",
+          "proven reliability",
+          "customer service",
+          "supermarket retail",
+          "convenience store"
+        ],
+        "text": "Front-line work suits me. I like being busy, I like dealing with people, and across a supermarket, a hotel kitchen and a petrol station shop I have learned that reliability is what a manager values most.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-tech-a",
+        "archetypes": [
+          "consulting-tech",
+          "analyst-bi",
+          "business-analyst"
+        ],
+        "tags": [
+          "ai",
+          "ai tooling",
+          "digital",
+          "transformation",
+          "technology",
+          "consulting",
+          "management consulting"
+        ],
+        "text": "Technology is changing how analysis gets done, and I want to be the person on a team who knows how to use it well. I hold four Anthropic Claude Academy certifications and use AI tools to build and automate real work, and I have learned that the value is in checking what they produce, not just in using them.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-tech-b",
+        "archetypes": [
+          "consulting-tech",
+          "analyst-bi",
+          "business-analyst"
+        ],
+        "tags": [
+          "ai",
+          "ai tooling",
+          "digital",
+          "transformation",
+          "technology",
+          "consulting",
+          "management consulting"
+        ],
+        "text": "I am drawn to this kind of work because it puts analysis in front of people who have to act on it. My MSc project and my own builds have been about the same thing: take a messy problem, find the data, and turn it into something a decision-maker can use.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-ops-a",
+        "archetypes": [
+          "customer-ops",
+          "finance-ops",
+          "retail-parttime",
+          "insurance-pensions"
+        ],
+        "tags": [
+          "fast paced",
+          "team collaboration",
+          "competing deadlines",
+          "high volume",
+          "targets",
+          "SLA",
+          "shift work"
+        ],
+        "text": "I work well when the volume is high and the deadlines are real. My year at Tata Consultancy Services ran on permanent night shifts with fixed turnaround times, and I learned to stay accurate at pace and to keep the team informed when something changed.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-why-echo-f",
+        "archetypes": [
+          "*"
+        ],
+        "isEchoFrame": true,
+        "text": "The ad asks for \"{{ECHO}}\", and that is work I have done before.",
+        "_unmeasured": true,
+        "claimsExperience": true
+      },
+      {
+        "id": "let-why-echo-g",
+        "archetypes": [
+          "*"
+        ],
+        "isEchoFrame": true,
+        "text": "One line in the ad stood out: \"{{ECHO}}.\" That is the part of the job I would enjoy most.",
         "_unmeasured": true
       }
     ],
@@ -2813,7 +3525,8 @@
           "full attendance",
           "shift work"
         ],
-        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed."
+        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed.",
+        "partTime": true
       },
       {
         "id": "let-ev-x-circlek",
@@ -2836,7 +3549,8 @@
           "shift work",
           "cash handling"
         ],
-        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed."
+        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed.",
+        "partTime": true
       },
       {
         "id": "let-ev-x-customer",
@@ -2859,7 +3573,8 @@
           "store policy",
           "supermarket retail"
         ],
-        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed."
+        "_requiresTagsWhy": "Part-time work is mentioned only when the ad asks for it (Derin, 20 Oct 2026); picking it by hand from the dropdown is still allowed.",
+        "partTime": true
       },
       {
         "id": "let-ev-x-claims",
@@ -2874,6 +3589,54 @@
           "insurance operations"
         ],
         "text": "At Tata Consultancy Services I first processed claims for a US pensions provider on the OMNI and Legacy systems. I was fully licensed and carrying the same SLAs and targets as colleagues with far more experience within one month of joining, working permanent night shifts.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-forecast",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "business forecasting",
+          "predictive analytics",
+          "prescriptive analytics",
+          "statistical analysis",
+          "time series",
+          "business planning"
+        ],
+        "text": "My MSc covered business forecasting and predictive and prescriptive analytics, and in R I have worked with regression and ARIMA forecasting, including stationarity and cointegration testing. For a role that plans ahead from data, that is the toolkit I would bring from the start.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-teamwork",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "team collaboration",
+          "cross functional",
+          "stakeholder communication",
+          "teamwork"
+        ],
+        "text": "Most of my work so far has been done in small teams under pressure: a ten-person pilot team at Tata Consultancy Services and a six-member MSc project team. In both I took on the job of keeping everyone working from the same information, whether that was the operating procedure or the project data.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-x-languages",
+        "archetypes": [
+          "*"
+        ],
+        "tags": [
+          "hindi",
+          "malayalam",
+          "multilingual"
+        ],
+        "text": "I speak English at CEFR C1, and also Hindi and Malayalam.",
+        "requiresTags": [
+          "hindi",
+          "malayalam",
+          "multilingual"
+        ],
         "_unmeasured": true
       }
     ],
@@ -3085,6 +3848,21 @@
         "id": "let-close-std-v3",
         "text": "{{COMPANY}} is where I would like to apply all of this, and I am glad to talk whenever suits. I am in Dublin, I need no sponsorship, and I am available full-time from 1 November.",
         "_unmeasured": true
+      },
+      {
+        "id": "let-close-std-v4",
+        "text": "If it would help to talk any of this through, I am easy to reach. I am based in Dublin, I need no sponsorship, and I can start full-time from 1 November.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-close-std-v5",
+        "text": "I would be glad to bring this to {{COMPANY}}. I live in Dublin, I do not need sponsorship, and I am available to start full-time from 1 November.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-close-plain-v2",
+        "text": "I live in Dublin, I do not need sponsorship, and I am available to start full-time from 1 November.",
+        "_unmeasured": true
       }
     ],
     "signoff": [
@@ -3096,6 +3874,16 @@
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "327d5416"
         }
+      },
+      {
+        "id": "let-signoff-v2",
+        "text": "Thank you for your time.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-signoff-v3",
+        "text": "Thank you for considering my application.",
+        "_unmeasured": true
       }
     ],
     "_rules": "Never 'Dear Sir/Madam'. Never 'To,' on its own line. Never 'passionate', 'grateful for the opportunity', 'would love the chance to prove myself', 'ideal candidate for the same'. Never flatter the company's history or values.",
@@ -3119,6 +3907,48 @@
           "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
           "hash": "f61979c8"
         }
+      }
+    ],
+    "evidenceVariants": [
+      {
+        "id": "let-ev-console-v2",
+        "variantOf": "let-ev-console",
+        "text": "On my MSc project, a six-member team working on stock market manipulation detection, my part was the alert console. The full dashboard held everything; the console showed only the highest-risk cases, in ranked order, each with the reason it had been flagged, so a reviewer could act without digging. I built it for the decision, not for completeness, and that is how I approach reporting.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-console-v3",
+        "variantOf": "let-ev-console",
+        "text": "For my MSc group project I built the alert console in Power BI. The team's dashboard held every result; the console sat in front of it and showed reviewers only the highest-risk cases, ranked, each with the reason it was flagged. It is a small example, but it shows how I think about reporting: start from the decision someone has to make.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-tcs-pilot-v2",
+        "variantOf": "let-ev-tcs-pilot",
+        "text": "In January 2025 my manager put me forward for a new client programme at Tata Consultancy Services: a ten-person pilot team verifying contract data for a US life insurer ahead of a system migration. There were 140 contract types, each with its own ruleset, and a three-hour turnaround per contract. With every contract checked by a colleague and the results reviewed with the client each week, I finished with 99% accuracy, the highest of the ten. {{ECHO}}",
+        "noEchoText": "In January 2025 my manager put me forward for a new client programme at Tata Consultancy Services: a ten-person pilot team verifying contract data for a US life insurer ahead of a system migration. There were 140 contract types, each with its own ruleset, and a three-hour turnaround per contract. With every contract checked by a colleague and the results reviewed with the client each week, I finished with 99% accuracy, the highest of the ten.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-tcs-control-v2",
+        "variantOf": "let-ev-tcs-control",
+        "text": "My year at Tata Consultancy Services was spent in the insurance vertical: first claims processing for a US pensions provider on the OMNI and Legacy systems, then contract data verification for a US life insurer before a system migration. The second was control work in its simplest form, checking that what had been done matched what should have been done and flagging it when it did not. On a ten-person pilot team I held 99% accuracy across every contract processed, the highest of the ten. {{ECHO}}",
+        "noEchoText": "My year at Tata Consultancy Services was spent in the insurance vertical: first claims processing for a US pensions provider on the OMNI and Legacy systems, then contract data verification for a US life insurer before a system migration. The second was control work in its simplest form, checking that what had been done matched what should have been done and flagging it when it did not. On a ten-person pilot team I held 99% accuracy across every contract processed, the highest of the ten.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-tcs-improve-v2",
+        "variantOf": "let-ev-tcs-improve",
+        "text": "At Tata Consultancy Services I worked on a ten-person pilot team verifying contract data ahead of a system migration. The client changed its requirements most weeks, so I wrote the team's operating procedure and reissued it after each change, which meant all ten of us worked to one standard. I held 99% accuracy on that team, the highest of the ten. {{ECHO}}",
+        "noEchoText": "At Tata Consultancy Services I worked on a ten-person pilot team verifying contract data ahead of a system migration. The client changed its requirements most weeks, so I wrote the team's operating procedure and reissued it after each change, which meant all ten of us worked to one standard. I held 99% accuracy on that team, the highest of the ten.",
+        "_unmeasured": true
+      },
+      {
+        "id": "let-ev-tcs-shift-v2",
+        "variantOf": "let-ev-tcs-shift",
+        "text": "I spent a year at Tata Consultancy Services on permanent night shifts, from six in the evening to four in the morning, with a ninety-minute commute each way. Within a month I was carrying the same targets as colleagues with years more experience. It was insurance data work rather than customer service, but turning up reliably for shifts you did not choose is the same job anywhere. {{ECHO}}",
+        "noEchoText": "I spent a year at Tata Consultancy Services on permanent night shifts, from six in the evening to four in the morning, with a ninety-minute commute each way. Within a month I was carrying the same targets as colleagues with years more experience. It was insurance data work rather than customer service, but turning up reliably for shifts you did not choose is the same job anywhere.",
+        "_unmeasured": true
       }
     ]
   },
@@ -3488,7 +4318,9 @@
       "specified",
       "compiled",
       "tested",
-      "helped"
+      "helped",
+      "kept",
+      "gained"
     ]
   },
   "formAnswers": {
@@ -4188,5 +5020,6 @@
         }
       }
     ]
-  }
+  },
+  "fallbackArchetype": "graduate-programme"
 }

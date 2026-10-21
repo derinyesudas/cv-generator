@@ -32,7 +32,7 @@ const LETTER_FIELDS = {
 };
 
 const jd = FIXTURE === 'empty' ? '' : fs.readFileSync(path.join('tests/fixtures/jd', FIXTURE + '.txt'), 'utf8');
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 for (const w of WIDTHS) {
   const mobile = w < 600;
   const ctx = await browser.newContext({ viewport: { width: w, height: mobile ? 844 : 900 }, deviceScaleFactor: mobile ? 2 : 1, colorScheme: SCHEME });

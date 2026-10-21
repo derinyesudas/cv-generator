@@ -82,6 +82,17 @@
         </div>
         <label class="sr-only" for="jd-input">Job description</label>
         <textarea id="jd-input" rows="8" spellcheck="false" placeholder="Paste the full job ad here: title, duties, requirements, all of it."></textarea>
+        <div class="ad-actions">
+          <button id="paste-ad-btn" class="btn btn-secondary btn-sm" type="button"><span aria-hidden="true">📋</span> Paste from clipboard</button>
+          <button id="clear-ad-btn" class="btn btn-ghost btn-sm" type="button">Clear</button>
+        </div>
+        <div id="ready-card" class="ready-card" role="status" aria-live="polite" hidden>
+          <p class="ready-headline"><span id="ready-emoji" aria-hidden="true"></span> <span id="ready-title"></span></p>
+          <p class="ready-sub" id="ready-sub"></p>
+          <ul class="ready-checks" id="ready-checks"></ul>
+          <button id="download-both-btn" class="btn btn-primary ready-download" type="button" disabled>Download CV + cover letter (PDF)</button>
+          <p class="ready-hint" id="ready-hint"></p>
+        </div>
       </section>
 
       <section class="panel panel-verdict" id="panel-verdict" aria-labelledby="h-verdict">

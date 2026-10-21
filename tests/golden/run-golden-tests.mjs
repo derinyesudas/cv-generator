@@ -88,7 +88,7 @@ function check(label, cond, detail) {
 
 const dataJson = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'data', 'cv-generator-data.json'), 'utf8'));
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await (await browser.newContext()).newPage();
 const pageErrors = [];
 page.on('pageerror', (err) => pageErrors.push(err.message));
@@ -138,7 +138,7 @@ const gateResult = await page.evaluate((data) => {
   var poisoned = [
     { t: 'name', text: data.identity.name, _prov: { text: { atoms: [{ ref: data.identity, field: 'name' }], join: null, prefix: '', suffix: '' } } },
     { t: 'auth', text: data.identity.rightToWork, _prov: { text: { atoms: [{ ref: data.identity, field: 'rightToWork' }], join: null, prefix: '', suffix: '' } } },
-    { t: 'bullet', text: 'Handled confidential SQL reporting tasks daily', _prov: { text: { atoms: [{ ref: { text: 'Handled confidential SQL reporting tasks daily' }, field: 'text' }], join: null, prefix: '', suffix: '' } } },
+    { t: 'bullet', text: 'Handled confidential Salesforce reporting tasks daily', _prov: { text: { atoms: [{ ref: { text: 'Handled confidential Salesforce reporting tasks daily' }, field: 'text' }], join: null, prefix: '', suffix: '' } } },
     { t: 'para', text: 'Led a team through an em—dash sentence.', _prov: { text: { atoms: [{ ref: { text: 'Led a team through an em—dash sentence.' }, field: 'text' }], join: null, prefix: '', suffix: '' } } },
     { t: 'para', text: 'This sentence has no provenance at all.' }
   ];
@@ -147,7 +147,7 @@ const gateResult = await page.evaluate((data) => {
   res.gates.forEach((g) => { byName[g.name] = g; });
   return byName;
 }, dataJson);
-check('Never-claim gate fires on the injected "SQL" bullet, and only that one', gateResult['Never-claim scan'].passed === false && gateResult['Never-claim scan'].findings.length === 1, JSON.stringify(gateResult['Never-claim scan']));
+check('Never-claim gate fires on the injected "Salesforce" bullet, and only that one', gateResult['Never-claim scan'].passed === false && gateResult['Never-claim scan'].findings.length === 1, JSON.stringify(gateResult['Never-claim scan']));
 check('Dash gate fires on the injected em dash, and only that one', gateResult['Dash scan'].passed === false && gateResult['Dash scan'].findings.length === 1, JSON.stringify(gateResult['Dash scan']));
 check('Provenance gate fires on the unbacked sentence', gateResult['Provenance check'].passed === false, JSON.stringify(gateResult['Provenance check']));
 check('Never-claim finding names the exact block/field location', /block 2 \(bullet\.text\)/.test(gateResult['Never-claim scan'].findings[0]), gateResult['Never-claim scan'].findings[0]);
@@ -707,7 +707,8 @@ console.log('\n--- js/experience.js: derived experience figures ---');
 const expDirect = await page.evaluate((data) => CVExperience.computeExperience(data), dataJson);
 check('experience.js: yearsRelevant is exactly 1 (TCS only, full-time+relevant)', expDirect.yearsRelevant === 1, JSON.stringify(expDirect));
 check('experience.js: yearsProfessional equals yearsRelevant today (TCS is the only full-time role)', expDirect.yearsProfessional === expDirect.yearsRelevant, JSON.stringify(expDirect));
-check('experience.js: monthsOtherEmployment is 18 (Blarney 8 + D-Mart 10, computed not guessed)', expDirect.monthsOtherEmployment === 18, JSON.stringify(expDirect));
+const circleKMonths = await page.evaluate(() => CVExperience.monthsBetween('2026-09-01', new Date().toISOString().slice(0, 10)));
+check('experience.js: monthsOtherEmployment is Blarney 8 + D-Mart 10 + Circle K so far (computed not guessed)', expDirect.monthsOtherEmployment === 18 + circleKMonths, JSON.stringify([expDirect, circleKMonths]));
 
 // ---- 7. Project-bearing archetypes build clean (regression guard) ---------
 console.log('\n--- Project-bearing archetypes build clean (data.facts.project vs .projects fix) ---');
@@ -1244,9 +1245,10 @@ const secondEv = await page.evaluate(([data, fixtures]) => {
     var built = CVLetter.buildLetterContentModel(data, { archetypeId: arch, extraction: extraction, rawJD: fx.text, company: 'Acme', role: 'Analyst', echoText: '' });
     var ids = built.letterResult.blocks.filter(function (b) { return b.category === 'evidence'; }).map(function (b) { return b.id; });
     out.perFixture.push(fx.name + ': ' + ids.join(' + '));
-    if (ids.length !== 2) out.problems.push(fx.name + ': ' + ids.length + ' evidence paragraph(s)');
+    if (ids.length !== 2 && ids.length !== 3) out.problems.push(fx.name + ': ' + ids.length + ' evidence paragraph(s)');
+    if (ids.length === 3 && /^let-ev-tcs-/.test(ids[2]) && /^let-ev-tcs-/.test(ids[0] + ids[1])) out.problems.push(fx.name + ': third paragraph is a second TCS one');
     if (ids.filter(function (id) { return /^let-ev-tcs-/.test(id); }).length > 1) out.problems.push(fx.name + ': two TCS paragraphs');
-    if (ids.length === 2 && order.indexOf(ids[0]) > order.indexOf(ids[1])) out.problems.push(fx.name + ': not in data-file order');
+    for (var k = 1; k < ids.length; k++) if (order.indexOf(ids[k - 1]) > order.indexOf(ids[k])) out.problems.push(fx.name + ': not in data-file order');
     if (ids.indexOf('let-ev-ai') !== -1 && !extraction.keywordHits['ai']) out.problems.push(fx.name + ': AI paragraph without an "ai" match');
     if (!ids.some(function (id) { return /^let-ev-tcs-/.test(id); })) out.problems.push(fx.name + ': no TCS paragraph');
     if (CVPageFit.measure(built.model, 'letter').overflows) out.problems.push(fx.name + ': overflows');
@@ -1283,7 +1285,7 @@ const secondEv = await page.evaluate(([data, fixtures]) => {
 }, [dataJson, fs.readdirSync(path.join(REPO_ROOT, 'tests', 'fixtures', 'jd')).filter((f) => f.endsWith('.txt'))
   .map((f) => ({ name: f.replace(/\.txt$/, ''), text: fs.readFileSync(path.join(REPO_ROOT, 'tests', 'fixtures', 'jd', f), 'utf8') }))]);
 console.log('  second evidence paragraph per fixture: ' + secondEv.perFixture.join(' | '));
-check('Second evidence paragraph: every fixture letter carries two, always including the TCS paragraph, never two TCS paragraphs, in data-file order, the AI one only for ads that match "ai", and still one page',
+check('Second evidence paragraph: every fixture letter carries two (or three when one more fits), always including the TCS paragraph, never two TCS paragraphs, in data-file order, the AI one only for ads that match "ai", and still one page',
   secondEv.problems.length === 0 && secondEv.perFixture.length >= 7, JSON.stringify(secondEv.problems));
 check('Second evidence paragraph: the AI paragraph is never picked by itself on "automation"/"tooling" alone, and is with an "ai" match',
   secondEv.aiGuardOff.indexOf('let-ev-ai') === -1 && secondEv.aiGuardOn.indexOf('let-ev-ai') !== -1, JSON.stringify([secondEv.aiGuardOff, secondEv.aiGuardOn]));
@@ -2438,6 +2440,9 @@ const gapCapAndDup = await page.evaluate(([data, fixtures]) => {
   var poisoned = JSON.parse(JSON.stringify(data));
   var evidenceEntry = poisoned.letterBlocks.evidence.filter(function (e) { return e.archetypes.indexOf('*') !== -1 || e.archetypes.indexOf('insurance-pensions') !== -1; })[0];
   evidenceEntry.text += ' I am already QFA qualified in every sense that matters to this ad.';
+  (poisoned.letterBlocks.evidenceVariants || []).forEach(function (v) {
+    if (v.variantOf === evidenceEntry.id) v.text += ' I am already QFA qualified in every sense that matters to this ad.';
+  });
   var dupBuilt = CVLetterBuild.buildLetterModel(poisoned, {
     archetypeId: 'insurance-pensions', extraction: { keywordHits: {} }, rawJD: '',
     company: 'Test Company Ltd', role: 'Test Role', team: '', echoText: '', fitCheckGapTrigger: 'qfa'

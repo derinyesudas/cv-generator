@@ -19,7 +19,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const dataJson = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'data', 'cv-generator-data.json'), 'utf8'));
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await (await browser.newContext()).newPage();
 const pageErrors = [];
 page.on('pageerror', (err) => pageErrors.push(err.message));

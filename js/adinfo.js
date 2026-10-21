@@ -249,7 +249,9 @@
   function looksLikeLocationLine(line) {
     var first = line.split(/\s+·\s+|\s+\|\s+/)[0];
     if (wordCount(first) > 8) return false;
-    if (!cityIn(first)) return false;
+    // The place has to lead the line: "Graduate Programme, Audit - Dublin
+    // (Sept 2027)" is a title that mentions a city, not a location line.
+    if (!cityIn(first.split(/\s*[,(\/]\s*|\s+[-–—]\s+/)[0])) return false;
     // "Dublin", "Cork, Ireland", "Galway, Republic of Ireland",
     // "Dublin, County Dublin, Ireland", "Dublin, IE, D02 H638",
     // "Dublin (Hybrid)", "Dublin or Cork".
@@ -341,6 +343,22 @@
     // ("Co-ordinator") have no spaces round the hyphen and are untouched.
     var sep = /\s+[-–—|]\s+|\s*[|]\s*/.exec(t);
     if (sep && sep.index > 2) t = t.slice(0, sep.index).trim();
+    // "Graduate Programme 2027 Dublin", "Payroll Assistant Job Details",
+    // "Branch Customer Advisor, Naas": intake years, a trailing city and
+    // job-site suffixes are not part of the title (seen across 576 real ads).
+    var tail = 0;
+    while (tail++ < 4) {
+      var before = t;
+      t = t.replace(/\s+job details$/i, "")
+           .replace(/[\s-]+[A-Z]{2,}[A-Z0-9]*\d{3,}[A-Z0-9]*$/, "") // reference codes: "HSEMW26170"
+           .replace(/[\s,]+(?:19|20)\d{2}(?:\s*[-\/]\s*(?:19|20)?\d{2,4})?$/, "");
+      var lastComma = /,\s*([^,]+)$/.exec(t);
+      if (lastComma && cityIn(lastComma[1]) && wordCount(lastComma[1]) <= 3) t = t.slice(0, lastComma.index);
+      var lastWord = /\s+(\S+)$/.exec(t);
+      if (lastWord && wordCount(t) > 2 && CITY_CANON[lastWord[1].toLowerCase()]) t = t.slice(0, lastWord.index);
+      t = t.trim();
+      if (t === before) break;
+    }
     // "Pensions Administrator Role" -> the letter already says "the ... role".
     t = t.replace(/\s+(?:role|position|vacancy|job|opportunity)$/i, "");
     t = t.replace(/[\s,;:.]+$/, "");
@@ -360,6 +378,10 @@
     if (!/[A-Za-z]/.test(t)) return -1;
     var score = 0;
     if (ROLE_NOUN_RE.test(t)) score += 6;
+    // The ad's very first line, shaped like a title, is the title even when
+    // it has no role noun ("Fund Accounting, SA") - a sweep of 576 real ads
+    // found most pastes start there.
+    else if (index === 0 && /^[A-Z0-9]/.test(t) && wordCount(t) <= 10 && !/:$/.test(t)) score += 5;
     else return -1;
     if (index < 3) score += 2;
     else if (index < 8) score += 1;
@@ -446,6 +468,9 @@
     function add(raw, from, how, weight) {
       var clean = tidyCompany(raw, plain);
       if (!clean || clean.length < 2 || NOT_A_COMPANY.test(clean) || CITY_CANON[clean.toLowerCase()]) return;
+      if (!/[A-Za-z]{2}/.test(clean)) return; // "021", a phone prefix, is not a company
+      // Job-site furniture seen in a sweep of 576 real ads.
+      if (/^(?:phone us|call us|email us|back to\b.*|found \d+ jobs?|\d+ (?:days?|weeks?|months?|hours?)(?: ago)?|contract type|job type|ai|ml|share|save|print)$/i.test(clean)) return;
       if (role && clean.toLowerCase() === String(role.value || "").toLowerCase()) return;
       var freq = countWord(plain, clean);
       cands.push({ value: clean, raw: raw, from: from, how: how, score: weight + Math.min(freq, 6), order: cands.length });
@@ -455,13 +480,33 @@
     });
     // Next to the title in the header block (job boards: Title / Company /
     // Location, or LinkedIn's Company / Title).
-    if (role && role.headerIndex >= 0) {
-      [role.headerIndex + 1, role.headerIndex - 1, role.headerIndex + 2].forEach(function (k) {
+    // Where the title sits in the header block: where it was read from, or
+    // the header line that carries it when it was read from a label or the
+    // body (the line under the title is usually the employer).
+    var ri = -1;
+    if (role) {
+      ri = role.headerIndex;
+      if (ri < 0) {
+        for (var hi = 0; hi < header.length; hi++) {
+          if (header[hi].text === role.raw || tidyRole(header[hi].text) === role.value) { ri = hi; break; }
+        }
+      }
+      // Read from a label further down ("Job Title: Credit Analyst I") while
+      // the ad still opens on a title line: the employer sits under that.
+      if (ri < 0 && header.length && titleScore(header[0].text, 0, plain) > 0) ri = 0;
+    }
+    if (ri >= 0) {
+      [ri + 1, ri - 1, ri + 2].forEach(function (k) {
         var h = header[k];
         if (!h) return;
         var at = /^at\s+([A-Z0-9].{1,60})$/.exec(h.text);
         if (at && companyShaped(at[1])) add(at[1], h.text, "header", 7);
-        else if (companyShaped(h.text) && !ROLE_NOUN_RE.test(h.text)) add(h.text, h.text, "header", 6);
+        // "HSE (Health Service Executive)": judged on the name without its
+        // bracketed expansion, so "Executive" in it is not a role noun.
+        else if (companyShaped(h.text) && !ROLE_NOUN_RE.test(tidyCompany(h.text, plain))) add(h.text, h.text, "header", 6);
+        // Lower-case brands as the line under an opening title ("daa", "eir").
+        else if (ri === 0 && k === 1 && /^[a-z][a-z0-9&]{1,10}\b/.test(h.text) && wordCount(h.text) <= 6 &&
+                 !looksLikeLocationLine(h.text) && !/^(?:locations?|posted|time|job|full|part|remote|hybrid|apply)\b/.test(h.text)) add(h.text, h.text, "header", 6);
       });
     }
     for (var i = 0; i < lines.length; i++) {
@@ -562,6 +607,7 @@
   // --- Recipient (verbatim) ----------------------------------------------------------
   var NAME_RE_SRC = "([A-Z][a-z'’]+(?:-[A-Z][a-z'’]+)?(?:\\s+(?:O['’]|Mc|Mac)?[A-Z][a-z'’]+(?:-[A-Z][a-z'’]+)?){1,2})";
   function plausibleName(n) {
+    if (/[\r\n]/.test(n)) return false; // "phone / Pension / Life" across list lines is not a name
     var parts = n.split(/\s+/);
     if (parts.length < 2 || parts.length > 3) return false;
     return parts.every(function (p) { return p.length >= 2 && !NOT_A_NAME_WORD.test(p.replace(/['’]s$/, "")); });

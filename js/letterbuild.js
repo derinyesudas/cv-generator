@@ -283,11 +283,36 @@
   function employerTalksAboutItself(text) {
     return /\b(?:we|we're|we’re|we've|we’ve|our|ours)\b/i.test(text) || /\bus\b/.test(text);
   }
+  var DUTY_VERBS = ["produce", "maintain", "prepare", "process", "support", "assist", "manage", "handle", "deliver",
+    "provide", "ensure", "review", "monitor", "check", "verify", "update", "analyse", "analyze", "report", "build",
+    "develop", "coordinate", "co-ordinate", "liaise", "respond", "resolve", "track", "record", "perform", "complete",
+    "administer", "input", "validate", "investigate", "identify", "communicate", "work", "answer", "issue", "set up",
+    "create", "compile", "document", "organise", "organize", "schedule", "assess", "calculate", "deal", "help",
+    "contribute", "collaborate", "partner", "present", "serve", "greet", "operate", "carry", "act", "own"];
+  var REQUIREMENT_RE = /\b(?:essential|required|requirement|must|desirable|preferred|experience (?:in|of|with)|years?|qualified|qualification|degree|ability to|skills?)\b/i;
+  function isDutyLine(text) {
+    var t = String(text || "").trim();
+    if (REQUIREMENT_RE.test(t)) return false;
+    var first = (t.match(/^[A-Za-z-]+/) || [""])[0].toLowerCase();
+    var stem = first.replace(/(?:ing|es|s)$/, "");
+    return DUTY_VERBS.some(function (v) { return first === v || stem === v || stem + "e" === v || first.indexOf(v) === 0 && first.length - v.length <= 3; });
+  }
+
   function pickEchoAuto(candidates) {
     var best = null;
     var bestScore = Infinity;
     (candidates || []).forEach(function (c) {
       if (employerTalksAboutItself(c.text)) return;
+      // A sweep of 576 real ads (21 Oct 2026): long requirement lists and
+      // "You will be responsible for..." lines read badly quoted back. The
+      // letter has its own why paragraph now, so no quote is better than a
+      // clumsy one. Either can still be picked by hand.
+      if (String(c.text).split(/\s+/).length > 22) return;
+      if (/^(?:you|you'll|you’ll|you're|you’re|the successful candidate|the ideal candidate)\b/i.test(c.text)) return;
+      // Only a duty line is quoted automatically: it starts with a duty verb
+      // and is not a requirement ("1 year plus FX experience is essential"
+      // quoted back reads as a claim to have it).
+      if (!isDutyLine(c.text)) return;
       var score = c.rank * 10 + quotePenalty(c.text);
       if (score < bestScore) { best = c; bestScore = score; }
     });
@@ -604,8 +629,12 @@
   // function's own comment in js/matcher.js for why it lives there and not
   // here: js/validate.js needs the same pattern at data-author time, and
   // it loads before this file does).
+  // Titles that are not a job ("Graduate Programme", "Summer Internship")
+  // read badly as "the ... role", so the word "role" after them is dropped.
+  var PROGRAMME_TITLE_RE = /\b(?:programme|program|internship|placement|scheme|apprenticeship|pathways?|showcase|talent pool)$/i;
   function fillTemplate(text, slots, blockId) {
     var src = String(text);
+    if (slots && slots.ROLE && PROGRAMME_TITLE_RE.test(slots.ROLE)) src = src.replace(/\{\{ROLE\}\} role\b/g, "{{ROLE}}");
     var out = src.replace(Matcher.slotRe(), function (m, key, offset) {
       var v = slots[key];
       if (v == null) return m;
@@ -781,6 +810,15 @@
       else if (pickedWhy && !pickedWhy.isEchoFrame && !pickedWhy.isEchoFallback) plainWhy = [pickedWhy];
     }
 
+    // One why paragraph, not every one written for this role type (21 Oct
+    // 2026, the bank now holds several per type): the one whose tags the ad
+    // hits most; ties, including an ad that hits none, go by a fixed rule on
+    // company and role so two applications rarely read the same.
+    if (!choices.why && plainWhy.length > 1) {
+      var bestWhy = -1;
+      plainWhy.forEach(function (e) { bestWhy = Math.max(bestWhy, Assemble.overlapScore(e.tags, extraction)); });
+      plainWhy = [rotate(plainWhy.filter(function (e) { return Assemble.overlapScore(e.tags, extraction) === bestWhy; }), company, role)];
+    }
     plainWhy.forEach(function (entry) {
       blocks.push({
         id: entry.id, category: "why", text: fillTemplate(entry.text, slots, entry.id), ref: entry,
@@ -789,13 +827,20 @@
     });
     var echoQuotedInWhy = false;
     if (echoText && echoFrames.length) {
-      var chosen = (choices.echoFrame && echoFrames.filter(function (e) { return e.id === choices.echoFrame; })[0]) || rotate(echoFrames, company, role);
+      // Checked against 576 real ads (21 Oct 2026): a tag match is too loose
+      // to say "I have done this" about a line ("promote financial products",
+      // "SoC validation"), even a core one. Frames that claim past work
+      // (claimsExperience) are hand-pick only; the automatic frame says why
+      // the line appeals, which makes no claim about past work.
+      var framePool = echoFrames.filter(function (e) { return !e.claimsExperience; });
+      if (!framePool.length) framePool = echoFrames;
+      var chosen = (choices.echoFrame && echoFrames.filter(function (e) { return e.id === choices.echoFrame; })[0]) || rotate(framePool, company, role);
       blocks.push({
         id: chosen.id, category: "why", text: fillTemplate(chosen.text, slots, chosen.id), ref: chosen,
         _prov: { text: templateProv(chosen, "text", slots) }
       });
       echoQuotedInWhy = true;
-    } else if (echoFallback) {
+    } else if (echoFallback && !plainWhy.length) {
       blocks.push({
         id: echoFallback.id, category: "why", text: fillTemplate(echoFallback.text, slots, echoFallback.id), ref: echoFallback,
         _prov: { text: templateProv(echoFallback, "text", slots) }
@@ -924,7 +969,10 @@
     var evidence3 = null;
     if (!closeMatchUsed && evidence && evidence2 && choices.evidence3 !== "none") {
       var taken = [evidence.id, evidence2.id];
-      var thirdPool = evidenceCandidates.filter(function (e) { return taken.indexOf(e.id) === -1 && !isTcsEvidence(e) && Assemble.overlapScore(e.tags, extraction) > 0; });
+      var hasPartTime = !!(evidence.partTime || evidence2.partTime);
+      var thirdPool = evidenceCandidates.filter(function (e) {
+        return taken.indexOf(e.id) === -1 && !isTcsEvidence(e) && !(hasPartTime && e.partTime) && Assemble.overlapScore(e.tags, extraction) > 0;
+      });
       evidence3 = bestByTags(thirdPool, extraction);
     }
     var noHandPicks = !slot1Hand && !slot2Hand;
@@ -956,11 +1004,15 @@
       // quote now appears once, in the frame; the {{ECHO}} ending is only
       // reached when a quote exists and no frame used it. Selection between
       // two approved texts, nothing composed.
-      var evidenceField = (evidence.noEchoText && (!echoText || echoQuotedInWhy)) ? "noEchoText" : "text";
-      var evidenceText = evidence[evidenceField];
+      // Same story, another approved wording (letterBlocks.evidenceVariants),
+      // by the fixed company-and-role rule. Selection logic above still runs
+      // on the base entry, so its id is what the rest of the app sees.
+      var wording = rotate([evidence].concat((lb.evidenceVariants || []).filter(function (v) { return v.variantOf === evidence.id; })), company, role);
+      var evidenceField = (wording.noEchoText && (!echoText || echoQuotedInWhy)) ? "noEchoText" : "text";
+      var evidenceText = wording[evidenceField];
       blocks.push({
-        id: evidence.id, category: "evidence", evidenceRole: role, evidenceSlot: slot, text: fillTemplate(evidenceText, slots, evidence.id), ref: evidence,
-        _prov: { text: templateProv(evidence, evidenceField, slots) }
+        id: evidence.id, category: "evidence", evidenceRole: role, evidenceSlot: slot, text: fillTemplate(evidenceText, slots, wording.id), ref: wording,
+        _prov: { text: templateProv(wording, evidenceField, slots) }
       });
     }
 
@@ -1100,7 +1152,7 @@
     }
 
     // Signoff: one entry, no selection logic.
-    (lb.signoff || []).forEach(function (entry) {
+    (lb.signoff && lb.signoff.length ? [rotate(lb.signoff, role, company)] : []).forEach(function (entry) {
       blocks.push({
         id: entry.id, category: "signoff", text: fillTemplate(entry.text, slots, entry.id), ref: entry,
         _prov: { text: templateProv(entry, "text", slots) }

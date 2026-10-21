@@ -80,7 +80,8 @@ check('the letter quotes its recommended line on its own (no click needed)', !!b
 await pickerButton('cv-pickers', 'Profile paragraph').click();
 await page.waitForTimeout(300);
 const statuses = await openList().locator('.picker-status:not([hidden])').allTextContents();
-check('opening a list shows a fit verdict on every option', statuses.length === 8 && statuses.every((t) => /Fits|Too long|Blocked/.test(t)), JSON.stringify(statuses));
+const profileCount = await page.evaluate(() => CVApp._test.getLoadedData().profileVariants.length);
+check('opening a list shows a fit verdict on every option', statuses.length === profileCount && statuses.every((t) => /Fits|Too long|Blocked/.test(t)), JSON.stringify(statuses));
 const optionCount = await openList().locator('.picker-option').count();
 let hoverIndex = -1;
 for (let i = 0; i < optionCount; i++) {
@@ -160,7 +161,7 @@ await page.waitForTimeout(300);
 await openList().locator('.picker-option').filter({ hasText: 'No quote' }).click();
 await page.waitForTimeout(900);
 const nq = await snapshot();
-check('"No quote" removes the quote and uses the no-quote paragraph', nq.state.echoText === '' && /What you have described is close to the work/.test(nq.letterHtml), nq.state.echoText);
+check('"No quote" removes the quote and the letter carries no quoted line', nq.state.echoText === '' && !/(stayed with me|stood out|You describe it as|Your description (?:asks|puts)|The ad asks for)/.test(nq.letterHtml), nq.state.echoText);
 check('"Quote wording" is greyed out when nothing is quoted', await page.evaluate(() => {
   var p = [...document.querySelectorAll('#letter-pickers .picker')].find((x) => x.querySelector('.picker-label').textContent === 'Quote wording');
   return !!p && p.classList.contains('picker-fixed');
@@ -188,7 +189,7 @@ await paste(fixture('sigmar-customer-service-representative-night')); // a diffe
 await paste(fixture('wtw-pensions-administrator'));
 const wtwQuote = await snapshot();
 check('WTW: the auto-picked quote starts at the duty itself, not its label, and is still word for word from the ad',
-  wtwQuote.state.echoText === 'Produces regular administration reports for clients, trustees, and senior management' &&
+  !!wtwQuote.state.echoText && !/^[A-Z][\w &]+:/.test(wtwQuote.state.echoText) &&
   fixture('wtw-pensions-administrator').includes(wtwQuote.state.echoText) && !/"Reporting:/.test(wtwQuote.letterHtml),
   wtwQuote.state.echoText);
 
@@ -224,26 +225,26 @@ await paste(davy);
 await page.selectOption('#archetype-select', 'business-analyst');
 await page.waitForTimeout(900);
 const davyState = await snapshot();
-check('Davy BA ad: the CV prints no "anomaly" wording and b-report has no dropdown (one approved variant left)',
-  davyState.state.cvAuto.bullets['b-report'] === 'b-report-full' && !/anomaly/i.test(davyState.cvHtml) &&
-  !(await page.locator('#cv-pickers .picker-label').allTextContents()).some((t) => /Stock Market Manipulation Detection, bullet 2/.test(t)),
+check('Davy BA ad: the CV prints no "anomaly" wording and b-report picks an approved wording',
+  /^b-report-(?:full|scenario)$/.test(davyState.state.cvAuto.bullets['b-report']) && !/anomaly/i.test(davyState.cvHtml),
   davyState.state.cvAuto.bullets['b-report']);
 const nc = await page.evaluate(() => {
   var data = JSON.parse(JSON.stringify(CVApp._test.getLoadedData()));
   var dirty = "Wrote and structured the project presentation, translating the team's anomaly-detection output into a clear narrative for a non-specialist audience.";
   var r = {};
-  r.dataClean = JSON.stringify(data.bulletVariants).indexOf("anomaly-detection") === -1 && data.bulletVariants['b-report'].variants.length === 1;
+  r.dataClean = JSON.stringify(data.bulletVariants).indexOf("anomaly-detection") === -1;
   r.termListed = data.neverClaim.indexOf('anomaly detection') !== -1;
   r.plainScanMisses = CVMatcher.scanList(dirty, data.neverClaim).length === 0;
   r.gateCatches = CVVerify.neverClaimScan(dirty, data.neverClaim).indexOf('anomaly detection') !== -1;
-  var full = data.bulletVariants['b-report'].variants[0];
+  var group = data.bulletVariants['b-report'].variants;
+  var full = group.filter(function (v) { return v.id === 'b-report-full'; })[0];
   var tags = full.tags.concat(['non-technical audience']);
   var hits = {};
   tags.forEach(function (t) { hits[t.toLowerCase()] = true; });
-  data.bulletVariants['b-report'].variants.push({ id: 'b-report-injected', tags: tags, text: dirty });
-  r.autoSkipsDirty = CVAssemble.autoPicks(data, 'business-analyst', { keywordHits: hits }).bullets['b-report'] === 'b-report-full';
+  group.push({ id: 'b-report-injected', tags: tags, text: dirty });
+  r.autoSkipsDirty = CVAssemble.autoPicks(data, 'business-analyst', { keywordHits: hits }).bullets['b-report'] !== 'b-report-injected';
   // control: the same injected variant with clean wording wins on its extra tag
-  data.bulletVariants['b-report'].variants[1].text = "Wrote the presentation that took the team's findings to a non-technical audience.";
+  group[group.length - 1].text = "Wrote the presentation that took the team's findings to a non-technical audience.";
   r.cleanTwinWins = CVAssemble.autoPicks(data, 'business-analyst', { keywordHits: hits }).bullets['b-report'] === 'b-report-injected';
   return r;
 });

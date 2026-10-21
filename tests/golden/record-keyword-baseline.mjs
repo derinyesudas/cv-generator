@@ -54,7 +54,7 @@ if (fixtureTexts.length !== 8) {
   process.exit(1);
 }
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await (await browser.newContext()).newPage();
 await page.goto(BASE_URL + '/index.test.html');
 await page.waitForFunction(

@@ -301,7 +301,14 @@
     var sel = archetypeSelectEl();
     var overridden = sel.value !== 'auto';
     var startDateEl = startDateInputEl();
-    return { jdText: jdInputEl().value, overridden: overridden, selValue: sel.value, startDateText: (startDateEl && startDateEl.value || '').trim() };
+    return { jdText: adText(), overridden: overridden, selValue: sel.value, startDateText: (startDateEl && startDateEl.value || '').trim() };
+  }
+
+  // The pasted ad as every step reads it: en and em dashes become plain
+  // hyphens (house style), so a line quoted from the ad never fails the dash
+  // check - 7 of 576 real ads did before this.
+  function adText() {
+    return jdInputEl().value.replace(/[\u2013\u2014]/g, '-');
   }
 
   // --- Cover-letter form inputs (21 Sept 2026) -----------------------------
@@ -1096,6 +1103,95 @@
   function updateDownloadState() {
     updateDocxDownloadState();
     mirrorDownloadButton('download-btn', 'download-pdf-btn');
+    renderReadyCard();
+  }
+
+  // --- Ready card (21 Oct 2026): the one place to look after pasting ----------
+  // Built entirely from state the page already has (the verdict and the two
+  // PDF buttons, which carry every download rule), so it can never disagree
+  // with them.
+  var READY_MOODS = [['🎯', 'Ready to send'], ['🚀', 'All set'], ['✅', 'Good to go'], ['✨', 'Looking sharp']];
+  function withArticle(words) { return (/^[aeiou]/i.test(words) ? 'an ' : 'a ') + words; }
+  function plainReason(btn) {
+    var t = (btn && btn.title) || 'not ready yet.';
+    return t.replace(/^Blocked:\s*/, '').replace(/^./, function (c) { return c.toLowerCase(); });
+  }
+  function renderReadyCard() {
+    var card = document.getElementById('ready-card');
+    if (!card) return;
+    if (!inputsNow().jdText.trim() || !currentModel || !loadedData) { card.hidden = true; return; }
+    var li = letterInputsNow();
+    var cvBtn = document.getElementById('download-pdf-btn');
+    var letterBtn = document.getElementById('letter-download-pdf-btn');
+    var cvOk = !!cvBtn && !cvBtn.disabled;
+    var letterOk = !!letterBtn && !letterBtn.disabled;
+    var items = [];
+    var level = lastVerdict && lastVerdict.level;
+    if (level === 'red') items.push(['⛔', 'The ad asks for something you do not have. Read "Should you apply?" below before sending.']);
+    else if (level === 'amber') items.push(['👀', 'Worth a quick look first: see "Should you apply?" below.']);
+    else items.push(['👍', 'Nothing in the ad rules you out.']);
+    items.push(cvOk ? ['📄', 'CV: one page, every check passed.'] : ['🔧', 'CV: ' + plainReason(cvBtn)]);
+    items.push(letterOk ? ['✉️', 'Cover letter: one page, every check passed.'] : ['🔧', 'Cover letter: ' + plainReason(letterBtn)]);
+    var both = cvOk && letterOk;
+    var mood = READY_MOODS[Math.abs(simpleHash(li.role + '|' + li.company)) % READY_MOODS.length];
+    document.getElementById('ready-emoji').textContent = both ? mood[0] : '🛠️';
+    document.getElementById('ready-title').textContent = both ? mood[1] : 'Almost there';
+    var who = [li.role, li.company].filter(Boolean).join(' at ');
+    document.getElementById('ready-sub').textContent = (who || 'This ad') + ' · built as ' + withArticle(archetypeLabel(currentArchetypeId).toLowerCase()) + ' CV';
+    var list = document.getElementById('ready-checks');
+    list.textContent = '';
+    items.forEach(function (it) {
+      var li2 = document.createElement('li');
+      var mark = document.createElement('span');
+      mark.className = 'mark';
+      mark.setAttribute('aria-hidden', 'true');
+      mark.textContent = it[0];
+      li2.appendChild(mark);
+      li2.appendChild(document.createTextNode(it[1]));
+      list.appendChild(li2);
+    });
+    var btn = document.getElementById('download-both-btn');
+    btn.disabled = !both;
+    document.getElementById('ready-hint').textContent = both
+      ? 'Saves two PDFs, named for the role and company. Read the letter once before you send it.'
+      : 'Sort out the item marked 🔧 and both downloads unlock.';
+    card.setAttribute('data-state', both ? 'ready' : 'todo');
+    card.hidden = false;
+  }
+
+  function handleDownloadBoth() {
+    var cvBtn = document.getElementById('download-pdf-btn');
+    var letterBtn = document.getElementById('letter-download-pdf-btn');
+    if (!cvBtn || !letterBtn || cvBtn.disabled || letterBtn.disabled) return;
+    cvBtn.click();
+    setTimeout(function () { letterBtn.click(); }, 600);
+  }
+
+  function handlePasteAd() {
+    var ta = jdInputEl();
+    if (!global.navigator.clipboard || !global.navigator.clipboard.readText) {
+      ta.focus();
+      showToast({ tone: 'info', title: 'Paste with Ctrl+V', text: 'This browser does not let the page read the clipboard. Click in the box and press Ctrl+V.' });
+      return;
+    }
+    global.navigator.clipboard.readText().then(function (text) {
+      if (!text || !text.trim()) {
+        showToast({ tone: 'info', title: 'The clipboard is empty', text: 'Copy the whole job ad first (Ctrl+A, Ctrl+C on the job page), then try again.' });
+        return;
+      }
+      ta.value = text;
+      recompute();
+    }).catch(function () {
+      ta.focus();
+      showToast({ tone: 'info', title: 'Paste with Ctrl+V', text: 'The browser did not allow reading the clipboard. Click in the box and press Ctrl+V.' });
+    });
+  }
+
+  function handleClearAd() {
+    var ta = jdInputEl();
+    ta.value = '';
+    recompute();
+    ta.focus();
   }
 
   function updateDocxDownloadState() {
@@ -1183,6 +1279,7 @@
   function updateLetterDownloadState(teamValid, recipientNameValid) {
     updateLetterDocxDownloadState(teamValid, recipientNameValid);
     mirrorDownloadButton('letter-download-btn', 'letter-download-pdf-btn');
+    renderReadyCard();
   }
 
   function updateLetterDocxDownloadState(teamValid, recipientNameValid) {
@@ -1263,6 +1360,7 @@
     var jdText = inputsNow().jdText;
     var li = letterInputsNow();
     var teamCheck = CVLetterBuild.validateTeam(li.team, jdText);
+    if (!teamCheck.valid && !adTypedByHand.team) teamCheck = { valid: true, team: '' };
     if (!teamCheck.valid) {
       clearLetterPanel(teamCheck.reason);
       showLetterNotice(teamCheck.reason);
@@ -1274,6 +1372,7 @@
     // download the same way an invalid TEAM already does, rather than
     // silently falling back to the standard salutation.
     var recipientNameCheck = CVLetterBuild.validateRecipientName(li.recipientName, jdText);
+    if (!recipientNameCheck.valid && !adTypedByHand.recipientName) recipientNameCheck = { valid: true, name: '' };
     if (!recipientNameCheck.valid) {
       clearLetterPanel(recipientNameCheck.reason);
       showLetterNotice(recipientNameCheck.reason);
@@ -1632,7 +1731,7 @@
     if (!loadedData || (dataErrors && dataErrors.length)) return;
     // Ad details first (2 Oct 2026): fills company/role/city/team/recipient/
     // start date from the ad before anything below reads those fields.
-    applyAdInfo(jdInputEl().value);
+    applyAdInfo(adText());
     var inputs = inputsNow();
     var staleDraft = global.CVEdits.current();
     if (staleDraft && staleDraft.jd !== inputs.jdText) { global.CVEdits.clear(); syncEditPanel(); }
@@ -1678,10 +1777,19 @@
 
     var extraction = CVScore.extractFromJD(loadedData, inputs.jdText);
     lastExtraction = extraction; // Phase 6: fit check needs this even on a noMatch recompute
-    lastPick = CVScore.pickArchetype(loadedData, extraction);
+    // The title read from the ad, plus the ad's first line, weigh most in the pick.
+    var firstLine = (inputs.jdText.split('\n').filter(function (l) { return l.trim(); })[0] || '').slice(0, 120);
+    lastPick = CVScore.pickArchetype(loadedData, extraction, letterInputsNow().role + ' | ' + firstLine);
     var noMatch = lastPick.noMatch && !inputs.overridden;
     var candidateArchetypeId = inputs.overridden ? inputs.selValue : lastPick.winner.archetype.id;
     renderArchetypeReadout(lastPick, candidateArchetypeId, inputs.overridden, noMatch);
+    if (lastPick.guessed && !inputs.overridden) {
+      var guessEl = document.getElementById('archetype-notice');
+      if (guessEl) {
+        guessEl.textContent = 'This ad did not clearly match one of your role types, so it is built as ' + withArticle(archetypeLabel(candidateArchetypeId).toLowerCase()) + ' CV. Pick another under Role type if that is wrong.';
+        guessEl.hidden = false;
+      }
+    }
 
     if (noMatch) {
       currentArchetypeId = null;
@@ -2805,6 +2913,9 @@
       });
 
     jdInputEl().addEventListener('input', debouncedRecompute);
+    document.getElementById('paste-ad-btn').addEventListener('click', handlePasteAd);
+    document.getElementById('clear-ad-btn').addEventListener('click', handleClearAd);
+    document.getElementById('download-both-btn').addEventListener('click', handleDownloadBoth);
     archetypeSelectEl().addEventListener('change', recompute);
     var startDateEl = startDateInputEl();
     if (startDateEl) startDateEl.addEventListener('input', debouncedRecompute);
@@ -2887,6 +2998,25 @@
           letterAuto: lastLetterAuto ? JSON.parse(JSON.stringify(lastLetterAuto)) : null,
           echoText: selectedEchoText,
           echoCandidates: lastLetterResult ? lastLetterResult.echoCandidates.map(function (c) { return c.text; }) : []
+        };
+      },
+      // Rebuild straight away instead of waiting for the typing debounce.
+      recomputeNow: function () { recompute(); },
+      // Everything one build produced, for the real-ad sweep (tests/sweep).
+      getRunSummary: function () {
+        var failed = function (r) { return r ? r.gates.filter(function (g) { return !g.passed; }).map(function (g) { return g.name + ': ' + g.findings.join(' | '); }) : null; };
+        return {
+          archetypeId: currentArchetypeId,
+          buildError: document.getElementById('build-error').textContent || '',
+          cvFit: lastCvFit ? { heightPx: Math.round(lastCvFit.heightPx), usablePx: Math.round(lastCvFit.usableHeightPx), overflows: lastCvFit.overflows } : null,
+          cvFailed: failed(lastGateResult),
+          letterFailed: failed(lastLetterGateResult),
+          trimLog: lastTrimLog || [],
+          cvText: currentModel ? CVVerify.collectText(currentModel) : '',
+          letterParas: currentLetterModel ? currentLetterModel.filter(function (b) { return b.t === 'letterPara'; }).map(function (b) { return { id: b.ref && b.ref.id, cat: b.category, text: b.text }; }) : [],
+          letterNotice: (document.getElementById('letter-notice') || {}).textContent || '',
+          verdict: lastVerdict ? JSON.parse(JSON.stringify(lastVerdict)) : null,
+          adInfo: letterInputsNow()
         };
       },
       setModelForTest: function (newModel) {

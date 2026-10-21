@@ -629,10 +629,13 @@
     });
     // Roles an archetype lists only when the ad hits one of the tags (e.g. a
     // part-time job on an analyst CV when the ad asks for customer service).
+    var conditionalAdded = [];
     (archetype.conditionalInclude || []).forEach(function (rule) {
       var hits = (extraction && extraction.keywordHits) || {};
       if (!rule.whenTags.some(function (t) { return hits[String(t).toLowerCase()]; })) return;
-      rule.ids.forEach(function (id) { if (includeIds.indexOf(id) === -1 && excludeFactIds.indexOf(id) === -1) includeIds.push(id); });
+      rule.ids.forEach(function (id) {
+        if (includeIds.indexOf(id) === -1 && excludeFactIds.indexOf(id) === -1) { includeIds.push(id); conditionalAdded.push(id); }
+      });
     });
     var roleSource = choices && choices.roles ? findById(data.archetypes, choices.roles) : null;
     if (roleSource) {
@@ -663,6 +666,12 @@
         model.push(headBlock(data, section.headingText));
         model = model.concat(section.blocks);
       }
+    });
+
+    // Optional roles (conditionalInclude) are the first thing the trim ladder
+    // drops whole when the page is full: their bullets count as filler.
+    model.forEach(function (b) {
+      if (b._trim && b._group && conditionalAdded.indexOf(b._group.id) !== -1) b._trim.strength = "filler";
     });
 
     // A hand-edited profile (js/edits.js) replaces the approved one unless

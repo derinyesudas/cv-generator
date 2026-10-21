@@ -90,7 +90,9 @@ function bundleScripts() {
   fs.writeFileSync(tmp, combined);
   let minified = true;
   try {
-    execFileSync("npx", ["--yes", ESBUILD, tmp, "--minify", "--legal-comments=none", "--log-level=warning", "--outfile=" + outPath], {
+    const win = process.platform === "win32";
+    const q = (a) => (win && /\s/.test(a) ? '"' + a + '"' : a);
+    execFileSync("npx", ["--yes", ESBUILD, tmp, "--minify", "--legal-comments=none", "--log-level=warning", "--outfile=" + outPath].map(q), {
       stdio: ["ignore", "inherit", "inherit"],
       shell: process.platform === "win32",
     });

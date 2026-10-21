@@ -25,7 +25,7 @@ const jdPath = path.join(ROOT, 'tests', 'fixtures', 'jd', fixtureName + '.txt');
 const jdText = readFileSync(jdPath, 'utf8');
 
 const PORT = 8299;
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await browser.newPage();
 const consoleErrors = [];
 page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });

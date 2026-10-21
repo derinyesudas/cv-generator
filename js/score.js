@@ -327,18 +327,56 @@
   // file has no vocabulary for at all, producing a confidently wrong CV with
   // no visible sign anything was uncertain. The caller must not auto-build
   // from a noMatch pick; it should refuse and ask for a manual choice.
-  function pickArchetype(data, extraction) {
+  // Job-title words (archetypes[].titleKeywords, 21 Oct 2026): a sweep of
+  // 576 real ads showed the title is the strongest signal, and body words
+  // alone sent payroll and banking ads to the retail CV. Whole-word match,
+  // summed, capped so one long title cannot drown the body evidence.
+  var TITLE_CAP = 45;
+  function titleScore(archetype, title) {
+    var t = " " + String(title || "").toLowerCase().replace(/[^a-z0-9&+]+/g, " ").trim() + " ";
+    var score = 0;
+    var terms = [];
+    Object.keys(archetype.titleKeywords || {}).forEach(function (term) {
+      if (t.indexOf(" " + term.toLowerCase() + " ") !== -1) {
+        score += archetype.titleKeywords[term];
+        terms.push({ term: "title: " + term, weight: archetype.titleKeywords[term], hits: 1 });
+      }
+    });
+    return { score: Math.min(score, TITLE_CAP), terms: terms };
+  }
+
+  // title (optional): the job title read from the ad. With no keyword or
+  // title match at all, data.fallbackArchetype is used and `guessed` is set,
+  // so the page builds something and says it guessed rather than refusing.
+  function pickArchetype(data, extraction, title) {
     var ranked = data.archetypes
-      .map(function (a) { return scoreArchetype(a, extraction); })
+      .map(function (a) {
+        var s = scoreArchetype(a, extraction);
+        var ts = titleScore(a, title);
+        s.score += ts.score;
+        s.matchedTerms = ts.terms.concat(s.matchedTerms);
+        return s;
+      })
       .sort(function (a, b) {
         if (b.score !== a.score) return b.score - a.score;
         return a.archetype.priority - b.archetype.priority;
       });
+    var noMatch = ranked[0].score === 0;
+    var winner = ranked[0];
+    var guessed = false;
+    // Only for something the length of a real ad: a half-pasted or nonsense
+    // line still gets "no match" rather than a guessed CV.
+    if (noMatch && data.fallbackArchetype && String(extraction && extraction.raw || "").trim().length >= 300) {
+      winner = ranked.filter(function (r) { return r.archetype.id === data.fallbackArchetype; })[0] || winner;
+      noMatch = false;
+      guessed = true;
+    }
     return {
-      winner: ranked[0],
+      winner: winner,
       ranked: ranked,
-      topTerms: ranked[0].matchedTerms.slice(0, 3),
-      noMatch: ranked[0].score === 0
+      topTerms: winner.matchedTerms.slice(0, 3),
+      noMatch: noMatch,
+      guessed: guessed
     };
   }
 

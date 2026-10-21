@@ -27,7 +27,7 @@ if (!fixtureName) {
 }
 const jdText = readFileSync(path.join(ROOT, 'tests', 'fixtures', 'jd', fixtureName + '.txt'), 'utf8');
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await browser.newPage({ acceptDownloads: true });
 const consoleErrors = [];
 page.on('console', (msg) => { if (msg.type() === 'error' && !/404/.test(msg.text())) consoleErrors.push(msg.text()); });

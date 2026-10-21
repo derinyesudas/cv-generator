@@ -34,7 +34,7 @@ const PORT = 8299;
 // via spawnSync's backgrounded shell was unreliable (process didn't detach
 // before this script's goto() fired). Caller's job, not this script's.
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await browser.newPage();
 const consoleErrors = [];
 page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });

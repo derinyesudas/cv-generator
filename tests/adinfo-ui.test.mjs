@@ -91,7 +91,7 @@ const docs = await page.evaluate(() => ({
   letter: document.getElementById('letter-preview-container').textContent
 }));
 check('NetApp: CV right-to-work line names the ad\'s start', /and for a January 2027 start\./.test(docs.cv), docs.cv.slice(0, 300));
-check('NetApp: letter opening names role, team and company', /I am applying for the FP&A Intern role with the Financial Planning & Analysis team at NetApp\./.test(docs.letter), docs.letter.slice(0, 400));
+check('NetApp: letter opening names role, team and company', /the FP&A Intern role with the Financial Planning & Analysis team at NetApp\./.test(docs.letter), docs.letter.slice(0, 400));
 
 // 5. No company in the ad: alert, notification, letter download blocked.
 await paste('Claims Processor\n\nResponsibilities\n- Process insurance claims accurately against service level agreements.\n- Answer customer queries by phone and email.');

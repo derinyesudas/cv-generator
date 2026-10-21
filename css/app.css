@@ -2747,3 +2747,34 @@ blockquote,
 .trim-log-box[open] > summary {
   margin-bottom: 6px;
 }
+
+
+/* ---------- Ready card and ad buttons (21 Oct 2026) ----------------------
+   One place to look after pasting: what was built, the checks in plain
+   words, and one button for both PDFs. The gradient edge is the fun bit. */
+.ad-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.ready-card {
+  margin-top: 14px;
+  padding: 14px 16px 16px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg, #5b8cff, #1f8f4e 55%, #f0a531) border-box;
+}
+.ready-card[data-state="todo"] {
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg, #f0a531, #e0603a) border-box;
+}
+.ready-headline { margin: 0 0 2px; font-size: 1.08rem; font-weight: 700; color: var(--text); }
+.ready-sub { margin: 0 0 10px; color: var(--text-2); font-size: 0.93rem; }
+.ready-checks { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 7px; }
+.ready-checks li { display: flex; gap: 8px; align-items: flex-start; font-size: 0.93rem; line-height: 1.35; color: var(--text); }
+.ready-checks .mark { flex: none; width: 1.3em; text-align: center; }
+.ready-download { width: 100%; justify-content: center; }
+.ready-hint { margin: 8px 0 0; font-size: 0.84rem; color: var(--text-3); }
+@media (prefers-reduced-motion: no-preference) {
+  .ready-card:not([hidden]) { animation: ready-pop 260ms ease-out; }
+  @keyframes ready-pop { from { transform: scale(0.97); opacity: 0.4; } to { transform: none; opacity: 1; } }
+}
