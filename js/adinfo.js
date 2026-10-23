@@ -155,7 +155,16 @@
     if (/<\/?(?:p|div|br|li|ul|ol|span|strong|b|i|em|h\d|section|table|tr|td)\b/i.test(s)) {
       s = s.replace(/<\s*(?:br|\/p|\/div|\/li|\/h\d|\/tr|li|p|div|h\d)\b[^>]*>/gi, "\n").replace(/<[^>]+>/g, " ");
     }
-    return decodeEntities(s).replace(/\r\n?/g, "\n").replace(/[ \t ]+/g, " ");
+    s = decodeEntities(s).replace(/\r\n?/g, "\n");
+    // A job page copied as markdown (23 Oct 2026, the AXA ad): bold and
+    // heading marks, code fences, tree glyphs and [text](link) are page
+    // furniture, not words of the ad.
+    s = s.replace(/^\s*`{3,}.*$/gm, "")
+         .replace(/[├└│]──\s?|[├└│]/g, "")
+         .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+         .replace(/\*\*|__/g, "")
+         .replace(/\[([^\]\n]+)\]\((?:[^)\s]+)\)/g, "$1");
+    return s.replace(/[ \t ]+/g, " ");
   }
   function linesOf(plain) {
     return plain.split("\n").map(function (l) { return l.trim(); });
@@ -358,6 +367,13 @@
       if (lastWord && wordCount(t) > 2 && CITY_CANON[lastWord[1].toLowerCase()]) t = t.slice(0, lastWord.index);
       t = t.trim();
       if (t === before) break;
+    }
+    // "Analyst in LITTLE ISLAND, Ireland" (AXA's careers site): the place
+    // after "in" is not part of the title when it is a known city, written
+    // in capitals, or followed by the country.
+    var inPlace = /\s+in\s+([A-Za-zÀ-ÿ'’. -]+?)(\s*,\s*(?:Ireland|IE|Republic of Ireland|Northern Ireland|UK))?$/.exec(t);
+    if (inPlace && inPlace.index > 3 && (inPlace[2] || cityIn(inPlace[1]) || (/[A-Z]{3,}/.test(inPlace[1]) && inPlace[1] === inPlace[1].toUpperCase()))) {
+      t = t.slice(0, inPlace.index).trim();
     }
     // "RETAIL ASSISTANT": a title in capitals is set in title case.
     if (/[A-Z]{4,}/.test(t) && t === t.toUpperCase() && wordCount(t) >= 2) t = titleCase(t.toLowerCase());
@@ -661,6 +677,20 @@
   // Returns { company, role, city, team, recipientName, startDate, notes }.
   // Each field is null or { value, from, how, raw? }. `notes` carries
   // things worth saying that are not values ("the ad says Remote").
+  // Last resort for an ad that never names its employer in the text (the
+  // AXA ad only says "careers.axa.com"): the employer's own careers-site
+  // address. Job boards and hiring-system hosts are never used, and the
+  // field says where the name came from so it can be checked.
+  var BOARD_HOSTS = /^(?:www|linkedin|indeed|irishjobs|jobs|glassdoor|monster|recruit|workday|myworkdayjobs|greenhouse|lever|smartrecruiters|successfactors|taleo|icims|jobvite|bamboohr|teamtailor|personio|workable|ashbyhq|google|bing|github|gradireland|publicjobs|stepstone|jobsireland)$/i;
+  function companyFromLink(raw) {
+    var m = /https?:\/\/(?:careers?|jobs|apply|work|join)\.([a-z0-9-]{2,30})\.[a-z.]{2,10}\b/i.exec(raw) ||
+            /https?:\/\/([a-z0-9-]{2,30})\.(?:wd\d+\.myworkdayjobs|taleo|icims|jobs\.personio|teamtailor)\.[a-z.]{2,10}\b/i.exec(raw);
+    if (!m || BOARD_HOSTS.test(m[1])) return null;
+    var token = m[1].replace(/-/g, " ");
+    var value = token.length <= 4 ? token.toUpperCase() : token.replace(/\b[a-z]/g, function (c) { return c.toUpperCase(); });
+    return { value: value, raw: m[0], from: m[0], how: "link" };
+  }
+
   function extract(rawJD) {
     var raw = String(rawJD || "");
     var empty = { company: null, role: null, city: null, team: null, recipientName: null, startDate: null, notes: [] };
@@ -676,6 +706,7 @@
     if (cityHit && cityHit.value) city = { value: cityHit.value, from: cityHit.from, how: cityHit.how };
     else if (cityHit && cityHit.how === "remote") notes.push("The ad gives the location as remote.");
     else if (cityHit && cityHit.how === "several") notes.push("The ad names several cities (" + cityHit.from + ") without saying which office the role is in.");
+    if (!company) company = companyFromLink(raw);
     var team = findTeam(raw, plain, role, company && company.value);
     var recipient = findRecipient(raw, lines, plain);
     var start = findStartDate(raw, lines, plain);
