@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.47",
+  "_version": "1.48",
   "_changelog": [
+    {
+      "version": "1.48",
+      "date": "3 Nov 2026",
+      "summary": "Derin's instruction: the CV and cover letter generator is removed as a project from every CV and letter (facts.projects, its two bullets, all archetype includes, and the builds letter paragraph, which now describes the job tracker and its employer register only). Projects shown are the Ireland Job Tracker and the MSc market-surveillance project. Also: hr-supervisory no longer uses the loose 'managed a team' pattern, which flagged AXA's 'managing intraday performance across all Customer Care teams' as a people-management requirement."
+    },
     {
       "version": "1.47",
       "date": "21 Oct 2026",
@@ -10,7 +15,7 @@
     {
       "version": "1.46",
       "date": "21 Oct 2026",
-      "summary": "Sentence bank widened from approved facts only: 24 theme-matched why paragraphs (accuracy, data and reporting, clients, graduate training, process improvement, financial services, pensions and insurance, retail, technology, operations), one chosen per letter by the ad's words; two more quote frames; alternative wordings of the console and every TCS paragraph (letterBlocks.evidenceVariants), picked by a fixed rule on company and role; three new evidence paragraphs (forecasting, teamwork, languages); more closings and sign-offs; five alternative TCS bullets that follow the ad's words; second profiles for consulting-tech and graduate-programme; the tracker and generator projects on consulting CVs and the tracker on graduate CVs. All new entries carry _unmeasured. Consulting and graduate CVs use the compact analyst skill lines so the projects fit; the languages paragraph needs the ad to name Hindi, Malayalam or multilingual. Quote frames that say Derin has done the work (echo a, d, f; claimsExperience) are hand-pick only: a sweep showed tag matches too loose for that claim ('promote financial products', 'FX experience is essential'); only duty lines are quoted automatically; long or 'You will...' lines are no longer quoted automatically; 'the Graduate Programme role' reads 'the Graduate Programme'. Insurance-pensions and finance-ops CVs no longer always carry D-Mart: Circle K (current) appears when the ad asks for customer-facing work. Round 2 (reading letters as a recruiter): a letter no longer tells the same fact twice (FACT_MARKERS in js/letterbuild.js); graduate-programme why lines only on graduate CVs, with two training why paragraphs for other roles; the alert-console paragraph is no longer used for retail or contact-centre letters; titles in capitals are set in title case. Round 3 (reading CVs as a recruiter): experience lists relevant full-time work first, then the rest newest first; the graduate and consulting certification heading no longer says 'and volunteering', which the page never prints. Round 4: fact markers also catch the console referred to indirectly and the six-member MSc team; the third paragraph is checked against the wording that actually prints; the client paragraph no longer opens 'At Tata Consultancy Services' right after a paragraph that did. Claims processing is a fact marker too, and the tools and claims paragraphs no longer open the same way as the TCS paragraph before them."
+      "summary": "Sentence bank widened from approved facts only: 24 theme-matched why paragraphs (accuracy, data and reporting, clients, graduate training, process improvement, financial services, pensions and insurance, retail, technology, operations), one chosen per letter by the ad's words; two more quote frames; alternative wordings of the console and every TCS paragraph (letterBlocks.evidenceVariants), picked by a fixed rule on company and role; three new evidence paragraphs (forecasting, teamwork, languages); more closings and sign-offs; five alternative TCS bullets that follow the ad's words; second profiles for consulting-tech and graduate-programme; the tracker project on consulting CVs and the tracker on graduate CVs. All new entries carry _unmeasured. Consulting and graduate CVs use the compact analyst skill lines so the projects fit; the languages paragraph needs the ad to name Hindi, Malayalam or multilingual. Quote frames that say Derin has done the work (echo a, d, f; claimsExperience) are hand-pick only: a sweep showed tag matches too loose for that claim ('promote financial products', 'FX experience is essential'); only duty lines are quoted automatically; long or 'You will...' lines are no longer quoted automatically; 'the Graduate Programme role' reads 'the Graduate Programme'. Insurance-pensions and finance-ops CVs no longer always carry D-Mart: Circle K (current) appears when the ad asks for customer-facing work. Round 2 (reading letters as a recruiter): a letter no longer tells the same fact twice (FACT_MARKERS in js/letterbuild.js); graduate-programme why lines only on graduate CVs, with two training why paragraphs for other roles; the alert-console paragraph is no longer used for retail or contact-centre letters; titles in capitals are set in title case. Round 3 (reading CVs as a recruiter): experience lists relevant full-time work first, then the rest newest first; the graduate and consulting certification heading no longer says 'and volunteering', which the page never prints. Round 4: fact markers also catch the console referred to indirectly and the six-member MSc team; the third paragraph is checked against the wording that actually prints; the client paragraph no longer opens 'At Tata Consultancy Services' right after a paragraph that did. Claims processing is a fact marker too, and the tools and claims paragraphs no longer open the same way as the TCS paragraph before them."
     },
     {
       "version": "1.45",
@@ -25,7 +30,7 @@
     {
       "version": "1.43",
       "date": "20 Oct 2026",
-      "summary": "Analyst CV model (Derin's attached CV): business-analyst and analyst-bi now run profile, skills, projects, experience, education, certifications, with three projects (Ireland Job Tracker, CV and Cover Letter Generator, the MSc project, now naming the Deloitte mentor and the 467,799-record framework) and an analyst profile that presents the AI work as skill and control. Part-time roles appear on those CVs only when the ad asks for customer-facing or shift work. SQL is now a held skill (removed from neverClaim, knownAbsentTools, the SQL warning; hardreq marked held). Stable figures only (335 employers, 467,799 records). New entries carry _unmeasured. Analyst CVs use compact skill lines (Data and BI, Programming, Analytics, Ways of working) as in the attached CV; the analyst profile is the default (preferred) for analyst roles and the older analyst profiles stay selectable; short versions added for the new bullets and the profile."
+      "summary": "Analyst CV model (Derin's attached CV): business-analyst and analyst-bi now run profile, skills, projects, experience, education, certifications, with two projects (Ireland Job Tracker, the MSc project, now naming the Deloitte mentor and the 467,799-record framework) and an analyst profile that presents the AI work as skill and control. Part-time roles appear on those CVs only when the ad asks for customer-facing or shift work. SQL is now a held skill (removed from neverClaim, knownAbsentTools, the SQL warning; hardreq marked held). Stable figures only (335 employers, 467,799 records). New entries carry _unmeasured. Analyst CVs use compact skill lines (Data and BI, Programming, Analytics, Ways of working) as in the attached CV; the analyst profile is the default (preferred) for analyst roles and the older analyst profiles stay selectable; short versions added for the new bullets and the profile."
     },
     {
       "version": "1.42",
@@ -545,17 +550,6 @@
           "bul-tracker-register"
         ],
         "_unmeasured": true
-      },
-      {
-        "id": "proj-cvgen",
-        "title": "CV and Cover Letter Generator",
-        "org": "Personal project, built with Claude Code. derinyesudas.github.io/cv-generator",
-        "stack": "JavaScript | Rule-based | Automated Testing",
-        "bullets": [
-          "bul-cvgen-build",
-          "bul-cvgen-test"
-        ],
-        "_unmeasured": true
       }
     ]
   },
@@ -1052,47 +1046,6 @@
       "basis": {
         "strength": "support",
         "why": "Support: the data-sourcing detail behind the tracker."
-      }
-    },
-    "bul-cvgen-build": {
-      "variants": [
-        {
-          "id": "bul-cvgen-build",
-          "tags": [
-            "rule-based automation",
-            "data validation",
-            "process automation",
-            "document automation"
-          ],
-          "text": "Designed a rule-based web app that turns a pasted job ad into a tailored one-page CV and cover letter using only an approved fact bank, so nothing can be invented. It runs entirely in the browser, with no AI at runtime.",
-          "verifiedBy": "stated",
-          "_unmeasured": true,
-          "short": "Designed a rule-based web app that turns a pasted job ad into a tailored one-page CV and cover letter from an approved fact bank only, so nothing can be invented."
-        }
-      ],
-      "basis": {
-        "strength": "core",
-        "why": "Core on analyst CVs: shows control over AI-built output (nothing invented, rules and tests), the point Derin wants recruiters to take."
-      }
-    },
-    "bul-cvgen-test": {
-      "variants": [
-        {
-          "id": "bul-cvgen-test",
-          "tags": [
-            "automated testing",
-            "quality assurance",
-            "test cases",
-            "release checks"
-          ],
-          "text": "Specified its matching, page-fit and safety rules, built it with Claude Code, and tested it against real Irish job ads with automated checks on every release.",
-          "verifiedBy": "stated",
-          "_unmeasured": true
-        }
-      ],
-      "basis": {
-        "strength": "support",
-        "why": "Support: how it was built and checked."
       }
     }
   },
@@ -1746,7 +1699,6 @@
       "include": [
         "edu-msc",
         "edu-bms",
-        "proj-cvgen",
         "proj-jobtracker",
         "proj-smmd",
         "role-tcs",
@@ -1817,7 +1769,6 @@
       ],
       "include": [
         "proj-jobtracker",
-        "proj-cvgen",
         "proj-smmd",
         "role-tcs",
         "edu-msc",
@@ -1906,7 +1857,6 @@
       ],
       "include": [
         "proj-jobtracker",
-        "proj-cvgen",
         "proj-smmd",
         "edu-msc",
         "edu-bms",
@@ -3424,7 +3374,7 @@
           "dashboard",
           "tooling"
         ],
-        "text": "Outside my degree I build things that save time, and I treat each one as a data project: where the data comes from, how I know it is right, and who uses the result. I built a tracker that checks 335 Irish employers' own career sites on a schedule, and a rule-based CV and cover letter generator that can only use facts I have approved, with automated tests behind it. I use AI to build faster, and I wrote the rules, checked the output and tested it against real ads.",
+        "text": "Outside my degree I build things that save time, and I treat each one as a data project: where the data comes from, how I know it is right, and who uses the result. I built a tracker that checks 335 Irish employers' own career sites on a schedule and posts new roles to a live board, and I researched the employer register behind it: the careers page, sector, entry routes and hiring system for each company. I use AI to build faster, and I set the rules, checked the output and kept the data accurate.",
         "_unmeasured": true
       },
       {
@@ -4876,7 +4826,8 @@
           "team lead experience",
           "people management experience",
           "line management experience",
-          "managed a team"
+          "team leader experience",
+          "direct reports"
         ],
         "held": false,
         "qualification": false,
