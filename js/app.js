@@ -91,7 +91,6 @@
   var letterChoices = {};
   var lastCvAuto = null; // CVAssemble.autoPicks() for the current archetype + ad
   var lastAssembledModel = null; // the committed CV before trimming - which bullet groups are in play
-  var lastStartDateOpt = null; // the startDate option the committed CV was built with
   var lastCvFit = null; // committed CV's fit, for the preview readout to fall back to
   var lastLetterBase = null; // everything the committed letter was built from except choices/echo
   var lastLetterAuto = null; // { mode, why, echoFrame, evidence, gap } picked automatically for this letter
@@ -296,13 +295,11 @@
 
   function jdInputEl() { return document.getElementById('jd-input'); }
   function archetypeSelectEl() { return document.getElementById('archetype-select'); }
-  function startDateInputEl() { return document.getElementById('jd-start-date'); }
 
   function inputsNow() {
     var sel = archetypeSelectEl();
     var overridden = sel.value !== 'auto';
-    var startDateEl = startDateInputEl();
-    return { jdText: adText(), overridden: overridden, selValue: sel.value, startDateText: (startDateEl && startDateEl.value || '').trim() };
+    return { jdText: adText(), overridden: overridden, selValue: sel.value };
   }
 
   // The pasted ad as every step reads it: en and em dashes become plain
@@ -337,7 +334,7 @@
   // similar information."
   //
   // Every time the ad text changes, js/adinfo.js reads company, role, city,
-  // team, recipient name and start date out of it and the matching fields
+  // team and recipient name out of it and the matching fields
   // are filled in - except a field Derin has edited himself since this ad
   // was pasted, which is left exactly as he typed it. Pasting a different
   // ad (most of the text replaced, not an edit to it) starts over: every
@@ -345,7 +342,7 @@
   // ever guessed: each field says where its value came from (or that the ad
   // didn't give one), step 6 carries an alert naming what is missing, and a
   // notification pops up when a newly pasted ad leaves the company, role or
-  // city empty. Team, recipient name and start date still go through the
+  // city empty. Team and recipient name still go through the
   // same word-for-word validators as before (js/letterbuild.js), so a value
   // read here can never get past a check a typed one couldn't.
   var AD_FIELDS = [
@@ -358,9 +355,7 @@
     { key: 'team', id: 'letter-team', label: 'team', alert: false,
       none: 'No team named in the ad, so the letter addresses the company.' },
     { key: 'recipientName', id: 'letter-recipient-name', label: 'recipient name', alert: false,
-      none: 'No contact named in the ad, so the letter opens "Dear Hiring Team,".' },
-    { key: 'startDate', id: 'jd-start-date', label: 'start date', alert: false,
-      none: 'No start date stated in the ad.' }
+      none: 'No contact named in the ad, so the letter opens "Dear Hiring Team,".' }
   ];
   var adTypedByHand = {}; // field key -> true once Derin edits it for the current ad
   var lastAdText = null; // the ad text applyAdInfo() last read (null before the first read)
@@ -1731,8 +1726,8 @@
   // than silently leaving the previous state on screen under a new label.
   function recompute() {
     if (!loadedData || (dataErrors && dataErrors.length)) return;
-    // Ad details first (2 Oct 2026): fills company/role/city/team/recipient/
-    // start date from the ad before anything below reads those fields.
+    // Ad details first (2 Oct 2026): fills company/role/city/team/recipient
+    // from the ad before anything below reads those fields.
     applyAdInfo(adText());
     var inputs = inputsNow();
     var staleDraft = global.CVEdits.current();
@@ -1815,29 +1810,7 @@
       return;
     }
 
-    // Item 2b (26 Sept 2026): the ad's stated start date, same verbatim-in-
-    // JD constraint as TEAM (CVLetterBuild.validateStartDate), checked here
-    // rather than left to buildModel - a start date that isn't really in
-    // the pasted ad is a false claim about availability, exactly the class
-    // of thing this app refuses to build rather than silently drops. Empty
-    // is always valid (means "no ad start date typed", not an error).
-    var startCheck = CVLetterBuild.validateStartDate(inputs.startDateText, inputs.jdText);
-    if (!startCheck.valid) {
-      currentArchetypeId = null;
-      currentModel = null;
-      currentStamp = null;
-      showBuildError('Start date: ' + startCheck.reason);
-      clearFitCheck();
-      updateDownloadState();
-      clearLetterPanel('');
-      renderFormAnswers();
-      return;
-    }
-    var startDateOpt = startCheck.date
-      ? { text: startCheck.date, appliesExtended: CVLetterBuild.startDateTriggersExtendedAuth(startCheck.date) }
-      : null;
-
-    var jdHash = simpleHash(inputs.jdText + '|' + inputs.startDateText);
+    var jdHash = simpleHash(inputs.jdText);
     // Section picks belong to one archetype's CV (2 Oct 2026): a different
     // archetype starts from its own automatic picks again.
     if (currentArchetypeId && candidateArchetypeId !== currentArchetypeId) {
@@ -1846,7 +1819,7 @@
     }
     var attemptedModel;
     try {
-      attemptedModel = CVAssemble.buildModel(loadedData, candidateArchetypeId, { excludeFactIds: ['vol'], extraction: extraction, startDate: startDateOpt, choices: cvChoices });
+      attemptedModel = CVAssemble.buildModel(loadedData, candidateArchetypeId, { excludeFactIds: ['vol'], extraction: extraction, choices: cvChoices });
     } catch (err) {
       console.error(err);
       var label = (CVAssemble.findById(loadedData.archetypes, candidateArchetypeId) || {}).label || candidateArchetypeId;
@@ -1868,7 +1841,6 @@
     currentArchetypeId = candidateArchetypeId;
     currentStamp = { archetypeId: candidateArchetypeId, jdHash: jdHash, dataVersion: loadedData._version };
     lastAssembledModel = attemptedModel.slice();
-    lastStartDateOpt = startDateOpt;
     lastCvAuto = CVAssemble.autoPicks(loadedData, candidateArchetypeId, extraction);
     clearBuildError();
     updatePreview();
@@ -1966,7 +1938,7 @@
 
   function buildCvWith(choices) {
     var model = CVAssemble.buildModel(loadedData, currentArchetypeId, {
-      excludeFactIds: ['vol'], extraction: lastExtraction, startDate: lastStartDateOpt, choices: choices
+      excludeFactIds: ['vol'], extraction: lastExtraction, choices: choices
     });
     var assembled = model.slice();
     var fitted = fitToPage(model);
@@ -2529,13 +2501,7 @@
   // Item 5 (26 Sept 2026): deterministic answers to standard application-
   // form questions - data.formAnswers holds the static text; this function's
   // only job is picking WHICH static text applies: the salary bucket for the
-  // current archetype, and, for right-to-work/sponsorship, whether the live
-  // CV model's own "auth" block line has actually diverged from the plain
-  // data.identity.rightToWork sentence (i.e. the extended start-date
-  // template, item 2b, actually fired) - only then is it worth showing in
-  // place of the static answer, which is otherwise the MORE informative one
-  // (it also carries the permission detail - see data.formAnswers.
-  // rightToWorkSponsorship._why). Called once after boot()'s initial load
+  // current archetype. Called once after boot()'s initial load
   // (so the answers that don't depend on a build show immediately) and
   // again at the end of every successful updatePreview(), plus every early
   // return in recompute()/updatePreview() that resets currentModel/
@@ -2577,23 +2543,7 @@
 
     addRow(fa.careerBreak.question, fa.careerBreak.answer);
 
-    // The static answer is MORE informative than the plain CV auth line for
-    // an ordinary build (it also carries the permission detail from
-    // data.availability.permission - see this field's own _why) - so the
-    // live model's line is only worth preferring once it actually differs
-    // from the plain data.identity.rightToWork sentence, i.e. once the
-    // extended-start-date template (item 2b) has actually substituted a
-    // real date into it. Preferring the live line unconditionally would
-    // silently drop the permission detail on every ordinary build instead.
-    var authText = '';
-    if (currentModel) {
-      for (var i = 0; i < currentModel.length; i++) {
-        if (currentModel[i].t === 'auth' && currentModel[i].text) { authText = currentModel[i].text; break; }
-      }
-    }
-    var rtwAnswer = fa.rightToWorkSponsorship.answer;
-    if (authText && authText !== loadedData.identity.rightToWork) rtwAnswer = authText;
-    addRow(fa.rightToWorkSponsorship.question, rtwAnswer);
+    addRow(fa.rightToWorkSponsorship.question, fa.rightToWorkSponsorship.answer);
 
     addRow(fa.tcsRoleDescription.question, fa.tcsRoleDescription.answer, fa.tcsRoleDescription._pendingReview);
     addRow(fa.subjectsStudiedRelevance.question, fa.subjectsStudiedRelevance.answer, fa.subjectsStudiedRelevance._pendingReview);
@@ -2652,7 +2602,7 @@
     // CURRENT live inputs - defence in depth beyond recompute()'s own
     // try/catch, for any future code path that might call this directly.
     var inputs = inputsNow();
-    var liveJdHash = simpleHash(inputs.jdText + '|' + inputs.startDateText);
+    var liveJdHash = simpleHash(inputs.jdText);
     if (!currentStamp || !currentModel ||
         currentStamp.jdHash !== liveJdHash ||
         currentStamp.dataVersion !== loadedData._version ||
@@ -2920,8 +2870,6 @@
     document.getElementById('clear-ad-btn').addEventListener('click', handleClearAd);
     document.getElementById('download-both-btn').addEventListener('click', handleDownloadBoth);
     archetypeSelectEl().addEventListener('change', recompute);
-    var startDateEl = startDateInputEl();
-    if (startDateEl) startDateEl.addEventListener('input', debouncedRecompute);
     document.getElementById('download-btn').addEventListener('click', handleDownload);
     var pdfBtn = document.getElementById('download-pdf-btn');
     if (pdfBtn) pdfBtn.addEventListener('click', handlePdfDownload);
@@ -3026,7 +2974,7 @@
       },
       setModelForTest: function (newModel) {
         currentModel = newModel;
-        currentStamp = { archetypeId: currentArchetypeId, jdHash: simpleHash(inputsNow().jdText + '|' + inputsNow().startDateText), dataVersion: loadedData && loadedData._version };
+        currentStamp = { archetypeId: currentArchetypeId, jdHash: simpleHash(inputsNow().jdText), dataVersion: loadedData && loadedData._version };
         updatePreview();
       },
       // Read-only handle onto the exact object boot() loaded and configured

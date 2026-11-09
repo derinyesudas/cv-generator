@@ -23,8 +23,8 @@
 //     untidied text. These are slot values typed per application, not
 //     claims about Derin - the same values he used to type by hand.
 //
-//   team, recipientName, startDate - must appear word for word in the ad
-//     (validateTeam / validateRecipientName / validateStartDate block the
+//   team, recipientName - must appear word for word in the ad
+//     (validateTeam / validateRecipientName block the
 //     download otherwise), so each is only ever returned as an exact
 //     substring of the ad, never tidied or reworded.
 //
@@ -116,7 +116,6 @@
   var LABEL_LOCATION_RE = /^(?:locations?|job location|work location|office location|location\(s\)|city|based in|workplace location|primary location)\s*:\s*(.+)$/i;
   var LABEL_LOCATION_ALONE_RE = /^(?:locations?|job location|work location|office location|location\(s\)|city|primary location)\s*:?$/i;
   var LABEL_START_RE = /^(?:start date|starting date|commencement date|expected start date|anticipated start date|start)\s*:\s*(.+)$/i;
-  var LABEL_START_ALONE_RE = /^(?:start date|starting date|commencement date|expected start date|anticipated start date)\s*:?$/i;
   var LABEL_CONTACT_RE = /^(?:recruiter|contact|contact person|contact name|hiring manager|recruitment contact|talent (?:acquisition )?(?:partner|specialist|contact)|point of contact)\s*:\s*(.+)$/i;
 
   var LEGAL_SUFFIX_RE = /(?:,?\s+(?:limited|ltd\.?|dac|d\.a\.c\.|plc|p\.l\.c\.|inc\.?|incorporated|llc|llp|lp|gmbh|ag|s\.a\.|sa|se|n\.v\.|nv|b\.v\.|bv|unlimited company|designated activity company|uc|co-operative society limited))+\s*$/i;
@@ -655,26 +654,8 @@
     return null;
   }
 
-  // --- Start date (verbatim) ------------------------------------------------------------
-  var MONTH_YEAR_SRC = "((?:\\d{1,2}(?:st|nd|rd|th)?\\s+(?:of\\s+)?)?((?:January|February|March|April|May|June|July|August|September|October|November|December)\\s+\\d{4}))";
-  function findStartDate(raw, lines, plain) {
-    var labelled = findLabelled(lines, LABEL_START_RE, LABEL_START_ALONE_RE);
-    if (labelled) {
-      var lm = new RegExp(MONTH_YEAR_SRC, "i").exec(labelled.value);
-      if (lm && inAd(raw, lm[2])) return { value: lm[2], full: lm[1], from: labelled.line, how: "label" };
-      return { value: null, from: labelled.line, how: "label-unparsed" };
-    }
-    var re = new RegExp("\\b(?:start(?:ing)?(?: date)?(?: is| of)?(?: in| on| from)?|commenc(?:e|es|ing)(?: in| on)?|intake(?: in)?|join(?:ing)? us (?:in|on|from))\\s+" + MONTH_YEAR_SRC, "gi");
-    var m = re.exec(plain);
-    if (m && inAd(raw, m[2])) return { value: m[2], full: m[1], from: m[0].trim(), how: "body" };
-    var re2 = new RegExp("\\b(?:an?\\s+)" + MONTH_YEAR_SRC + "\\s+(?:start|intake)\\b", "gi");
-    m = re2.exec(plain);
-    if (m && inAd(raw, m[2])) return { value: m[2], full: m[1], from: m[0].trim(), how: "body" };
-    return null;
-  }
-
   // --- Public ----------------------------------------------------------------------------
-  // Returns { company, role, city, team, recipientName, startDate, notes }.
+  // Returns { company, role, city, team, recipientName, notes }.
   // Each field is null or { value, from, how, raw? }. `notes` carries
   // things worth saying that are not values ("the ad says Remote").
   // Last resort for an ad that never names its employer in the text (the
@@ -693,7 +674,7 @@
 
   function extract(rawJD) {
     var raw = String(rawJD || "");
-    var empty = { company: null, role: null, city: null, team: null, recipientName: null, startDate: null, notes: [] };
+    var empty = { company: null, role: null, city: null, team: null, recipientName: null, notes: [] };
     if (!raw.trim()) return empty;
     var plain = toPlain(raw);
     var lines = linesOf(plain);
@@ -709,13 +690,8 @@
     if (!company) company = companyFromLink(raw);
     var team = findTeam(raw, plain, role, company && company.value);
     var recipient = findRecipient(raw, lines, plain);
-    var start = findStartDate(raw, lines, plain);
-    if (start && !start.value) {
-      notes.push('The ad\'s start date ("' + start.from.replace(/^[^:]*:\s*/, "") + '") is not a month and year, so it was not used.');
-      start = null;
-    }
     if (role) delete role.headerIndex;
-    return { company: company, role: role, city: city, team: team, recipientName: recipient, startDate: start, notes: notes };
+    return { company: company, role: role, city: city, team: team, recipientName: recipient, notes: notes };
   }
 
   global.CVAdInfo = {

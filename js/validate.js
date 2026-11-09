@@ -835,13 +835,6 @@
           });
         });
       });
-      // data.identity.rightToWorkExtendedTemplate (26 Sept 2026, item 2b):
-      // the one template slot that lives outside letterBlocks - same
-      // author-time shape check, same reason (see js/assemble.js's
-      // buildAuthLine and js/matcher.js's KNOWN_LETTER_SLOTS comment).
-      if (data.identity && data.identity.rightToWorkExtendedTemplate) {
-        scanForSlots(data.identity.rightToWorkExtendedTemplate, "identity.rightToWorkExtendedTemplate");
-      }
     })();
 
     // --- Privacy pass (25 Sept 2026, Derin's own instruction, verbatim:

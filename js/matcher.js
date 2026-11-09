@@ -133,12 +133,7 @@
   }
   // The complete set of slot names actually wired up to a real value
   // somewhere in this app (js/letterbuild.js's buildLetterModel `slots`
-  // object, plus js/letter.js's salutationBlock RECIPIENT slot, plus
-  // js/assemble.js's buildAuthLine ADSTARTDATE slot, added 26 Sept 2026,
-  // item 2b - the first template slot used OUTSIDE letterBlocks, on the
-  // CV's own right-to-work line via data.identity.rightToWorkExtendedTemplate;
-  // this list's name predates that and is kept rather than renamed, since
-  // every name here is still "a known template slot", letter-only or not).
+  // object, plus js/letter.js's salutationBlock RECIPIENT slot).
   // A well-formed but unregistered slot ({{ROLLE}}, a typo) is a different
   // failure than a malformed one, but the same class Derin named: still
   // silent everywhere except a render-time throw that only fires for
@@ -148,7 +143,7 @@
   // js/letter.js, or js/assemble.js, it must be added here in the same
   // change, or validate.js will (correctly) refuse to load the data file
   // that uses it.
-  var KNOWN_LETTER_SLOTS = ["ROLE", "COMPANY", "TEAM", "ECHO", "YEARS", "RECIPIENT", "REFEREE", "ADSTARTDATE"];
+  var KNOWN_LETTER_SLOTS = ["ROLE", "COMPANY", "TEAM", "ECHO", "YEARS", "RECIPIENT", "REFEREE"];
 
   // ---------------------------------------------------------------------
   // Stem-set tag matching (27 Sept 2026, item 1 of Derin's matcher/deploy

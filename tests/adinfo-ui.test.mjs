@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Auto-filled letter details, in the real page (2 Oct 2026). Pastes real
 // fixture ads into index.test.html and checks that company/role/city/team/
-// start date fill themselves in, say where they came from, leave Derin's
+// recipient fill themselves in, say where they came from, leave Derin's
 // own edits alone, start over for a different ad, and raise an alert and a
 // notification for anything the ad doesn't give.
 //
@@ -29,7 +29,7 @@ page.on('pageerror', (e) => errors.push(e.message));
 await page.goto('http://localhost:8199/index.test.html');
 await page.waitForFunction(() => document.getElementById('load-status').textContent.includes('loaded'), { timeout: 15000 });
 
-const IDS = ['letter-company', 'letter-role', 'letter-city', 'letter-team', 'letter-recipient-name', 'jd-start-date'];
+const IDS = ['letter-company', 'letter-role', 'letter-city', 'letter-team', 'letter-recipient-name'];
 async function state() {
   return page.evaluate((ids) => {
     const out = {};
@@ -57,7 +57,7 @@ let s = await state();
 check('WTW: company read from the ad and tidied', s['letter-company'].value === 'WTW' && /WTW \(Willis Towers Watson\)/.test(s['letter-company'].source), JSON.stringify(s['letter-company']));
 check('WTW: role read and title-cased', s['letter-role'].value === 'Pensions Administrator' && s['letter-role'].state === 'ad', JSON.stringify(s['letter-role']));
 check('WTW: city read from the location line', s['letter-city'].value === 'Dublin', JSON.stringify(s['letter-city']));
-check('WTW: absent team/recipient/start date explained, not flagged', s['letter-team'].state === 'none' && s['letter-recipient-name'].state === 'none' && s['jd-start-date'].state === 'none', JSON.stringify([s['letter-team'], s['letter-recipient-name'], s['jd-start-date']]));
+check('WTW: absent team/recipient explained, not flagged', s['letter-team'].state === 'none' && s['letter-recipient-name'].state === 'none', JSON.stringify([s['letter-team'], s['letter-recipient-name']]));
 check('WTW: step 6 says the details are filled in; no notification', /filled in/.test(s.status) && s.toast === '', JSON.stringify([s.status, s.toast]));
 check('WTW: letter downloadable with nothing typed by hand', s.letterDl.disabled === false, JSON.stringify(s.letterDl));
 
@@ -81,16 +81,15 @@ const focused = await page.evaluate(() => document.activeElement && document.act
 check('notification "Fill in" goes to the missing field', focused === 'letter-city', focused);
 check('notification closes once used', (await state()).toast === '');
 
-// 4. NetApp: team and start date, both word for word from the ad.
+// 4. NetApp: team word for word from the ad; the CV header is Stamp 1G only.
 await paste(fixture('netapp-fpa-intern'));
 s = await state();
 check('NetApp: team read word for word', s['letter-team'].value === 'Financial Planning & Analysis team', JSON.stringify(s['letter-team']));
-check('NetApp: start date read (month and year)', s['jd-start-date'].value === 'January 2027', JSON.stringify(s['jd-start-date']));
 const docs = await page.evaluate(() => ({
   cv: document.getElementById('preview-container').textContent,
   letter: document.getElementById('letter-preview-container').textContent
 }));
-check('NetApp: CV right-to-work line names the ad\'s start', /and for a January 2027 start\./.test(docs.cv), docs.cv.slice(0, 300));
+check('NetApp: CV header says Stamp 1G and not the ad\'s start date', /Stamp 1G/.test(docs.cv) && !/January 2027/.test(docs.cv), docs.cv.slice(0, 300));
 check('NetApp: letter opening names role, team and company', /the FP&A Intern role with the Financial Planning & Analysis team at NetApp\./.test(docs.letter), docs.letter.slice(0, 400));
 
 // 5. No company in the ad: alert, notification, letter download blocked.

@@ -1540,63 +1540,26 @@ check('Action verbs: a bullet .short rewritten to open on a noun fails validatio
 check('Action verbs: an empty data.actionVerbs.list is itself a load-time error', actionVerbGates.emptyListFires === true, JSON.stringify(actionVerbGates));
 check('Action verbs: a mid-sentence attribution phrase after a real verb opener does not false-fire (Derin\'s own example)', actionVerbGates.midSentencePhrasePasses === true, JSON.stringify(actionVerbGates));
 
-// ---- Right-to-work start-date line: gate-fires (26 Sept 2026, item 2b,
-// Derin's own instruction, verbatim: "Take the date from the ad and
-// validate it verbatim, the same way as TEAM."). Proves: (1) the verbatim-
-// in-JD constraint really rejects a date not in the ad, exactly like TEAM;
-// (2) the "later than 1 November 2026" threshold fires only for a date
-// genuinely later than it (December 2026+ or any 2027+ month), not for
-// November 2026 itself or an unparseable shape; (3) js/assemble.js's
-// buildAuthLine actually produces the extended sentence, with correct
-// template provenance, only when both checks pass - and leaves the plain
-// rightToWork line completely untouched otherwise (the overwhelming
-// common case, and every one of the 8 real fixtures below, none of which
-// pass a startDate at all).
-console.log('\n--- Right-to-work start-date line: gate-fires ---');
-const startDateGates = await page.evaluate((data) => {
-  var results = {};
-  var jd = 'We are hiring for a role starting September 2027, apply now.';
-
-  var okCheck = CVLetterBuild.validateStartDate('September 2027', jd);
-  results.verbatimMatchValid = okCheck.valid === true && okCheck.date === 'September 2027';
-
-  var badCheck = CVLetterBuild.validateStartDate('October 2027', jd);
-  results.verbatimMismatchInvalid = badCheck.valid === false;
-
-  var emptyCheck = CVLetterBuild.validateStartDate('', jd);
-  results.emptyIsValid = emptyCheck.valid === true && emptyCheck.date === '';
-
-  results.septemberTriggers = CVLetterBuild.startDateTriggersExtendedAuth('September 2027') === true;
-  results.decemberTriggers = CVLetterBuild.startDateTriggersExtendedAuth('December 2026') === true;
-  results.novemberDoesNotTrigger = CVLetterBuild.startDateTriggersExtendedAuth('November 2026') === false;
-  results.unparseableDoesNotTrigger = CVLetterBuild.startDateTriggersExtendedAuth('Q3 2027') === false;
-
-  var extendedModel = CVAssemble.buildModel(data, 'consulting-tech', { excludeFactIds: ['vol'], startDate: { text: 'September 2027', appliesExtended: true } });
-  var authBlock = extendedModel.filter(function (b) { return b.t === 'auth'; })[0];
-  results.extendedLineRendersCorrectly = authBlock.text === 'Eligible to work in Ireland. No visa sponsorship required. Available from 1 November 2026 and for a September 2027 start.';
-  results.extendedLineHasTemplateProv = !!(authBlock._prov && authBlock._prov.text && authBlock._prov.text.template);
-
-  var plainModel = CVAssemble.buildModel(data, 'consulting-tech', { excludeFactIds: ['vol'] });
-  var plainAuthBlock = plainModel.filter(function (b) { return b.t === 'auth'; })[0];
-  results.noStartDateLeavesBaseLineUntouched = plainAuthBlock.text === data.identity.rightToWork;
-
-  var notTriggeredModel = CVAssemble.buildModel(data, 'consulting-tech', { excludeFactIds: ['vol'], startDate: { text: 'November 2026', appliesExtended: false } });
-  var notTriggeredAuthBlock = notTriggeredModel.filter(function (b) { return b.t === 'auth'; })[0];
-  results.notTriggeredLeavesBaseLineUntouched = notTriggeredAuthBlock.text === data.identity.rightToWork;
-
-  return results;
+// ---- Visa status (Derin, 9 Nov 2026): every archetype's CV header line
+// is "Stamp 1G" and nothing else, and no CV or letter text still says
+// "sponsorship" or "eligible to work".
+console.log('\n--- Visa status line: every archetype ---');
+const stampGates = await page.evaluate((data) => {
+  var printable = function (k, v) { return k.charAt(0) === '_' ? undefined : v; };
+  return data.archetypes.map(function (a) {
+    var model = CVAssemble.buildModel(data, a.id, { excludeFactIds: ['vol'] });
+    var auth = model.filter(function (b) { return b.t === 'auth'; });
+    return { id: a.id, auth: auth.map(function (b) { return b.text; }), oldWording: /sponsor|eligible to work/i.test(JSON.stringify(model, printable)) };
+  });
 }, dataJson);
-check('Start date: a verbatim JD match validates (same shape as TEAM)', startDateGates.verbatimMatchValid === true, JSON.stringify(startDateGates));
-check('Start date: a date not in the pasted JD is rejected', startDateGates.verbatimMismatchInvalid === true, JSON.stringify(startDateGates));
-check('Start date: an empty field is always valid (no ad start date typed)', startDateGates.emptyIsValid === true, JSON.stringify(startDateGates));
-check('Start date: "September 2027" is later than 1 Nov 2026 and triggers the extended line', startDateGates.septemberTriggers === true, JSON.stringify(startDateGates));
-check('Start date: "December 2026" is later than 1 Nov 2026 and triggers the extended line', startDateGates.decemberTriggers === true, JSON.stringify(startDateGates));
-check('Start date: "November 2026" itself does NOT trigger the extended line', startDateGates.novemberDoesNotTrigger === true, JSON.stringify(startDateGates));
-check('Start date: an unparseable shape ("Q3 2027") does NOT trigger the extended line (no invention)', startDateGates.unparseableDoesNotTrigger === true, JSON.stringify(startDateGates));
-check('Start date: the extended auth line renders exactly as Derin specified it, verbatim', startDateGates.extendedLineRendersCorrectly === true, JSON.stringify(startDateGates));
-check('Start date: the extended auth line carries template provenance (traceable, not a hand-typed exception)', startDateGates.extendedLineHasTemplateProv === true, JSON.stringify(startDateGates));
-check('Start date: no ad start date typed leaves the plain rightToWork line completely untouched', startDateGates.noStartDateLeavesBaseLineUntouched === true, JSON.stringify(startDateGates));
-check('Start date: a date that does not trigger the threshold also leaves the plain line untouched', startDateGates.notTriggeredLeavesBaseLineUntouched === true, JSON.stringify(startDateGates));
+stampGates.forEach(function (g) {
+  check('Visa status: ' + g.id + ' CV header line is exactly "Stamp 1G"', g.auth.length === 1 && g.auth[0] === 'Stamp 1G', JSON.stringify(g));
+  check('Visa status: ' + g.id + ' CV has no sponsorship/eligibility wording', g.oldWording === false, JSON.stringify(g));
+});
+check('Visa status: no letter block or form answer still says sponsorship or eligible to work',
+  !/sponsor|eligible to work/i.test(Object.values(dataJson.letterBlocks).flat().map((b) => (b.text || '') + ' ' + (b.noEchoText || '')).join(' ') +
+    Object.values(dataJson.formAnswers).map((a) => a.answer || '').join(' ')) &&
+  dataJson.formAnswers.rightToWorkSponsorship.answer === 'Stamp 1G');
 
 // ---- Close-match letter mode: gate-fires (26 Sept 2026, item 4, Derin's
 // own instruction: "Derin rejected a letter today as generic, for an ad...
@@ -1861,8 +1824,7 @@ if (softcoFixture) {
 // ---- Form-answers panel: gate-fires (item 5, 26 Sept 2026) ----------------
 // data.formAnswers holds the static text; js/app.js's renderFormAnswers()
 // picks WHICH static text applies (the salary bucket for the current
-// archetype) and prefers the live CV model's own "auth" block text over the
-// static right-to-work/sponsorship fallback. private-overrides.json is
+// archetype). private-overrides.json is
 // gitignored and never exists in this sandbox, so CVApp._test.
 // setPrivateOverridesForTest() substitutes a synthetic value for the
 // duration of these checks - same problem the refereeName tests solve by
@@ -1901,33 +1863,13 @@ check('Form answers: right-to-work falls back to the static answer with no live 
 check('Form answers: salary row reports no archetype selected yet (no guess)',
   /no archetype selected yet/i.test(findAnswer(noMatchRows, 'salary') || ''), JSON.stringify(noMatchRows));
 
-// Right-to-work/sponsorship: for an ORDINARY build (no ad start date typed)
-// the panel must keep showing the fuller STATIC answer, not the plain CV
-// auth line - the static answer also carries the permission detail
-// that the bare CV sentence doesn't, so silently preferring the live line
-// here would be a real regression, not an improvement (caught and fixed
-// this same pass - see js/app.js's renderFormAnswers() comment).
+// Right-to-work/sponsorship: a built CV shows the same "Stamp 1G" answer.
 await page.fill('#jd-input', '');
 await page.selectOption('#archetype-select', 'business-analyst');
 await page.waitForTimeout(300);
 const builtRows = await readFormAnswers();
-check('Form answers: right-to-work row keeps the fuller static answer on an ordinary build (not the shorter live CV line)',
-  findAnswer(builtRows, 'right to work') === dataJson.formAnswers.rightToWorkSponsorship.answer, JSON.stringify(builtRows));
-
-// Extended-start-date trigger (item 2b): typing a qualifying ad start date
-// must change the form-answers right-to-work row too, not just the CV
-// itself - proves renderFormAnswers() really does read the live model
-// rather than always falling back to the static field.
-await page.fill('#jd-start-date', 'September 2027');
-await page.fill('#jd-input', 'Business Analyst role. We are looking to fill this position with a September 2027 start.');
-await page.selectOption('#archetype-select', 'business-analyst');
-await page.waitForTimeout(300);
-const extendedRows = await readFormAnswers();
-check('Form answers: right-to-work row picks up the extended start-date line when that trigger fires',
-  /September 2027 start/.test(findAnswer(extendedRows, 'right to work') || ''), JSON.stringify(extendedRows));
-check('Form answers: extended right-to-work row differs from the plain static fallback',
-  findAnswer(extendedRows, 'right to work') !== dataJson.formAnswers.rightToWorkSponsorship.answer, JSON.stringify(extendedRows));
-await page.fill('#jd-start-date', '');
+check('Form answers: right-to-work row says "Stamp 1G" on a built CV',
+  findAnswer(builtRows, 'right to work') === 'Stamp 1G', JSON.stringify(builtRows));
 
 // Salary bucket lookup: confidently-mapped archetype + no override figure
 // on file -> named, non-blank instruction to add it, never a blank/guessed

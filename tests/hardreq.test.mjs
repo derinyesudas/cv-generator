@@ -111,7 +111,7 @@ console.log('\n--- Section 5 required cases ---');
   const jd = 'Must be able to work legally in Ireland without requiring visa sponsorship now or in the future.';
   const r = run(jd);
   check('StepStone sponsorship-now-or-future sentence -> AMBER', r.verdict === 'AMBER', JSON.stringify(r));
-  check('  ...with the fixed permission note', r.findings.some((f) => f.id === 'hr-sponsorship-future' && /permission to work/.test(f.note || '')), JSON.stringify(r.findings));
+  check('  ...with the fixed permission note', r.findings.some((f) => f.id === 'hr-sponsorship-future' && /Stamp 1G/.test(f.note || '')), JSON.stringify(r.findings));
 }
 
 // PASS (no finding): StepStone degree-pursuit sentence (standalone)

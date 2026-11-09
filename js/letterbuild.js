@@ -424,56 +424,6 @@
     return { valid: true, team: t };
   }
 
-  // --- START DATE (right-to-work auth line) -------------------------------
-  // 26 Sept 2026, item 2b, Derin's own instruction, verbatim: "Take the
-  // date from the ad and validate it verbatim, the same way as TEAM."
-  // Identical shape to validateTeam above - manual entry, empty-is-valid
-  // (no ad start date typed means "use the plain rightToWork line", not an
-  // error), non-empty must be a verbatim (case-insensitive) substring of
-  // the pasted JD. Lives here rather than in js/assemble.js because
-  // js/assemble.js loads BEFORE this file (<script> order in index.html) -
-  // js/app.js calls this (and startDateTriggersExtendedAuth below) BEFORE
-  // calling CVAssemble.buildModel, and passes only the trusted result in,
-  // the same division of labour buildModel() already uses for JD scoring
-  // (js/score.js decides, js/assemble.js only ever consumes the decision).
-  function validateStartDate(dateText, rawJD) {
-    var t = (dateText || "").trim();
-    if (!t) return { valid: true, date: "" };
-    var jd = rawJD || "";
-    if (jd.toLowerCase().indexOf(t.toLowerCase()) === -1) {
-      return { valid: false, date: t, reason: "\"" + t + "\" does not appear in the pasted job description. Paste the start date verbatim from the ad, or leave this blank." };
-    }
-    return { valid: true, date: t };
-  }
-
-  // Deliberately narrow, mechanical parse: "Month YYYY" only (full month
-  // name, case-insensitive), matching the one shape Derin's own example
-  // uses ("September 2027"). A date text that doesn't match this shape
-  // (a bare year, a DD/MM/YYYY figure, "Q3 2027") returns null rather than
-  // guessing - the extended auth line then simply does not fire, same
-  // "no invention" discipline as everything else in this file. If a real
-  // ad ever needs a different shape recognised, that is a deliberate,
-  // named addition to this parser, not something to guess past silently.
-  var MONTH_NAMES = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
-  function parseMonthYear(text) {
-    var m = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\b/i.exec(String(text || ""));
-    if (!m) return null;
-    return { month: MONTH_NAMES.indexOf(m[1].toLowerCase()), year: parseInt(m[2], 10) };
-  }
-
-  // "Later than 1 November 2026" (Derin's own threshold, verbatim). Month-
-  // granularity input means November 2026 itself is treated as NOT later
-  // (it could be the 1st) - only December 2026 or any month in 2027+
-  // trips it. Returns false (never fires the extended line) for anything
-  // that doesn't parse as Month+YYYY, per parseMonthYear's own comment.
-  function startDateTriggersExtendedAuth(dateText) {
-    var my = parseMonthYear(dateText);
-    if (!my) return false;
-    if (my.year > 2026) return true;
-    if (my.year === 2026 && my.month === 11 /* December, 0-indexed */) return true;
-    return false;
-  }
-
   // --- Close-match letter mode (26 Sept 2026, item 4, Derin's own
   // instruction, verbatim: "Derin rejected a letter today as generic, for
   // an ad... whose responsibilities were almost exactly his TCS job.
@@ -1229,8 +1179,6 @@
     quoteForm: quoteForm,
     validateTeam: validateTeam,
     validateRecipientName: validateRecipientName,
-    validateStartDate: validateStartDate,
-    startDateTriggersExtendedAuth: startDateTriggersExtendedAuth,
     computeCloseMatchTrigger: computeCloseMatchTrigger,
     buildLetterModel: buildLetterModel,
     // fillTemplate is exported for one real caller, not for convenience:

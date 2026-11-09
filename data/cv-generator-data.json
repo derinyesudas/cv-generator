@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.48",
+  "_version": "1.49",
   "_changelog": [
+    {
+      "version": "1.49",
+      "date": "9 Nov 2026",
+      "summary": "Derin's instruction: he now holds Stamp 1G. The CV header line (Word and PDF, every archetype) is 'Stamp 1G' and nothing else; the old eligibility/no-sponsorship sentence and the start-date add-on line (and its form field) are removed. The seven letter closes say 'I hold Stamp 1G' in place of the sponsorship clause, the right-to-work form answer is 'Stamp 1G', and the app's own notes name Stamp 1G."
+    },
     {
       "version": "1.48",
       "date": "3 Nov 2026",
@@ -226,9 +231,8 @@
         "link": "https://derinyesudas.github.io/"
       }
     ],
-    "rightToWork": "Eligible to work in Ireland. No visa sponsorship required.",
-    "rightToWorkExtendedTemplate": "Eligible to work in Ireland. No visa sponsorship required. Available from 1 November 2026 and for a {{ADSTARTDATE}} start.",
-    "_rightToWorkNote": "RESOLVED 26 Sept 2026 (item 2b, Derin's own instruction, verbatim): 'When the ad names a start date later than 1 November 2026, the auth line becomes: \"Eligible to work in Ireland. No visa sponsorship required. Available from 1 November 2026 and for a September 2027 start.\" Take the date from the ad and validate it verbatim, the same way as TEAM.' The old rightToWorkVariants array (three hand-typed alternative sentences, added earlier, never once read by any renderer or by js/assemble.js's buildModel, which always printed rightToWork alone) is REMOVED, not kept alongside the new mechanism - it was dead data describing a feature that was never actually wired up, and keeping it next to the real implementation would be exactly the 'two readings of one truth' problem this project keeps flagging elsewhere. The real mechanism: js/letterbuild.js's validateStartDate() constrains the typed ad-start-date to a verbatim JD substring (identical shape to validateTeam), js/letterbuild.js's startDateTriggersExtendedAuth() parses it as Month+YYYY and compares against 1 Nov 2026, and only when both checks pass does js/assemble.js's buildAuthLine() substitute {{ADSTARTDATE}} into rightToWorkExtendedTemplate above - never into rightToWork itself, which stays the untouched, always-true base sentence. HEIGHT, MEASURED NOT ASSUMED: the extended line is longer than the base sentence, which could in principle wrap to a second line and silently under-count in js/pagefit.js (identityHeight('rightToWork') is a single stored constant, not a live simulation, unlike letterBlocks templated content). Checked for real, against the actual renderer, before shipping rather than assumed safe: rendered the extended line through the app's own render-docx.js + LibreOffice + pdftotext (the same measurement method as everywhere else in this file) with both 'September 2027' (Derin's own example, tied for the longest month name) and 'May 2027' substituted for {{ADSTARTDATE}} - both measured at exactly 1 line, same as the base sentence, at the real CV page width and the rightToWork font size. So the existing single stored heightPx.identity.rightToWork constant (14.07px, 1 line) is correct for the extended line too, for every value startDateTriggersExtendedAuth can actually produce (parseMonthYear only accepts full month names, so no longer string is possible) - no pagefit.js change was needed, and this was proven, not assumed.",
+    "rightToWork": "Stamp 1G",
+    "_rightToWorkNote": "Derin, 9 Nov 2026: he holds Stamp 1G (full-time work, no restriction). The header line is 'Stamp 1G' and nothing else; the old 'Eligible to work in Ireland. No visa sponsorship required.' line and its start-date add-on (item 2b) are removed. Anywhere visa status is stated, it is 'Stamp 1G' only.",
     "_note": "GitHub is deliberately NOT in the contact list. Add github.com/derinyesudas only once the profile has a README, a bio and a pinned repository. An empty GitHub link is worse than none.",
     "signatureName": "Derin Yesudas",
     "analystLinks": [
@@ -242,8 +246,8 @@
     "fullTimeFrom": "1 November 2026",
     "partTimeNow": true,
     "noticePeriod": "None - not currently employed",
-    "permission": "No employment permit or sponsorship required.",
-    "_note": "The detailed permission wording lives in the private settings file (key 'permission') and never appears in the CV header; form answers may use it."
+    "permission": "Stamp 1G",
+    "_note": "Visa status is stated as 'Stamp 1G' only (Derin, 9 Nov 2026)."
   },
   "facts": {
     "education": [
@@ -3866,21 +3870,13 @@
     "close": [
       {
         "id": "let-close-std",
-        "text": "This is the work I want to be doing, and {{COMPANY}} is where I would like to do it. I am in Dublin, I need no sponsorship, and I am available full-time from 1 November.",
-        "heightPx": {
-          "letter": 37.07,
-          "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
-          "hash": "4673b805"
-        }
+        "text": "This is the work I want to be doing, and {{COMPANY}} is where I would like to do it. I am in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
+        "_unmeasured": true
       },
       {
         "id": "let-close-plain",
-        "text": "I am based in Dublin and need no visa sponsorship, and I am available full-time from 1 November.",
-        "heightPx": {
-          "letter": 18.53,
-          "note": "measured with template slots empty - wrap-simulator adds the runtime delta for whatever gets substituted",
-          "hash": "cbef1b87"
-        }
+        "text": "I am based in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
+        "_unmeasured": true
       },
       {
         "id": "let-close-referee",
@@ -3897,27 +3893,27 @@
       },
       {
         "id": "let-close-std-v2",
-        "text": "I would welcome the chance to talk this through, and I would be glad to do this work at {{COMPANY}}. I am in Dublin, I need no sponsorship, and I am available full-time from 1 November.",
+        "text": "I would welcome the chance to talk this through, and I would be glad to do this work at {{COMPANY}}. I am in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
         "_unmeasured": true
       },
       {
         "id": "let-close-std-v3",
-        "text": "{{COMPANY}} is where I would like to apply all of this, and I am glad to talk whenever suits. I am in Dublin, I need no sponsorship, and I am available full-time from 1 November.",
+        "text": "{{COMPANY}} is where I would like to apply all of this, and I am glad to talk whenever suits. I am in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
         "_unmeasured": true
       },
       {
         "id": "let-close-std-v4",
-        "text": "If it would help to talk any of this through, I am easy to reach. I am based in Dublin, I need no sponsorship, and I can start full-time from 1 November.",
+        "text": "If it would help to talk any of this through, I am easy to reach. I am based in Dublin, I hold Stamp 1G, and I can start full-time from 1 November.",
         "_unmeasured": true
       },
       {
         "id": "let-close-std-v5",
-        "text": "I would be glad to bring this to {{COMPANY}}. I live in Dublin, I do not need sponsorship, and I am available to start full-time from 1 November.",
+        "text": "I would be glad to bring this to {{COMPANY}}. I live in Dublin, I hold Stamp 1G, and I am available to start full-time from 1 November.",
         "_unmeasured": true
       },
       {
         "id": "let-close-plain-v2",
-        "text": "I live in Dublin, I do not need sponsorship, and I am available to start full-time from 1 November.",
+        "text": "I live in Dublin, I hold Stamp 1G, and I am available to start full-time from 1 November.",
         "_unmeasured": true
       }
     ],
@@ -4031,7 +4027,7 @@
       "id": "w-sponsorship",
       "severity": "info",
       "pattern": "(not eligible for visa sponsorship|no sponsorship|sponsorship is not available)",
-      "message": "Good news - you need no sponsorship, so say so prominently."
+      "message": "Good news - your Stamp 1G is already at the top of your CV."
     },
     {
       "id": "w-years",
@@ -4388,8 +4384,8 @@
     },
     "rightToWorkSponsorship": {
       "question": "Do you have the right to work in Ireland? Will you require visa sponsorship, now or in future?",
-      "answer": "Eligible to work in Ireland. No visa sponsorship required.",
-      "_why": "'The standard lines' (Derin, 26 Sept 2026) - built from identity.rightToWork plus availability.permission, both already-approved fields; availability.permission's own _note already says it 'may be used in application form answers about availability or sponsorship.' When the pasted ad names a start date that triggers identity.rightToWorkExtendedTemplate (item 2b), the app's own currently-built CV auth line is used in place of the plain identity.rightToWork sentence above - see js/app.js's form-answers panel, which reads the live CV model rather than this static field whenever a build exists, so the two can never silently disagree."
+      "answer": "Stamp 1G",
+      "_why": "Derin, 9 Nov 2026: visa status is answered as 'Stamp 1G' only."
     },
     "tcsRoleDescription": {
       "question": "Please describe your most recent / most relevant role.",
@@ -5031,7 +5027,7 @@
       },
       {
         "id": "hr-rtw-ireland",
-        "label": "Right to work in Ireland with no sponsorship now",
+        "label": "Right to work in Ireland (Stamp 1G)",
         "patterns": [
           "right to work in ireland"
         ],

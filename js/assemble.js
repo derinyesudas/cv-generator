@@ -131,52 +131,6 @@
     return textProv([{ ref: ref, field: field }], null);
   }
 
-  // --- Right-to-work / start-date auth line (26 Sept 2026, item 2b,
-  // Derin's own instruction, verbatim: "When the ad names a start date
-  // later than 1 November 2026, the auth line becomes: 'Eligible to work
-  // in Ireland. No visa sponsorship required. Available from 1 November
-  // 2026 and for a September 2027 start.' Take the date from the ad and
-  // validate it verbatim, the same way as TEAM.") The verbatim-in-JD
-  // validation and the "later than 1 Nov 2026" comparison both happen
-  // UPSTREAM of this file, in js/letterbuild.js's validateStartDate() +
-  // startDateTriggersExtendedAuth() (js/app.js calls both before ever
-  // reaching buildModel) - this function only ever receives an ALREADY
-  // TRUSTED { text, appliesExtended } object, or null/undefined when no ad
-  // start date applies, exactly the same division of labour buildModel()
-  // already uses for opts.extraction (JD scoring happens in js/score.js,
-  // not here). This file cannot call into js/letterbuild.js itself
-  // (<script> load order: assemble.js loads before letterbuild.js), which
-  // is exactly why the validation lives there and only the trusted RESULT
-  // crosses into this file.
-  //
-  // Provenance: the base line (no extended date, the overwhelming common
-  // case) is unchanged from before this item - a plain oneProv atom
-  // against data.identity.rightToWork. The extended line reuses the exact
-  // template-provenance shape js/letterbuild.js's templateProv() already
-  // established for letter blocks ({ template: { ref, field, slots } }) -
-  // js/verify.js's expectedFromProv() recognises this shape generically
-  // (it re-runs Matcher.slotRe()-based substitution against ref[field],
-  // it does not care whether ref is a letterBlocks entry or data.identity),
-  // so no change to js/verify.js was needed to make this provable.
-  function buildAuthLine(data, startDate) {
-    if (!startDate || !startDate.appliesExtended || !startDate.text) {
-      return { text: data.identity.rightToWork, prov: oneProv(data.identity, "rightToWork") };
-    }
-    var slots = { ADSTARTDATE: startDate.text };
-    var template = data.identity.rightToWorkExtendedTemplate;
-    var text = String(template).replace(Matcher.slotRe(), function (m, key) {
-      var v = slots[key];
-      return v == null ? m : v;
-    });
-    if (Matcher.slotRe().test(text)) {
-      throw new Error("assemble.js: data.identity.rightToWorkExtendedTemplate still has an unfilled {{SLOT}} after substitution.");
-    }
-    return {
-      text: text,
-      prov: { template: { ref: data.identity, field: "rightToWorkExtendedTemplate", slots: slots } }
-    };
-  }
-
   // Section headings must be sourced from SOME archetype's sectionOrder
   // array (itself data-file content), never hand-typed - searches every
   // archetype, not just the current one, since the same heading text can
@@ -670,14 +624,13 @@
         .concat(roleSource.include.filter(function (id) { return roleIds.indexOf(id) !== -1 && excludeFactIds.indexOf(id) === -1; }));
     }
 
-    var authLine = buildAuthLine(data, opts.startDate);
     var model = [
       { t: "name", text: data.identity.name, _prov: { text: oneProv(data.identity, "name") } },
       {
         t: "contact", items: data.identity.contact,
         _prov: { items: data.identity.contact.map(function (it) { return oneProv(it, "text"); }) }
       },
-      { t: "auth", text: authLine.text, _prov: { text: authLine.prov } },
+      { t: "auth", text: data.identity.rightToWork, _prov: { text: oneProv(data.identity, "rightToWork") } },
       { t: "spacer" }
     ];
     // Optional second contact line (Portfolio and GitHub on analyst CVs).

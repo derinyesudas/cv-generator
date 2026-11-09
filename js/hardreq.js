@@ -282,7 +282,7 @@
       requirementType: "n/a",
       held: "unknown",
       severity: "amber",
-      note: "Depends on how long your permission to work lasts - your answer to decide.",
+      note: "Depends on how long your Stamp 1G lasts - your answer to decide.",
       gapBlockId: null
     };
   }

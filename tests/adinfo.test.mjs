@@ -40,8 +40,8 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 
 console.log('\n--- Real ads (tests/fixtures/jd) ---');
 const FIXTURES = {
-  'wtw-pensions-administrator': { company: 'WTW', role: 'Pensions Administrator', city: 'Dublin', team: null, recipientName: null, startDate: null },
-  'netapp-fpa-intern': { company: 'NetApp', role: 'FP&A Intern', city: 'Cork', team: 'Financial Planning & Analysis team', startDate: 'January 2027' },
+  'wtw-pensions-administrator': { company: 'WTW', role: 'Pensions Administrator', city: 'Dublin', team: null, recipientName: null },
+  'netapp-fpa-intern': { company: 'NetApp', role: 'FP&A Intern', city: 'Cork', team: 'Financial Planning & Analysis team' },
   'ornua-graduate-trainee': { company: 'Ornua', role: 'Graduate Trainee', city: 'Dublin', team: null },
   'sigmar-customer-service-representative-night': { company: 'Sigmar Recruitment', role: 'Customer Service Representative', city: 'Galway', team: null, recipientName: null },
   'standard-life-pensions-investments-administrator': { company: 'Standard Life', role: 'Pensions and Investments Administrator', city: null },
@@ -88,7 +88,7 @@ const WORKDAY = [
   'At Brightwater Insurance, we put customers first. Brightwater Insurance is one of Ireland\'s largest insurers.',
   'Responsibilities', '- Handle claims end to end.', 'Start date: September 2027'
 ].join('\n');
-expectFields('Workday layout (labels on their own lines)', extract(WORKDAY), { company: 'Brightwater Insurance', role: 'Claims Handler', city: 'Cork', startDate: 'September 2027' });
+expectFields('Workday layout (labels on their own lines)', extract(WORKDAY), { company: 'Brightwater Insurance', role: 'Claims Handler', city: 'Cork' });
 
 const INDEED = [
   'Data Analyst – Operations', 'Northwind Logistics', 'Limerick', '€38,000 - €42,000 a year - Full-time', 'Apply now',
@@ -106,13 +106,6 @@ const REMOTE = ['Customer Support Agent', 'Harbour Software', 'Location: Remote'
 const remote = extract(REMOTE);
 check('Location: Remote -> no city, and a note saying so', v(remote, 'city') === null && remote.notes.some((n) => /remote/i.test(n)), JSON.stringify(remote));
 
-const ASAP = ['Accounts Assistant', 'Kestrel Foods', 'Galway', 'Start date: ASAP', 'Responsibilities', 'Process invoices.'].join('\n');
-const asap = extract(ASAP);
-check('Start date: ASAP -> no start date (not a month and year), with a note', v(asap, 'startDate') === null && asap.notes.some((n) => /ASAP/.test(n)), JSON.stringify(asap));
-
-const SEPT = 'Graduate Analyst\nOrbit Bank\nDublin\n\nThis is a September 2027 start, joining our graduate intake.';
-expectFields('prose start date ("a September 2027 start")', extract(SEPT), { startDate: 'September 2027' });
-
 const HTML = 'Title: Junior Analyst\n<div><p><strong>About Quill Analytics:</strong></p><p>Quill Analytics is a data firm. At Quill Analytics, you will join our Risk &amp; Pricing team in Dublin.</p></div>';
 const html = extract(HTML);
 expectFields('raw HTML paste', html, { company: 'Quill Analytics', role: 'Junior Analyst', city: 'Dublin' });
@@ -121,7 +114,7 @@ check('raw HTML paste: a team spelled "&amp;" in the paste is not returned as "&
 const NOTHING = 'We are a friendly bunch. Apply today and tell us about yourself. Great benefits and a lovely office.';
 const none = extract(NOTHING);
 check('an ad with no title, company or place yields nulls, not guesses',
-  ['company', 'role', 'city', 'team', 'recipientName', 'startDate'].every((k) => none[k] === null), JSON.stringify(none));
+  ['company', 'role', 'city', 'team', 'recipientName'].every((k) => none[k] === null), JSON.stringify(none));
 check('empty input', Object.values(extract('')).every((x) => x === null || (Array.isArray(x) && !x.length)));
 
 console.log('\n--- Tidying ---');
@@ -138,25 +131,25 @@ console.log('\n--- Invariants over every input above ---');
 const ALL = [
   ...Object.keys(FIXTURES).map((n) => read(`tests/fixtures/jd/${n}.txt`)),
   ...Object.keys(REAL).map((n) => read(`tests/golden/real-jds/${n}.txt`)),
-  LINKEDIN, WORKDAY, INDEED, GREENHOUSE, REMOTE, ASAP, SEPT, HTML, NOTHING
+  LINKEDIN, WORKDAY, INDEED, GREENHOUSE, REMOTE, HTML, NOTHING
 ];
 let verbatimOk = true;
 let cleanOk = true;
 const bad = [];
 for (const text of ALL) {
   const r = extract(text);
-  for (const k of ['team', 'recipientName', 'startDate']) {
+  for (const k of ['team', 'recipientName']) {
     if (r[k] && text.toLowerCase().indexOf(r[k].value.toLowerCase()) === -1) { verbatimOk = false; bad.push(k + ': ' + r[k].value); }
   }
   for (const k of ['company', 'role', 'city', 'team']) {
     const val = r[k] && r[k].value;
     if (val && (/[–—]/.test(val) || /\s{2,}/.test(val) || /^\s|\s$/.test(val) || /[{}<>]/.test(val))) { cleanOk = false; bad.push(k + ': ' + val); }
   }
-  for (const k of ['company', 'role', 'city', 'team', 'recipientName', 'startDate']) {
+  for (const k of ['company', 'role', 'city', 'team', 'recipientName']) {
     if (r[k] && !r[k].from) { cleanOk = false; bad.push(k + ' has no "from"'); }
   }
 }
-check('team, recipient name and start date are always word-for-word substrings of the ad (what the validators require)', verbatimOk, bad.join(' | '));
+check('team and recipient name are always word-for-word substrings of the ad (what the validators require)', verbatimOk, bad.join(' | '));
 check('no value carries an en/em dash, a double space, stray whitespace or markup; every value says where it came from', cleanOk, bad.join(' | '));
 
 console.log(`\n${passes} passed, ${failures} failed`);
