@@ -758,8 +758,8 @@ check('data._version matches its own most recent _changelog entry (self-consiste
 
 const consultingArch = dataJson.archetypes.find((a) => a.id === 'consulting-tech');
 check('consulting-tech no longer carries _pendingReview (resolved)', !consultingArch._pendingReview, JSON.stringify(consultingArch._pendingReview));
-check('consulting-tech._why states its own basis for Blarney (three grounds) and volunteering',
-  /verifiable Irish work/.test(consultingArch._why) && /community involvement/.test(consultingArch._why),
+check('consulting-tech._why states the TCS-only rule (9 Nov 2026) and keeps its volunteering basis',
+  /Experience shows TCS only/.test(consultingArch._why) && /community involvement/.test(consultingArch._why),
   consultingArch._why);
 
 const consultingNotice2 = await archetypeNoticeState('consulting-tech');
@@ -787,11 +787,8 @@ check('archetype-notice no longer fires for consulting-tech (regression guard on
 const customerOpsArch = dataJson.archetypes.find((a) => a.id === 'customer-ops');
 check('customer-ops no longer carries _pendingReview (role-blarney gap resolved)',
   !customerOpsArch._pendingReview, JSON.stringify(customerOpsArch._pendingReview));
-check('customer-ops._why states its own basis for role-blarney (reliability/service-environment grounds)',
-  /back-of-house/i.test(customerOpsArch._why) && /not customer-facing/i.test(customerOpsArch._why),
-  customerOpsArch._why);
-check('customer-ops._why states role-dmart\'s own resolved basis (regression guard - no longer an open question)',
-  /role-dmart/.test(customerOpsArch._why) && /RESOLVED/.test(customerOpsArch._why) && !/OPEN QUESTION/.test(customerOpsArch._why),
+check('customer-ops._why states the TCS-only rule (9 Nov 2026: part-time jobs only on the retail CV)',
+  /Experience shows TCS only/.test(customerOpsArch._why) && !customerOpsArch.include.some((id) => /role-(circlek|dmart|blarney)/.test(id)),
   customerOpsArch._why);
 check('bulletVariants.b-dmart (unverified, job-board-shaped text) is gone',
   !dataJson.bulletVariants['b-dmart'], Object.keys(dataJson.bulletVariants).filter(k => k.includes('dmart')).join(', '));
@@ -1147,11 +1144,16 @@ const tcsMapping = await page.evaluate((data) => {
   var pilotPick = evidenceIdFor('consulting-tech', ['accuracy', 'financial services', 'migration', 'pilot'], 'a process nobody had run before');
   var controlPick = evidenceIdFor('business-analyst', ['accuracy', 'financial services', 'peer review', 'controls'], 'a process nobody had run before');
   var improvePick = evidenceIdFor('customer-ops', ['accuracy', 'financial services', 'automation', 'process improvement'], 'a process nobody had run before');
-  var shiftPick = evidenceIdFor('retail-parttime', ['shift work', 'reliability', 'targets', 'punctuality'], 'a shift you did not pick');
+  // retail (9 Nov 2026): the Circle K paragraph is always one of the two
+  // (archetype letterLead), with the TCS shift paragraph as its partner
+  var retailIds = CVLetterBuild.buildLetterModel(data, {
+    archetypeId: 'retail-parttime', extraction: { keywordHits: { 'shift work': true, reliability: true, targets: true, punctuality: true } },
+    rawJD: '', company: 'Acme', role: 'Analyst', echoText: 'a shift you did not pick'
+  }).blocks.filter(function (b) { return b.category === 'evidence'; }).map(function (b) { return b.id; });
   results.pilotArchetypePicksPilotVariant = pilotPick && pilotPick.id === 'let-ev-tcs-pilot';
   results.controlArchetypePicksControlVariant = controlPick && controlPick.id === 'let-ev-tcs-control';
   results.improveArchetypePicksImproveVariant = improvePick && improvePick.id === 'let-ev-tcs-improve';
-  results.retailArchetypePicksShiftVariant = shiftPick && shiftPick.id === 'let-ev-tcs-shift';
+  results.retailArchetypePicksShiftVariant = retailIds.indexOf('let-ev-tcs-shift') !== -1 && retailIds.indexOf('let-ev-x-circlek') !== -1;
 
   // noEchoText branch: with echoText empty, the returned text must be the
   // shorter sibling (no trailing ECHO sentence), never a dangling {{ECHO}}.
@@ -1206,8 +1208,8 @@ const tcsMapping = await page.evaluate((data) => {
     archetypeId: 'retail-parttime', extraction: realExtraction, rawJD: realJD,
     company: 'Acme Retail', role: 'Sales Assistant', echoText: 'turn up for every shift'
   });
-  var realEvidence = realModel.blocks.filter(function (b) { return b.category === 'evidence' && b.evidenceRole === 'primary'; })[0];
-  results.realPipelinePicksShiftVariant = realEvidence && realEvidence.id === 'let-ev-tcs-shift';
+  var realIds = realModel.blocks.filter(function (b) { return b.category === 'evidence'; }).map(function (b) { return b.id; });
+  results.realPipelinePicksShiftVariant = realIds.indexOf('let-ev-tcs-shift') !== -1 && realIds.indexOf('let-ev-x-circlek') !== -1;
 
   return results;
 }, dataJson);
@@ -1221,7 +1223,7 @@ check('TCS evidence mapping: business-analyst (control) resolves to let-ev-tcs-c
   tcsMapping.controlArchetypePicksControlVariant === true, JSON.stringify(tcsMapping));
 check('TCS evidence mapping: customer-ops (improve) resolves to let-ev-tcs-improve',
   tcsMapping.improveArchetypePicksImproveVariant === true, JSON.stringify(tcsMapping));
-check('TCS evidence mapping: retail-parttime resolves to let-ev-tcs-shift (20 Sept 2026 correction)',
+check('TCS evidence mapping: retail-parttime resolves to let-ev-tcs-shift (20 Sept 2026 correction), beside the Circle K paragraph (9 Nov 2026)',
   tcsMapping.retailArchetypePicksShiftVariant === true, JSON.stringify(tcsMapping));
 check('TCS evidence mapping: noEchoText is used (not a dangling {{ECHO}}) when no echo quote is available',
   tcsMapping.noEchoTextUsedWhenEchoEmpty === true, JSON.stringify(tcsMapping));
@@ -1303,7 +1305,7 @@ check('Second evidence paragraph: picking the AI one by hand keeps the TCS parag
   JSON.stringify([secondEv.handPickAi, secondEv.noneSecond]));
 check('allKnownTags fix: a real JD about night shifts/reliability/targets actually registers hits under the evidence tags',
   tcsMapping.realExtractionHasShiftTagHits === true, JSON.stringify(tcsMapping));
-check('allKnownTags fix: real CVScore.extractFromJD pipeline (not injected hits) still picks let-ev-tcs-shift for retail-parttime',
+check('allKnownTags fix: real CVScore.extractFromJD pipeline (not injected hits) still picks let-ev-tcs-shift for retail-parttime, beside Circle K',
   tcsMapping.realPipelinePicksShiftVariant === true, JSON.stringify(tcsMapping));
 
 // ---- Zero-saving shorts: measured, reported, and skipped at runtime (20
@@ -1560,6 +1562,45 @@ check('Visa status: no letter block or form answer says sponsorship, eligible to
   !/sponsor|eligible to work|1 November|start full-time/i.test(Object.values(dataJson.letterBlocks).flat().map((b) => (b.text || '') + ' ' + (b.noEchoText || '')).join(' ') +
     Object.values(dataJson.formAnswers).map((a) => a.answer || '').join(' ')) &&
   dataJson.formAnswers.rightToWorkSponsorship.answer === 'Stamp 1G');
+
+// ---- TCS only (Derin, 9 Nov 2026): ATS screens read the newest job first,
+// so every CV except retail lists TCS as its only job, with both projects;
+// no profile or letter paragraph a non-retail CV can use names a part-time
+// job; the retail CV runs newest first (Circle K leads) and is picked only
+// for a shop job title.
+console.log('\n--- TCS only on every non-retail CV ---');
+const PART_TIME_RE = /Circle K|D-Mart|Blarney|kitchen|supermarket|\btill\b|shop floor|petrol station/i;
+const tcsOnly = await page.evaluate((data) => {
+  return data.archetypes.map(function (a) {
+    var model = CVAssemble.buildModel(data, a.id, { excludeFactIds: ['vol'] });
+    var ids = function (kind) { return model.filter(function (b) { return b.t === 'role' && b._group && b._group.kind === kind; }).map(function (b) { return b._group.id; }); };
+    return { id: a.id, roles: ids('role'), projects: ids('project') };
+  });
+}, dataJson);
+tcsOnly.forEach(function (g) {
+  if (g.id === 'retail-parttime') {
+    check('TCS only: retail CV keeps every job, newest first (Circle K leads)', g.roles.join() === 'role-circlek,role-blarney,role-tcs,role-dmart', JSON.stringify(g));
+  } else {
+    check('TCS only: ' + g.id + ' CV lists TCS as its only job', g.roles.join() === 'role-tcs', JSON.stringify(g));
+    check('TCS only: ' + g.id + ' CV shows both projects', g.projects.join() === 'proj-jobtracker,proj-smmd', JSON.stringify(g));
+  }
+});
+const nonRetailPartTime = [];
+dataJson.profileVariants.forEach((p) => {
+  if (p.archetypes.some((id) => id !== 'retail-parttime') && PART_TIME_RE.test(p.text + ' ' + (p.short || ''))) nonRetailPartTime.push(p.id);
+});
+['opening', 'why', 'evidence', 'gap', 'close', 'closeMatch'].forEach((cat) => (dataJson.letterBlocks[cat] || []).forEach((b) => {
+  var usable = !b.archetypes || b.archetypes.some((id) => id !== 'retail-parttime');
+  if (usable && PART_TIME_RE.test((b.text || '') + ' ' + (b.noEchoText || ''))) nonRetailPartTime.push(b.id);
+}));
+check('TCS only: no profile or letter paragraph a non-retail CV can use names a part-time job', nonRetailPartTime.length === 0, nonRetailPartTime.join(', '));
+const retailPick = await page.evaluate((data) => ['Retail Systems Analyst', 'Medical Scientist', 'Retail Assistant', 'Assistant Store Manager'].map(function (title) {
+  var extraction = CVScore.extractFromJD(data, title + '\nServe customers in store, handle cash and keep the shop floor stocked on shift work.');
+  return { title: title, winner: CVScore.pickArchetype(data, extraction, title).winner.archetype.id };
+}), dataJson);
+check('TCS only: the retail CV is picked for shop titles and never for "Retail Systems Analyst" or "Medical Scientist"',
+  retailPick[0].winner !== 'retail-parttime' && retailPick[1].winner !== 'retail-parttime' &&
+  retailPick[2].winner === 'retail-parttime' && retailPick[3].winner === 'retail-parttime', JSON.stringify(retailPick));
 
 // ---- Close-match letter mode: gate-fires (26 Sept 2026, item 4, Derin's
 // own instruction: "Derin rejected a letter today as generic, for an ad...

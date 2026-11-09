@@ -891,7 +891,11 @@
       // tell a fact it already tells (both describing the operating procedure).
       var tcsMarks = tcsCandidate ? markersOf(tcsCandidate.text) : {};
       var primaryPool = evidenceCandidates.filter(function (e) { return isTcsEvidence(e) || !sharesFact(markersOf(e.text), tcsMarks); });
-      autoPrimary = bestByTags(primaryPool.length ? primaryPool : evidenceCandidates, extraction);
+      // An archetype's letterLead is always one of its two paragraphs: the
+      // retail letter tells the current shop job, Circle K (Derin, 9 Nov 2026).
+      var leadId = (Assemble.findById(data.archetypes, archetypeId) || {}).letterLead;
+      autoPrimary = evidenceCandidates.filter(function (e) { return e.id === leadId; })[0] ||
+        bestByTags(primaryPool.length ? primaryPool : evidenceCandidates, extraction);
       autoSecond = partnerFor(autoPrimary);
     }
     var evidenceOrder = (lb.evidence || []).map(function (e) { return e.id; });

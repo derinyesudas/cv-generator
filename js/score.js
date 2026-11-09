@@ -336,6 +336,8 @@
     var t = " " + String(title || "").toLowerCase().replace(/[^a-z0-9&+]+/g, " ").trim() + " ";
     var score = 0;
     var terms = [];
+    // A title word that rules this archetype out ("Retail Systems Analyst" is not a shop job).
+    if ((archetype.titleExclude || []).some(function (w) { return t.indexOf(" " + w + " ") !== -1; })) return { score: 0, terms: terms };
     Object.keys(archetype.titleKeywords || {}).forEach(function (term) {
       if (t.indexOf(" " + term.toLowerCase() + " ") !== -1) {
         score += archetype.titleKeywords[term];
@@ -354,6 +356,9 @@
         var s = scoreArchetype(a, extraction);
         var ts = titleScore(a, title);
         s.score += ts.score;
+        // The retail CV leads with part-time shop work, so only a shop job
+        // title can pick it (Derin, 9 Nov 2026).
+        if (a.titleRequired && !ts.score) s.score = 0;
         s.matchedTerms = ts.terms.concat(s.matchedTerms);
         return s;
       })

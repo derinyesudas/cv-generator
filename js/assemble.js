@@ -426,20 +426,22 @@
   }
 
   // Relevant full-time work first, then everything else newest first, so a
-  // current part-time job never sits under one from 2021 (21 Oct 2026).
-  function roleOrder(roles) {
+  // current part-time job never sits under one from 2021 (21 Oct 2026). An
+  // archetype with roleOrder "newest" (the retail CV) is newest first only,
+  // so Circle K leads there (9 Nov 2026).
+  function roleOrder(roles, newestOnly) {
     return roles.map(function (r, i) { return { r: r, i: i }; }).sort(function (a, b) {
       var ea = a.r.employment || {}, eb = b.r.employment || {};
       var ra = ea.countsAsRelevant ? 1 : 0, rb = eb.countsAsRelevant ? 1 : 0;
-      if (ra !== rb) return rb - ra;
+      if (ra !== rb && !newestOnly) return rb - ra;
       var sa = ea.startDate || "", sb = eb.startDate || "";
       if (sa !== sb) return sa < sb ? 1 : -1;
       return a.i - b.i;
     }).map(function (x) { return x.r; });
   }
 
-  function buildExperience(data, includeIds, headingText, extraction, choices) {
-    var roles = roleOrder(selectInOrder(data.facts.roles, includeIds));
+  function buildExperience(data, includeIds, headingText, extraction, choices, newestOnly) {
+    var roles = roleOrder(selectInOrder(data.facts.roles, includeIds), newestOnly);
     if (!roles.length) return null;
     var blocks = [];
     roles.forEach(function (role) {
@@ -566,7 +568,7 @@
       case "profile": return buildProfile(data, archetype, headingText, extraction, choices);
       case "skills": return buildSkills(data, archetype, headingText, extraction, choices);
       case "project": return buildProjects(data, includeIds, headingText, extraction, choices);
-      case "experience": return buildExperience(data, includeIds, headingText, extraction, choices);
+      case "experience": return buildExperience(data, includeIds, headingText, extraction, choices, archetype.roleOrder === "newest");
       case "education": return buildEducation(data, includeIds, headingText);
       case "certifications": return buildCertificationsAndVolunteering(data, includeIds, headingText);
       default:
@@ -607,16 +609,6 @@
     var includeIds = archetype.include.filter(function (id) {
       return excludeFactIds.indexOf(id) === -1;
     });
-    // Roles an archetype lists only when the ad hits one of the tags (e.g. a
-    // part-time job on an analyst CV when the ad asks for customer service).
-    var conditionalAdded = [];
-    (archetype.conditionalInclude || []).forEach(function (rule) {
-      var hits = (extraction && extraction.keywordHits) || {};
-      if (!rule.whenTags.some(function (t) { return hits[String(t).toLowerCase()]; })) return;
-      rule.ids.forEach(function (id) {
-        if (includeIds.indexOf(id) === -1 && excludeFactIds.indexOf(id) === -1) { includeIds.push(id); conditionalAdded.push(id); }
-      });
-    });
     var roleSource = choices && choices.roles ? findById(data.archetypes, choices.roles) : null;
     if (roleSource) {
       var roleIds = data.facts.roles.map(function (r) { return r.id; });
@@ -645,12 +637,6 @@
         model.push(headBlock(data, section.headingText));
         model = model.concat(section.blocks);
       }
-    });
-
-    // Optional roles (conditionalInclude) are the first thing the trim ladder
-    // drops whole when the page is full: their bullets count as filler.
-    model.forEach(function (b) {
-      if (b._trim && b._group && conditionalAdded.indexOf(b._group.id) !== -1) b._trim.strength = "filler";
     });
 
     // A hand-edited profile (js/edits.js) replaces the approved one unless
