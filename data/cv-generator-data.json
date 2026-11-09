@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.49",
+  "_version": "1.50",
   "_changelog": [
+    {
+      "version": "1.50",
+      "date": "9 Nov 2026",
+      "summary": "Derin's instruction: \"don't write available... anything. Just Stamp 1G\". The seven letter closes drop the start-date clause ('available full-time from 1 November') and end '... Dublin and I hold Stamp 1G.'"
+    },
     {
       "version": "1.49",
       "date": "9 Nov 2026",
@@ -3870,12 +3875,12 @@
     "close": [
       {
         "id": "let-close-std",
-        "text": "This is the work I want to be doing, and {{COMPANY}} is where I would like to do it. I am in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
+        "text": "This is the work I want to be doing, and {{COMPANY}} is where I would like to do it. I am in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       },
       {
         "id": "let-close-plain",
-        "text": "I am based in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
+        "text": "I am based in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       },
       {
@@ -3893,27 +3898,27 @@
       },
       {
         "id": "let-close-std-v2",
-        "text": "I would welcome the chance to talk this through, and I would be glad to do this work at {{COMPANY}}. I am in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
+        "text": "I would welcome the chance to talk this through, and I would be glad to do this work at {{COMPANY}}. I am in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       },
       {
         "id": "let-close-std-v3",
-        "text": "{{COMPANY}} is where I would like to apply all of this, and I am glad to talk whenever suits. I am in Dublin, I hold Stamp 1G, and I am available full-time from 1 November.",
+        "text": "{{COMPANY}} is where I would like to apply all of this, and I am glad to talk whenever suits. I am in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       },
       {
         "id": "let-close-std-v4",
-        "text": "If it would help to talk any of this through, I am easy to reach. I am based in Dublin, I hold Stamp 1G, and I can start full-time from 1 November.",
+        "text": "If it would help to talk any of this through, I am easy to reach. I am based in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       },
       {
         "id": "let-close-std-v5",
-        "text": "I would be glad to bring this to {{COMPANY}}. I live in Dublin, I hold Stamp 1G, and I am available to start full-time from 1 November.",
+        "text": "I would be glad to bring this to {{COMPANY}}. I live in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       },
       {
         "id": "let-close-plain-v2",
-        "text": "I live in Dublin, I hold Stamp 1G, and I am available to start full-time from 1 November.",
+        "text": "I live in Dublin and I hold Stamp 1G.",
         "_unmeasured": true
       }
     ],

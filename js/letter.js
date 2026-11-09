@@ -184,7 +184,7 @@
   function bodyBlocks(data, letterResult) {
     var after = data.style.spacingAfter.letterPara;
     // An edited draft (js/edits.js) replaces the approved opening/why/evidence
-    // paragraphs; the approved gap, closing (Dublin, Stamp 1G, start date,
+    // paragraphs; the approved gap, closing (Dublin, Stamp 1G,
     // referee) and sign-off blocks are kept, so those facts never come from it.
     var draft = global.CVEdits && global.CVEdits.current();
     if (draft && draft.letter && draft.letter.length) {

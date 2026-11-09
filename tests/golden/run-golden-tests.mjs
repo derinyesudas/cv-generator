@@ -1556,8 +1556,8 @@ stampGates.forEach(function (g) {
   check('Visa status: ' + g.id + ' CV header line is exactly "Stamp 1G"', g.auth.length === 1 && g.auth[0] === 'Stamp 1G', JSON.stringify(g));
   check('Visa status: ' + g.id + ' CV has no sponsorship/eligibility wording', g.oldWording === false, JSON.stringify(g));
 });
-check('Visa status: no letter block or form answer still says sponsorship or eligible to work',
-  !/sponsor|eligible to work/i.test(Object.values(dataJson.letterBlocks).flat().map((b) => (b.text || '') + ' ' + (b.noEchoText || '')).join(' ') +
+check('Visa status: no letter block or form answer says sponsorship, eligible to work or a start date',
+  !/sponsor|eligible to work|1 November|start full-time/i.test(Object.values(dataJson.letterBlocks).flat().map((b) => (b.text || '') + ' ' + (b.noEchoText || '')).join(' ') +
     Object.values(dataJson.formAnswers).map((a) => a.answer || '').join(' ')) &&
   dataJson.formAnswers.rightToWorkSponsorship.answer === 'Stamp 1G');
 
