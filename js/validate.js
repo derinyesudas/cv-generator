@@ -209,6 +209,25 @@
     checkStemLengths(data.neverClaim, "neverClaim");
     checkStemLengths((data.knownAbsentTools && data.knownAbsentTools.tools) || [], "knownAbsentTools.tools");
 
+    // atsOnly skill terms (10 Nov 2026, data._atsRule): each one must say at
+    // least one of the ad words that adds it, or adding it would not put the
+    // ad's word on the CV.
+    Object.keys(data.skillLines || {}).forEach(function (catKey) {
+      (data.skillLines[catKey].terms || []).forEach(function (term) {
+        if (!term.atsOnly) return;
+        var label = "skillLines['" + catKey + "'] term '" + term.text + "'";
+        if (!Array.isArray(term.atsAsk) || !term.atsAsk.length) {
+          errors.push(label + ": atsOnly term has no atsAsk words.");
+          return;
+        }
+        if (!Matcher.scanListJoined(term.text, term.atsAsk).length) {
+          errors.push(label + ": says none of its own atsAsk words (" + term.atsAsk.join(", ") + ").");
+        }
+        checkStemLengths(term.atsAsk, label + " atsAsk");
+      });
+    });
+    (data.atsGaps || []).forEach(function (g) { checkStemLengths(g.atsAsk, "atsGaps '" + g.label + "'"); });
+
     // --- Fix 2 (18-19 Sept 2026, Derin's own instruction, in response to a
     // real ECHO false-hit traced to single-word tags like "legacy" and
     // "requirements" matching ordinary company prose that had nothing to

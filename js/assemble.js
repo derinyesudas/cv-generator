@@ -365,18 +365,24 @@
   // order), via the same index-tie-broken stableSortDesc used for bullets,
   // so with no extraction every term scores 0 and the original file order
   // comes back unchanged.
-  function buildSkills(data, archetype, headingText, extraction, choices) {
-    var blocks = [];
+  // atsAdd (10 Nov 2026): the atsOnly terms buildModel decided this ad needs
+  // (see atsTermsToAdd); every other atsOnly term stays off the CV.
+  function skillSource(data, archetype, choices) {
     // opts.choices.skills (2 Oct 2026): use another archetype's own
     // approved category list (its skillCategories, in its order) - a choice
     // between existing lists, never a new combination.
-    var source = (choices && choices.skills && findById(data.archetypes, choices.skills)) || archetype;
-    source.skillCategories.forEach(function (catKey) {
+    return (choices && choices.skills && findById(data.archetypes, choices.skills)) || archetype;
+  }
+
+  function buildSkills(data, archetype, headingText, extraction, choices, atsAdd) {
+    var blocks = [];
+    skillSource(data, archetype, choices).skillCategories.forEach(function (catKey) {
       var cat = data.skillLines[catKey];
       if (!cat) throw new Error("assemble.js: archetype '" + archetype.id + "' references unknown skill category '" + catKey + "'");
-      var ordered = stableSortDesc(cat.terms, function (term) {
+      var added = cat.terms.filter(function (term) { return term.atsOnly && (atsAdd || []).indexOf(term) !== -1; });
+      var ordered = stableSortDesc(cat.terms.filter(function (term) { return !term.atsOnly; }), function (term) {
         return overlapScore(term.tags, extraction) > 0 ? 1 : 0;
-      });
+      }).concat(added);
       var atoms = ordered.map(function (term) { return { ref: term, field: "text" }; });
       var text = ordered.map(function (term) { return term.text; }).join(data.style.separator);
       blocks.push({
@@ -384,10 +390,55 @@
         _prov: {
           label: oneProv(cat, "label"),
           text: textProv(atoms, data.style.separator)
-        }
+        },
+        _ats: added.map(function (term) { return term.text; })
       });
     });
     return { headingText: headingText, blocks: blocks };
+  }
+
+  // --- ATS wording (10 Nov 2026, data._atsRule) -----------------------------
+  // ATS keyword search is literal. When the ad's requirement text asks for a
+  // word the built CV does not contain, the approved atsOnly skill term that
+  // says it is added. "Reporting to the manager" is a reporting line, not a
+  // reporting skill, so it is taken out of the ad text first.
+  function atsAdText(extraction) {
+    return (extraction.matchableSentences || []).join(" ").replace(/\breport(s|ing) (in)?to\b/gi, " ");
+  }
+
+  function modelText(model) {
+    return model.map(function (b) {
+      return [b.text, b.title, b.org, b.right, b.label].concat((b.items || []).map(function (it) { return it && it.text; }))
+        .filter(Boolean).join(" ");
+    }).join("\n");
+  }
+
+  function atsTermsToAdd(data, source, model, extraction) {
+    if (!extraction) return [];
+    var ad = atsAdText(extraction);
+    var cv = modelText(model);
+    var add = [];
+    source.skillCategories.forEach(function (catKey) {
+      data.skillLines[catKey].terms.forEach(function (term) {
+        if (!term.atsOnly) return;
+        var missing = Matcher.scanListJoined(ad, term.atsAsk).filter(function (w) {
+          return !Matcher.scanListJoined(cv, [w]).length;
+        });
+        if (missing.length) add.push(term);
+      });
+    });
+    return add;
+  }
+
+  // What the ATS readout shows: the terms added to this CV, and the
+  // data.atsGaps skills the ad asks for that Derin does not have.
+  function atsReport(data, model, extraction) {
+    var added = [];
+    model.forEach(function (b) { if (b.t === "skillLine") added = added.concat(b._ats || []); });
+    var ad = extraction ? atsAdText(extraction) : "";
+    var gaps = (data.atsGaps || []).filter(function (g) { return Matcher.scanListJoined(ad, g.atsAsk).length; })
+      .map(function (g) { return g.label; });
+    return { added: added, gaps: gaps };
   }
 
   // Bug found and fixed during Phase 6 verification: this used to read only
@@ -639,6 +690,16 @@
       }
     });
 
+    // Second pass for the ad's ATS words: rebuild the skill lines with the
+    // terms the built CV is missing. Same categories in the same order, so
+    // the new lines replace the old ones one for one.
+    var atsAdd = atsTermsToAdd(data, skillSource(data, archetype, choices), model, extraction);
+    if (atsAdd.length) {
+      var fresh = buildSkills(data, archetype, null, extraction, choices, atsAdd).blocks;
+      var k = 0;
+      model = model.map(function (b) { return b.t === "skillLine" ? fresh[k++] : b; });
+    }
+
     // A hand-edited profile (js/edits.js) replaces the approved one unless
     // Derin picked a profile version by hand. It carries no _trim (nothing
     // shorter exists to fall back to), so js/verify.js's edit gate and the
@@ -710,6 +771,7 @@
 
   global.CVAssemble = {
     buildModel: buildModel,
+    atsReport: atsReport,
     autoPicks: autoPicks,
     findById: findById,
     fixLastParagraphSpacing: fixLastParagraphSpacing,

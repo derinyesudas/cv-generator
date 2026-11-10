@@ -695,6 +695,22 @@
   // touches download-button state - a BLOCKED verdict is information, not a
   // gate (spec, verbatim: "Never refuse to generate... I have applied to
   // BLOCKED roles deliberately before"). ---------------------------------
+  // ATS keywords (10 Nov 2026): the skill words added so the CV uses the ad's
+  // own words, and what the ad asks for that Derin does not have. Information
+  // only - nothing to click (his own instruction: no extra steps).
+  function renderAtsReadout(report) {
+    var el = document.getElementById('ats-readout');
+    if (!el) return;
+    if (!report) { el.textContent = ''; return; }
+    var lines = [report.added.length
+      ? 'Added to your skills so the CV uses this ad\'s words: ' + report.added.join(', ') + '.'
+      : 'Nothing to add: your CV already uses this ad\'s words for the skills you have.'];
+    if (report.gaps.length) {
+      lines.push('The ad also asks for things you have not done, so no wording can add them: ' + report.gaps.join(', ') + '.');
+    }
+    el.textContent = lines.join(' ');
+  }
+
   function renderFitCheck(result) {
     var verdictEl = document.getElementById('fitcheck-verdict');
     verdictEl.className = 'fitcheck-verdict fitcheck-' + result.verdict.toLowerCase();
@@ -2681,6 +2697,7 @@
     var archetypeObj = CVAssemble.findById(loadedData.archetypes, currentArchetypeId);
     lastFitCheck = CVFitCheck.run(loadedData, lastExtraction, archetypeObj, CVVerify.collectText(currentModel));
     renderFitCheck(lastFitCheck);
+    renderAtsReadout(lastExtraction ? CVAssemble.atsReport(loadedData, currentModel, lastExtraction) : null);
 
     lastGateResult = CVVerify.runGates(currentModel, loadedData, fit);
     renderGates(lastGateResult);

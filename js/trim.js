@@ -173,13 +173,13 @@
   // and is not a bullet under a heading it could orphan, so it carries no
   // orphan-avoidance concern at all - it is just removable outright, same
   // strength-then-last-included-first ordering as everything else.
-  function pickDropTarget(model) {
+  function pickDropTarget(model, parasOnly) {
     for (var s = 0; s < DROPPABLE_ORDER.length; s++) {
       var strength = DROPPABLE_ORDER[s];
       var atStrength = [];
       for (var i = 0; i < model.length; i++) {
         var b = model[i];
-        var eligible = (b.t === "bullet" && b._trim && b._trim.strength === strength) ||
+        var eligible = (!parasOnly && b.t === "bullet" && b._trim && b._trim.strength === strength) ||
           (b.t === "para" && b._trim && b._trim.strength === strength && b._trim.droppable === true);
         if (eligible) atStrength.push(b);
       }
@@ -212,8 +212,8 @@
     return model.filter(function (b) { return b !== bulletBlock; });
   }
 
-  function applyDrop(model) {
-    var pick = pickDropTarget(model);
+  function applyDrop(model, parasOnly) {
+    var pick = pickDropTarget(model, parasOnly);
     if (!pick) return null;
     var target = pick.block;
     // Standalone droppable para (e.g. the education modules line): no
@@ -246,14 +246,63 @@
     };
   }
 
+  // ---- ATS words (10 Nov 2026) ---------------------------------------------
+  // Take off the last skill term added for the ad's ATS words (js/assemble.js
+  // atsTermsToAdd). Runs after shortening and after the standalone droppable
+  // lines (the MSc modules line, which mostly repeats the skills section),
+  // but before any bullet: on the 418 tracker ads, letting the words push out
+  // bullets cost a real TCS bullet on 12 CVs.
+  // Soft-skill terms (atsSoft: teamwork, communication) go first: recruiters
+  // search for a skill like requirements gathering far more than for those.
+  function applyDropAtsTerm(model) {
+    for (var pass = 0; pass < 2; pass++) {
+      var found = dropAtsTermPass(model, pass === 0);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function dropAtsTermPass(model, softOnly) {
+    for (var i = model.length - 1; i >= 0; i--) {
+      var b = model[i];
+      if (b.t !== "skillLine" || !(b._ats && b._ats.length)) continue;
+      var prov = b._prov.text;
+      var at = -1;
+      prov.atoms.forEach(function (a, j) { if (a.ref.atsOnly && (!softOnly || a.ref.atsSoft)) at = j; });
+      if (at === -1) continue;
+      var atoms = prov.atoms.filter(function (_, j) { return j !== at; });
+      var dropped = prov.atoms[at].ref.text;
+      var line = Object.assign({}, b, {
+        text: atoms.map(function (a) { return a.ref[a.field]; }).join(prov.join),
+        _prov: Object.assign({}, b._prov, { text: Object.assign({}, prov, { atoms: atoms }) }),
+        _ats: b._ats.filter(function (t) { return t !== dropped; })
+      });
+      return {
+        model: model.map(function (x) { return x === b ? line : x; }),
+        applied: true,
+        phase: "drop",
+        description: "Took the ATS skill term \"" + dropped + "\" off the " + b.label + " line (trim step 2, before any bullet is dropped)."
+      };
+    }
+    return null;
+  }
+
   // ---- Combined ladder --------------------------------------------------------
   // One atomic action per call: shorten if anything is still shortenable,
   // else drop if anything is still droppable, else {applied: false} - step
   // 3 (HARD FAILURE) is the caller's own job from there (see file header).
+  // When the CV carries ATS skill terms, the drop step runs in two halves
+  // around them: standalone lines, then the ATS terms, then bullets.
   function applyOneStep(model, docType) {
     docType = docType || "cv";
     var shorten = applyShorten(model, docType);
     if (shorten) return shorten;
+    if (model.some(function (b) { return b._ats && b._ats.length; })) {
+      var line = applyDrop(model, true);
+      if (line) return line;
+      var ats = applyDropAtsTerm(model);
+      if (ats) return ats;
+    }
     var drop = applyDrop(model);
     if (drop) return drop;
     return { model: model, applied: false, phase: null, description: null };

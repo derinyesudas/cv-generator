@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.51",
+  "_version": "1.52",
   "_changelog": [
+    {
+      "version": "1.52",
+      "date": "10 Nov 2026",
+      "summary": "Derin's instruction: the CV comes out at the best ATS grade possible the moment the ad is pasted, with no extra step. New atsOnly skill terms (analystMethods, analystWays, transversal) print only when the ad asks for their word and the CV does not already say it: reporting, data quality, insights, analytical problem solving, teamwork and collaboration, communication, process documentation, requirements gathering, continuous improvement, customer service, client calls by phone, financial services. New atsGaps lists skills he does not have, reported in the ATS readout and never printed. Built after an ATS-style audit of 418 tracker ads found the CV used different words from the ad for things he has done. When space runs out, the trim ladder takes the MSc modules line off first, then ATS terms, and only then bullets (trimPolicy._atsStep)."
+    },
     {
       "version": "1.51",
       "date": "9 Nov 2026",
@@ -1401,6 +1406,116 @@
             "data confidentiality",
             "GDPR"
           ]
+        },
+        {
+          "text": "Reporting",
+          "atsOnly": true,
+          "atsAsk": [
+            "reporting"
+          ],
+          "_why": "Power BI dashboards and report design (MSc project console, Power BI with DAX); TCS results reviewed with the client weekly."
+        },
+        {
+          "text": "Data quality checks",
+          "atsOnly": true,
+          "atsAsk": [
+            "data quality"
+          ],
+          "_why": "TCS: verified data for 140 contract types at 99% accuracy under maker-checker review."
+        },
+        {
+          "text": "Turning data into insights",
+          "atsOnly": true,
+          "atsAsk": [
+            "insights",
+            "insight"
+          ],
+          "_why": "MSc Business Analytics; the Power BI alert console ranks flagged cases with the reason each was flagged."
+        },
+        {
+          "text": "Analytical problem solving",
+          "atsOnly": true,
+          "atsAsk": [
+            "analytical",
+            "problem solving"
+          ],
+          "_why": "MSc Business Analytics; at TCS resolved requirements that did not match what was being delivered.",
+          "atsSoft": true
+        },
+        {
+          "text": "Teamwork and collaboration",
+          "atsOnly": true,
+          "atsAsk": [
+            "teamwork",
+            "team work",
+            "team player",
+            "collaborat*"
+          ],
+          "_why": "Ten-person pilot team at TCS; MSc project team of six.",
+          "atsSoft": true
+        },
+        {
+          "text": "Written and verbal communication",
+          "atsOnly": true,
+          "atsAsk": [
+            "communication"
+          ],
+          "_why": "Wrote the team SOP and briefed the team after client calls; English CEFR C1.",
+          "atsSoft": true
+        },
+        {
+          "text": "Process documentation",
+          "atsOnly": true,
+          "atsAsk": [
+            "documentation"
+          ],
+          "_why": "Wrote and owned the team operating procedure at TCS."
+        },
+        {
+          "text": "Requirements gathering",
+          "atsOnly": true,
+          "atsAsk": [
+            "requirements gathering",
+            "gathering requirements",
+            "gather requirements",
+            "requirements elicitation"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: clarified client requirements that did not match what was being delivered at TCS."
+        },
+        {
+          "text": "Continuous improvement",
+          "atsOnly": true,
+          "atsAsk": [
+            "continuous improvement",
+            "process improvement"
+          ],
+          "_why": "Kept the SOP current through weekly client changes, which lifted team performance; automates recurring manual work."
+        },
+        {
+          "text": "Customer service",
+          "atsOnly": true,
+          "atsAsk": [
+            "customer service",
+            "customer facing"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: real customer service at Circle K and D-Mart. A skill line only; those jobs stay off non-retail CVs."
+        },
+        {
+          "text": "Handling client calls and phone queries",
+          "atsOnly": true,
+          "atsAsk": [
+            "phone",
+            "telephone"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: took client queries and complaints by phone at TCS."
+        },
+        {
+          "text": "Financial services (US insurance and pensions)",
+          "atsOnly": true,
+          "atsAsk": [
+            "financial services"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: TCS work for a US pensions provider and a US life insurer."
         }
       ],
       "_fileOrderBaselineHeightPx": {
@@ -1544,6 +1659,49 @@
             "data visualisation",
             "management reporting"
           ]
+        },
+        {
+          "text": "Reporting",
+          "atsOnly": true,
+          "atsAsk": [
+            "reporting"
+          ],
+          "_why": "Power BI dashboards and report design (MSc project console, Power BI with DAX); TCS results reviewed with the client weekly."
+        },
+        {
+          "text": "Data quality checks",
+          "atsOnly": true,
+          "atsAsk": [
+            "data quality"
+          ],
+          "_why": "TCS: verified data for 140 contract types at 99% accuracy under maker-checker review."
+        },
+        {
+          "text": "Turning data into insights",
+          "atsOnly": true,
+          "atsAsk": [
+            "insights",
+            "insight"
+          ],
+          "_why": "MSc Business Analytics; the Power BI alert console ranks flagged cases with the reason each was flagged."
+        },
+        {
+          "text": "Analytical problem solving",
+          "atsOnly": true,
+          "atsAsk": [
+            "analytical",
+            "problem solving"
+          ],
+          "_why": "MSc Business Analytics; at TCS resolved requirements that did not match what was being delivered.",
+          "atsSoft": true
+        },
+        {
+          "text": "Financial services data (US insurance and pensions)",
+          "atsOnly": true,
+          "atsAsk": [
+            "financial services"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: TCS work for a US pensions provider and a US life insurer."
         }
       ]
     },
@@ -1579,6 +1737,64 @@
             "task automation",
             "ai tooling"
           ]
+        },
+        {
+          "text": "Teamwork and collaboration",
+          "atsOnly": true,
+          "atsAsk": [
+            "teamwork",
+            "team work",
+            "team player",
+            "collaborat*"
+          ],
+          "_why": "Ten-person pilot team at TCS; MSc project team of six.",
+          "atsSoft": true
+        },
+        {
+          "text": "Process documentation",
+          "atsOnly": true,
+          "atsAsk": [
+            "documentation"
+          ],
+          "_why": "Wrote and owned the team operating procedure at TCS."
+        },
+        {
+          "text": "Requirements gathering",
+          "atsOnly": true,
+          "atsAsk": [
+            "requirements gathering",
+            "gathering requirements",
+            "gather requirements",
+            "requirements elicitation"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: clarified client requirements that did not match what was being delivered at TCS."
+        },
+        {
+          "text": "Continuous improvement",
+          "atsOnly": true,
+          "atsAsk": [
+            "continuous improvement",
+            "process improvement"
+          ],
+          "_why": "Kept the SOP current through weekly client changes, which lifted team performance; automates recurring manual work."
+        },
+        {
+          "text": "Customer service",
+          "atsOnly": true,
+          "atsAsk": [
+            "customer service",
+            "customer facing"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: real customer service at Circle K and D-Mart. A skill line only; those jobs stay off non-retail CVs."
+        },
+        {
+          "text": "Handling client calls and phone queries",
+          "atsOnly": true,
+          "atsAsk": [
+            "phone",
+            "telephone"
+          ],
+          "_why": "Approved by Derin 10 Nov 2026: took client queries and complaints by phone at TCS."
         }
       ]
     }
@@ -4448,7 +4664,8 @@
       "Emit a document that overflows one page without refusing the download and saying so on screen"
     ],
     "note": "Trimming is a safety net, not the main mechanism. The archetype's include list is what normally decides whether Blarney and D-Mart appear at all. If trimming fires often for a given archetype, that archetype's include list is wrong - tell Derin rather than trimming every time. In three years of Derin's own real hand-built application documents, page-fit was never actually solved by deleting a section - it was always solved by shortening a sentence. That is why shortening now runs to exhaustion BEFORE anything is ever dropped, a straight reversal of this file's original (13 Sept 2026) drop-only design.",
-    "basisRule": "Derin, 14 Sept 2026 (REVIEW-RESPONSE-3.md section 2), verbatim: 'An item's stated basis is its trim priority. They are the same field, not two... If a section has no stated basis, it is the first thing trimmed - because nobody could say why it was there... That also kills inheritance-by-accident structurally: a new archetype cannot inherit a basis, because an empty basis field means \"trim first\", which is loud and visible rather than silent and wrong.' STATUS, updated 19 Sept 2026 (superseding the original entry below, kept for history, not deleted): this is now mechanically enforced, not just recorded policy. bulletVariants[gid].basis and profileVariants[i].basis are {strength, why} objects living directly on the group/variant, js/validate.js refuses to load a data file where any group or profile variant is missing one or uses an unrecognised strength, and js/trim.js's shorten-then-drop ladder reads `basis.strength` directly - there is no longer a separate numeric `priority` field that basis merely explained; basis IS the field the app executes against. ORIGINAL 14 SEPT 2026 ENTRY, preserved verbatim for history: 'Applied concretely to consulting-tech's role-blarney/vol inclusion (see that archetype's _why) - the specific gap this rule was written to close. STATUS, stated plainly rather than implied: this is a recorded policy, not (yet) a mechanically enforced one. Nothing in js/validate.js or js/trim.js currently checks that an archetype including role-blarney or vol has a non-empty _why covering them, and bulletVariants priority numbers (which is what trim.js actually reads) are not derived from _why at all - they are set independently and, for b-blarney/b-dmart, already happen to be priority 5. Applying this rule found one more live, previously-unflagged instance while writing it down: customer-ops includes role-blarney with no _why at all (see its own _pendingReview) - not resolved, since inventing a basis Derin has not stated would be exactly the guessing this project exists to prevent. A second, separate gap this rule does not close: volunteering (\"vol\") has no trim mechanism in js/trim.js at all - it is rendered unconditionally by buildCertificationsAndVolunteering() whenever an archetype's include list names it, with no bulletVariants-style priority and no way for trimPolicy to drop it short of manually editing excludeFactIds. So \"volunteering... first to drop when tight\" is not actually true in code today for any archetype, regardless of what its basis says. Queued, not built here - out of scope for what was asked (write the basis, not rebuild the trim engine).' The volunteering gap this original entry flagged is STILL open as of 19 Sept 2026 - js/trim.js's rewrite did not touch buildCertificationsAndVolunteering()/volunteering at all (out of scope for the A-E pass, which was about bulletVariants/profileVariants only); tracked as its own remaining work-order item, not silently closed by this update."
+    "basisRule": "Derin, 14 Sept 2026 (REVIEW-RESPONSE-3.md section 2), verbatim: 'An item's stated basis is its trim priority. They are the same field, not two... If a section has no stated basis, it is the first thing trimmed - because nobody could say why it was there... That also kills inheritance-by-accident structurally: a new archetype cannot inherit a basis, because an empty basis field means \"trim first\", which is loud and visible rather than silent and wrong.' STATUS, updated 19 Sept 2026 (superseding the original entry below, kept for history, not deleted): this is now mechanically enforced, not just recorded policy. bulletVariants[gid].basis and profileVariants[i].basis are {strength, why} objects living directly on the group/variant, js/validate.js refuses to load a data file where any group or profile variant is missing one or uses an unrecognised strength, and js/trim.js's shorten-then-drop ladder reads `basis.strength` directly - there is no longer a separate numeric `priority` field that basis merely explained; basis IS the field the app executes against. ORIGINAL 14 SEPT 2026 ENTRY, preserved verbatim for history: 'Applied concretely to consulting-tech's role-blarney/vol inclusion (see that archetype's _why) - the specific gap this rule was written to close. STATUS, stated plainly rather than implied: this is a recorded policy, not (yet) a mechanically enforced one. Nothing in js/validate.js or js/trim.js currently checks that an archetype including role-blarney or vol has a non-empty _why covering them, and bulletVariants priority numbers (which is what trim.js actually reads) are not derived from _why at all - they are set independently and, for b-blarney/b-dmart, already happen to be priority 5. Applying this rule found one more live, previously-unflagged instance while writing it down: customer-ops includes role-blarney with no _why at all (see its own _pendingReview) - not resolved, since inventing a basis Derin has not stated would be exactly the guessing this project exists to prevent. A second, separate gap this rule does not close: volunteering (\"vol\") has no trim mechanism in js/trim.js at all - it is rendered unconditionally by buildCertificationsAndVolunteering() whenever an archetype's include list names it, with no bulletVariants-style priority and no way for trimPolicy to drop it short of manually editing excludeFactIds. So \"volunteering... first to drop when tight\" is not actually true in code today for any archetype, regardless of what its basis says. Queued, not built here - out of scope for what was asked (write the basis, not rebuild the trim engine).' The volunteering gap this original entry flagged is STILL open as of 19 Sept 2026 - js/trim.js's rewrite did not touch buildCertificationsAndVolunteering()/volunteering at all (out of scope for the A-E pass, which was about bulletVariants/profileVariants only); tracked as its own remaining work-order item, not silently closed by this update.",
+    "_atsStep": "10 Nov 2026: when a CV carries skill terms added for the ad's ATS words (data._atsRule), the DROP step runs in two halves around them: after SHORTEN, standalone droppable lines go first (the MSc modules line, which mostly repeats the skills section), then the ATS terms (last added first), and only then bullets. The words never cost a bullet."
   },
   "_sectionRule": "sectionOrder entries are {type, heading}. CODE DISPATCHES ON type. heading is display text only and varies by archetype (SKILLS vs KEY SKILLS, CERTIFICATIONS vs CERTIFICATIONS AND VOLUNTEERING). Never dispatch on heading text. Valid types: profile, skills, experience, project, education, certifications. An unknown type is a hard build failure that must surface on screen, never a silent stale render.",
   "_additionalExperienceRemoved": "ADDITIONAL EXPERIENCE was removed from customer-ops on 13 Sept 2026. It came from an older instructions document that used a Relevant/Additional split to stop strict reverse chronology putting the Blarney Castle Hotel role (2026) above the TCS year (2024-25). In practice every CV actually built by hand used a SINGLE EXPERIENCE heading ordered by relevance - see reference-output.docx, where TCS precedes the Blarney Castle Hotel role under one heading. The convention was abandoned; the archetype kept the dangling heading. If the split is ever wanted back, add it deliberately with per-archetype role buckets in the data, not as an orphan heading.",
@@ -5084,5 +5301,81 @@
       }
     ]
   },
-  "fallbackArchetype": "graduate-programme"
+  "fallbackArchetype": "graduate-programme",
+  "atsGaps": [
+    {
+      "label": "Reconciliations",
+      "atsAsk": [
+        "reconcil*"
+      ]
+    },
+    {
+      "label": "Invoices and accounts payable",
+      "atsAsk": [
+        "invoic*",
+        "accounts payable",
+        "accounts receivable"
+      ]
+    },
+    {
+      "label": "VAT",
+      "atsAsk": [
+        "VAT"
+      ]
+    },
+    {
+      "label": "Payroll",
+      "atsAsk": [
+        "payroll"
+      ]
+    },
+    {
+      "label": "Month-end close",
+      "atsAsk": [
+        "month end",
+        "year end"
+      ]
+    },
+    {
+      "label": "Budgeting",
+      "atsAsk": [
+        "budgeting"
+      ]
+    },
+    {
+      "label": "Fund accounting",
+      "atsAsk": [
+        "fund accounting",
+        "NAV"
+      ]
+    },
+    {
+      "label": "Banking experience",
+      "atsAsk": [
+        "banking experience",
+        "experience in banking"
+      ]
+    },
+    {
+      "label": "Underwriting",
+      "atsAsk": [
+        "underwrit*"
+      ]
+    },
+    {
+      "label": "Broker experience",
+      "atsAsk": [
+        "broker",
+        "brokers"
+      ]
+    },
+    {
+      "label": "Sales targets",
+      "atsAsk": [
+        "sales targets",
+        "sales experience"
+      ]
+    }
+  ],
+  "_atsRule": "10 Nov 2026, Derin: the CV should come out at the best ATS grade the moment the ad is pasted, with no extra step. ATS keyword search is literal, so when the ad uses a word for something Derin has done and the CV says it differently, this term adds the ad's word. atsOnly skill terms carry atsAsk (data.matchRule syntax, matched against the ad's requirement text). Every term is something Derin has done; the four marked \"Approved by Derin 10 Nov 2026\" were confirmed by him one by one. atsGaps are skills he does not have: the app names them in the ATS readout and never prints them. atsSoft marks the soft-skill terms; when space runs out the trim ladder takes those off before the others."
 }

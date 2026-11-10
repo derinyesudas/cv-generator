@@ -1602,6 +1602,78 @@ check('TCS only: the retail CV is picked for shop titles and never for "Retail S
   retailPick[0].winner !== 'retail-parttime' && retailPick[1].winner !== 'retail-parttime' &&
   retailPick[2].winner === 'retail-parttime' && retailPick[3].winner === 'retail-parttime', JSON.stringify(retailPick));
 
+// ---- ATS wording (Derin, 10 Nov 2026): the CV comes out at the best ATS
+// grade the moment the ad is pasted, with no extra step. An atsOnly skill
+// term prints only when the ad asks for its word and the CV does not
+// already say it; skills he has not done (data.atsGaps) are reported in the
+// readout and never printed.
+console.log('\n--- ATS wording ---');
+const ats = await page.evaluate(() => {
+  var data = CVApp._test.getLoadedData();
+  var atsTexts = [];  // the same wording sits in more than one category; counted once
+  Object.keys(data.skillLines).forEach(function (k) { data.skillLines[k].terms.forEach(function (t) { if (t.atsOnly && atsTexts.indexOf(t.text) === -1) atsTexts.push(t.text); }); });
+  function run(archetypeId, jd, choices) {
+    var extraction = jd == null ? null : CVScore.extractFromJD(data, jd);
+    var model = CVAssemble.buildModel(data, archetypeId, { extraction: extraction, excludeFactIds: ['vol'], choices: choices });
+    var addedBeforeTrim = extraction ? CVAssemble.atsReport(data, model, extraction).added : [];
+    var fit = CVPageFit.measure(model, 'cv');
+    var atsDrops = 0;
+    for (var steps = 0; fit.overflows && steps < 30; steps++) {
+      var s = CVTrim.applyOneStep(model);
+      if (!s.applied) break;
+      if (/ATS skill term/.test(s.description)) atsDrops++;
+      model = s.model;
+      fit = CVPageFit.measure(model, 'cv');
+    }
+    var skillLines = model.filter(function (b) { return b.t === 'skillLine'; }).map(function (b) { return b.text; });
+    return {
+      skills: skillLines.join(' | '),
+      printedAts: atsTexts.filter(function (t) { return skillLines.some(function (l) { return l.split(data.style.separator).indexOf(t) !== -1; }); }),
+      text: CVVerify.collectText(model),
+      report: extraction ? CVAssemble.atsReport(data, model, extraction) : null,
+      failedGates: CVVerify.runGates(model, data, fit).gates.filter(function (g) { return !g.passed; }).map(function (g) { return g.name + ': ' + g.findings.join(' | '); }),
+      fits: !fit.overflows,
+      atsDrops: atsDrops,
+      addedBeforeTrim: addedBeforeTrim
+    };
+  }
+  var service = 'Customer Service Administrator\n\nRequirements:\nExcellent customer service and communication skills.\nA team player who enjoys collaborating with colleagues.\nComfortable handling client queries by phone.\nExperience processing payroll is an advantage.';
+  var reportingLine = 'Accounts Assistant\n\nRequirements:\nReporting to the Finance Manager, you will process supplier invoices.\nStrong attention to detail.';
+  var finServ = 'Fund Services Associate\n\nRequirements:\nExperience in financial services is an advantage.\nStrong attention to detail.';
+  var ba = 'Business Analyst\n\nRequirements:\nRequirements gathering with the business, reporting and documentation.\nStrong analytical and problem-solving skills.\nClear stakeholder communication.';
+  return {
+    atsCount: atsTexts.length,
+    service: run('customer-ops', service),
+    noAd: data.archetypes.map(function (a) { return { id: a.id, printed: run(a.id, null).printedAts }; }),
+    reportingLine: run('finance-ops', reportingLine),
+    finServ: run('finance-ops', finServ),
+    ba: run('business-analyst', ba),
+    // A finance CV switched by hand to every job has no room left: the trim
+    // ladder takes ATS terms off before dropping any bullet, and the CV
+    // still fits and passes.
+    crowded: run('finance-ops', service + '\nReporting and documentation, data quality, insights, continuous improvement and requirements gathering.', { roles: 'retail-parttime' })
+  };
+});
+check('ATS: the data file carries approved atsOnly skill terms (js/validate.js checks each says its own ad word)', ats.atsCount >= 12, String(ats.atsCount));
+check('ATS: with no ad, no CV prints an atsOnly term', ats.noAd.every((r) => !r.printed.length), JSON.stringify(ats.noAd.filter((r) => r.printed.length)));
+check('ATS: a customer service ad adds Customer service, communication, teamwork and phone wording to the customer CV',
+  ['Customer service', 'Written and verbal communication', 'Teamwork and collaboration', 'Handling client calls and phone queries'].every((t) => ats.service.printedAts.indexOf(t) !== -1) &&
+  ats.service.report.added.indexOf('Customer service') !== -1, JSON.stringify({ printed: ats.service.printedAts, report: ats.service.report }));
+check('ATS: payroll is reported as a gap and never printed', ats.service.report.gaps.join() === 'Payroll' && !/payroll/i.test(ats.service.text), JSON.stringify(ats.service.report));
+check('ATS: the customer CV with added wording passes every gate and fits one page', !ats.service.failedGates.length && ats.service.fits, JSON.stringify(ats.service.failedGates));
+check('ATS: "Reporting to the Finance Manager" does not add Reporting; invoices are a reported gap',
+  ats.reportingLine.printedAts.indexOf('Reporting') === -1 && ats.reportingLine.report.gaps.indexOf('Invoices and accounts payable') !== -1, JSON.stringify(ats.reportingLine.report));
+check('ATS: a word the CV already says is not added again (finance CV already says "Financial services and insurance operations")',
+  ats.finServ.printedAts.indexOf('Financial services (US insurance and pensions)') === -1 && /Financial services and insurance operations/.test(ats.finServ.skills), ats.finServ.skills);
+check('ATS: a business analyst ad adds Reporting, Analytical problem solving, Requirements gathering and Process documentation, but not a second communication line',
+  ['Reporting', 'Analytical problem solving', 'Requirements gathering', 'Process documentation'].every((t) => ats.ba.addedBeforeTrim.indexOf(t) !== -1) &&
+  ats.ba.addedBeforeTrim.indexOf('Written and verbal communication') === -1 && !ats.ba.failedGates.length && ats.ba.fits, JSON.stringify({ added: ats.ba.addedBeforeTrim, failed: ats.ba.failedGates }));
+check('ATS: when space runs out, the soft-skill term goes before Requirements gathering',
+  ats.ba.printedAts.indexOf('Requirements gathering') !== -1 &&
+  (ats.ba.printedAts.indexOf('Analytical problem solving') === -1 || ats.ba.printedAts.length === ats.ba.addedBeforeTrim.length), JSON.stringify(ats.ba.printedAts));
+check('ATS: with no room left, the trim ladder takes ATS terms off before dropping a bullet, and the CV still fits and passes every gate',
+  ats.crowded.atsDrops > 0 && ats.crowded.fits && !ats.crowded.failedGates.length, JSON.stringify({ drops: ats.crowded.atsDrops, printed: ats.crowded.printedAts, failed: ats.crowded.failedGates }));
+
 // ---- Close-match letter mode: gate-fires (26 Sept 2026, item 4, Derin's
 // own instruction: "Derin rejected a letter today as generic, for an ad...
 // whose responsibilities were almost exactly his TCS job. Trigger: 50% or
