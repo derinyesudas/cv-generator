@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.52",
+  "_version": "1.53",
   "_changelog": [
+    {
+      "version": "1.53",
+      "date": "10 Nov 2026",
+      "summary": "Derin approved fixing an ATS parsing snag: role-tcs no longer prints \"Insurance domain\" right-aligned on the title line, where text extraction joined it to the city (\"Mumbai Insurance domain\"). It now sits on the dates line: \"August 2024 - August 2025. Insurance domain, permanent night shifts.\" role-tcs is _unmeasured (heightPx deleted) since its role and dates text changed. Project tags stay right-aligned: a project has no employer, city or dates for them to run into."
+    },
     {
       "version": "1.52",
       "date": "10 Nov 2026",
@@ -338,7 +343,7 @@
         "id": "role-tcs",
         "title": "Data Processor",
         "org": "Tata Consultancy Services, Mumbai",
-        "dates": "August 2024 - August 2025. Permanent night shifts.",
+        "dates": "August 2024 - August 2025. Insurance domain, permanent night shifts.",
         "bullets": [
           "bul-tcs-lng-scale",
           "bul-tcs-accuracy",
@@ -354,17 +359,8 @@
           "countsAsRelevant": true,
           "_note": "Exact days confirmed by Derin, 14 Sept 2026 (previously only 'August 2024 - August 2025' was on file). 'Trainee' is the contract category on the TCS letters/payslip (see the _note above) - Derin confirmed directly that this governs employment-status form answers only, not whether the year counts as experience here: full year, full-time, counts in full."
         },
-        "heightPx": {
-          "role": {
-            "cv": 16.73,
-            "hash": "83561bd3"
-          },
-          "dates": {
-            "cv": 14.93,
-            "hash": "91572404"
-          }
-        },
-        "right": "Insurance domain"
+        "_unmeasured": true,
+        "_rightNote": "10 Nov 2026, Derin: \"Insurance domain\" moved from the right-hand side of the title line to the dates line. Right-aligned text sits on the same line as the employer and city, and CV parsers read it as part of them (\"Tata Consultancy Services, Mumbai Insurance domain\"), which can put the wrong location into an ATS profile."
       },
       {
         "id": "role-blarney",

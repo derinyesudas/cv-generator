@@ -1601,6 +1601,11 @@ const retailPick = await page.evaluate((data) => ['Retail Systems Analyst', 'Med
 check('TCS only: the retail CV is picked for shop titles and never for "Retail Systems Analyst" or "Medical Scientist"',
   retailPick[0].winner !== 'retail-parttime' && retailPick[1].winner !== 'retail-parttime' &&
   retailPick[2].winner === 'retail-parttime' && retailPick[3].winner === 'retail-parttime', JSON.stringify(retailPick));
+// Right-aligned text on a job's title line is read by CV parsers as part of
+// the employer and city ("Mumbai Insurance domain"), so no job carries any.
+check('ATS parsing: no job prints right-aligned text beside its employer and city; TCS says "Insurance domain" on its dates line',
+  dataJson.facts.roles.every((r) => !r.right) && /Insurance domain/.test(dataJson.facts.roles.find((r) => r.id === 'role-tcs').dates),
+  JSON.stringify(dataJson.facts.roles.map((r) => [r.id, r.right || null])));
 
 // ---- ATS wording (Derin, 10 Nov 2026): the CV comes out at the best ATS
 // grade the moment the ad is pasted, with no extra step. An atsOnly skill
