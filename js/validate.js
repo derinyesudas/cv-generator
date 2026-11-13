@@ -228,6 +228,22 @@
     });
     (data.atsGaps || []).forEach(function (g) { checkStemLengths(g.atsAsk, "atsGaps '" + g.label + "'"); });
 
+    // boldCandidates (12 Nov 2026, data._boldRule): each phrase is an exact
+    // piece of its own bullet's text or short text, holds no number, and
+    // stands for some of that bullet's own tags (so the ad's tag hits rank it).
+    Object.keys(data.bulletVariants || {}).forEach(function (gid) {
+      (data.bulletVariants[gid].variants || []).forEach(function (v) {
+        (v.boldCandidates || []).forEach(function (c) {
+          var label = "bulletVariants['" + gid + "'].variants['" + v.id + "'] bold phrase '" + c.text + "'";
+          if (v.text.indexOf(c.text) === -1 && String(v.short || "").indexOf(c.text) === -1) errors.push(label + ": not in the bullet's text or short text.");
+          if (/[0-9]/.test(c.text)) errors.push(label + ": holds a number - numbers stay plain.");
+          if (!(c.tags || []).length || c.tags.some(function (t) { return (v.tags || []).indexOf(t) === -1; })) {
+            errors.push(label + ": tags must be some of the bullet's own tags.");
+          }
+        });
+      });
+    });
+
     // --- Fix 2 (18-19 Sept 2026, Derin's own instruction, in response to a
     // real ECHO false-hit traced to single-word tags like "legacy" and
     // "requirements" matching ordinary company prose that had nothing to

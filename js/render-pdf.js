@@ -147,6 +147,13 @@
     });
   }
 
+  // A block's bold phrases (data._boldRule) as separate runs; same text.
+  function boldRuns(b, o) {
+    return global.CVMatcher.boldParts(b.text, b.bold).map(function (part) {
+      return run(part.text, Object.assign({}, o, { bold: part.bold }));
+    });
+  }
+
   function paragraphFor(b) {
     var body = halfPointsToPt(S.sizes.body);
     var small = halfPointsToPt(S.sizes.small);
@@ -194,7 +201,7 @@
       case "bullet":
         p.indent = twipsToPt(S.bullet.indentLeft);
         p.glyph = { text: S.bullet.glyph, x: twipsToPt(S.bullet.indentLeft - S.bullet.hanging), color: S.bullet.colour, size: DEFAULT_RUN_PT };
-        p.runs = [run(b.text, { size: body })];
+        p.runs = boldRuns(b, { size: body });
         break;
       case "skillLine":
         p.runs = [run(b.label + S.skillLabelSuffix, { bold: true, size: body }), run(b.text, { size: body })];
@@ -203,7 +210,7 @@
       case "letterPara":
       case "letterLine":
         var o = b.opts || {};
-        p.runs = [run(b.text, { size: o.size ? halfPointsToPt(o.size) : body, italic: !!o.italics, color: o.color })];
+        p.runs = boldRuns(b, { size: o.size ? halfPointsToPt(o.size) : body, italic: !!o.italics, color: o.color });
         break;
       default:
         throw new Error("render-pdf: unknown content-model block type '" + b.t + "'");

@@ -238,7 +238,29 @@
     return TextWrap.wrapLineCount(block.text, cw, widthPx, 2, 0) * META.lineAdvancePx[key];
   }
 
+  // Bold letters are wider (data._boldRule): the extra lines a block's bold
+  // phrases cost, by wrap-simulating the same text both ways with the same
+  // function, as letterBlockHeight does for filled slots.
+  function boldExtraPx(block, docType) {
+    if (!block.bold || (block.t !== "bullet" && block.t !== "para")) return 0;
+    var spans = [], at = 0;
+    global.CVMatcher.boldParts(block.text, block.bold).forEach(function (p) {
+      if (p.bold) spans.push([at, at + p.text.length]);
+      at += p.text.length;
+    });
+    if (!spans.length) return 0;
+    var cw = META.charWidths.body;
+    var widthPx = twipsToPx(data.style.textWidthTwips - (block.t === "bullet" ? data.style.bullet.indentLeft : 0));
+    var plain = TextWrap.wrapLineCount(block.text, cw, widthPx, 2, 0);
+    var bold = TextWrap.wrapLineCount(block.text, cw, widthPx, 2, 0, { table: META.charWidths.bodyBold, spans: spans });
+    return Math.max(0, bold - plain) * META.lineAdvancePx.body;
+  }
+
   function heightForBlock(block, docType) {
+    return plainHeightForBlock(block, docType) + boldExtraPx(block, docType);
+  }
+
+  function plainHeightForBlock(block, docType) {
     if (block._edited) return freeTextHeight(block, docType);
     switch (block.t) {
       case "name": return identityHeight("name");
@@ -412,6 +434,7 @@
     usableHeightPx: usableHeightPx,
     measure: measure,
     heightForBlock: heightForBlock,
+    boldExtraPx: boldExtraPx,
     letterBlockHeight: letterBlockHeight
   };
 })(typeof window !== "undefined" ? window : globalThis);

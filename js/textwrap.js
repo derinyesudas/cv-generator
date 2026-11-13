@@ -65,16 +65,27 @@
   //     word (e.g. a bold "Label:  " skillLine prefix, which render-docx.js
   //     emits as a separate TextRun ahead of the wrapped text, occupying
   //     real width on that first line only).
-  function wrapLineCount(text, widthTable, usableWidthPx, kerningTolerancePx, initialOffsetPx) {
+  //   bold (12 Nov 2026) - optional {table, spans}: characters inside any
+  //     [start, end) span of `text` use the bold width table.
+  function wrapLineCount(text, widthTable, usableWidthPx, kerningTolerancePx, initialOffsetPx, bold) {
     kerningTolerancePx = kerningTolerancePx == null ? 2 : kerningTolerancePx;
     initialOffsetPx = initialOffsetPx || 0;
     var effectiveWidth = usableWidthPx - kerningTolerancePx;
-    var words = text.split(" ").filter(function (w) { return w.length > 0; });
+    var words = [], pos = 0;
+    text.split(" ").forEach(function (w) {
+      if (w.length) words.push({ w: w, at: pos });
+      pos += w.length + 1;
+    });
     var spaceWidth = widthTable[" "];
     var lines = 1;
     var cur = initialOffsetPx;
-    words.forEach(function (w, i) {
-      var ww = textWidth(w, widthTable);
+    words.forEach(function (word, i) {
+      var ww = 0;
+      for (var k = 0; k < word.w.length; k++) {
+        var at = word.at + k;
+        var inBold = bold && bold.spans.some(function (s) { return at >= s[0] && at < s[1]; });
+        ww += textWidth(word.w[k], inBold ? bold.table : widthTable);
+      }
       // No leading space before the very first word - whatever precedes it
       // (a label prefix, or nothing) already accounts for its own trailing
       // separator; this function only ever adds a space BETWEEN words it is

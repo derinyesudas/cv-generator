@@ -228,13 +228,20 @@
     });
   }
 
-  function bullet(t) {
+  // A block's bold phrases (data._boldRule) as separate runs; same text.
+  function boldRuns(t, bold, o) {
+    return global.CVMatcher.boldParts(t, bold).map(function (part) {
+      return new TextRun(Object.assign({ text: part.text, bold: part.bold }, o));
+    });
+  }
+
+  function bullet(t, bold) {
     requireConfigured();
     requireLib();
     return new Paragraph({
       numbering: { reference: "bullets", level: 0 },
       spacing: { after: SPACING.bullet, line: LINE, lineRule: LR },
-      children: [new TextRun({ text: t, size: BODY, font: FONT })]
+      children: boldRuns(t, bold, { size: BODY, font: FONT })
     });
   }
 
@@ -245,13 +252,13 @@
   // only fires for a caller that omits `after` entirely; every current
   // caller always passes it explicitly, so this is a defensive default,
   // not a second copy of a real style value.
-  function para(t, o) {
+  function para(t, o, bold) {
     requireConfigured();
     requireLib();
     o = o || {};
     return new Paragraph({
       spacing: { after: o.after != null ? o.after : 36, line: LINE, lineRule: LR },
-      children: [new TextRun({ text: t, size: o.size || BODY, font: FONT, italics: !!o.italics, color: o.color })]
+      children: boldRuns(t, bold, { size: o.size || BODY, font: FONT, italics: !!o.italics, color: o.color })
     });
   }
 
@@ -281,8 +288,8 @@
         case "head": return head(b.text);
         case "role": return role(b.title, b.org, b.right);
         case "dates": return dates(b.text);
-        case "bullet": return bullet(b.text);
-        case "para": return para(b.text, b.opts);
+        case "bullet": return bullet(b.text, b.bold);
+        case "para": return para(b.text, b.opts, b.bold);
         case "skillLine": return skillLine(b.label, b.text);
         // letterPara/letterLine (21 Sept 2026, cover-letter renderer): both
         // are plain paragraphs of text - a templated letterBlocks entry and

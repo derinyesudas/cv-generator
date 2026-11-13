@@ -87,6 +87,32 @@
     return (terms || []).filter(function (t) { return test(text, t) || test(spaced, t); });
   }
 
+  // Bold emphasis (12 Nov 2026, data._boldRule): a block's `bold` is
+  // {phrases, max} - phrases in priority order, the first `max` that appear
+  // (whole words, any case, first time each) are bold. Returns the text cut
+  // into [{text, bold}] pieces whose texts join back to exactly `text`, so
+  // the preview, PDF, Word file and page fit all share one reading of it.
+  function boldParts(text, bold) {
+    text = String(text == null ? "" : text);
+    var spans = [];
+    ((bold && bold.phrases) || []).forEach(function (p) {
+      if (spans.length >= bold.max) return;
+      var m = new RegExp("(^|[^A-Za-z0-9])(" + escapeRe(p) + ")(?![A-Za-z0-9])", "i").exec(text);
+      if (!m) return;
+      var s = m.index + m[1].length, e = s + m[2].length;
+      if (!spans.some(function (x) { return s < x[1] && x[0] < e; })) spans.push([s, e]);
+    });
+    spans.sort(function (a, b) { return a[0] - b[0]; });
+    var parts = [], at = 0;
+    spans.forEach(function (x) {
+      if (x[0] > at) parts.push({ text: text.slice(at, x[0]), bold: false });
+      parts.push({ text: text.slice(x[0], x[1]), bold: true });
+      at = x[1];
+    });
+    if (at < text.length || !parts.length) parts.push({ text: text.slice(at), bold: false });
+    return parts;
+  }
+
   // ---------------------------------------------------------------------
   // Letter-template slot syntax (25 Sept 2026, item 4 of Derin's privacy-
   // and-correctness pass - "the RECIPIENT_NAME bug is a class, not an
@@ -418,6 +444,7 @@
     countHits: countHits,
     scanList: scanList,
     scanListJoined: scanListJoined,
+    boldParts: boldParts,
     slotRe: slotRe,
     braceRe: braceRe,
     KNOWN_LETTER_SLOTS: KNOWN_LETTER_SLOTS,

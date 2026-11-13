@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.53",
+  "_version": "1.54",
   "_changelog": [
+    {
+      "version": "1.54",
+      "date": "12 Nov 2026",
+      "summary": "Derin's bold spec: the profile bolds 'a year' and '99% accuracy'; each main-job bullet (TCS, or Circle K on the retail CV) bolds one boldCandidates phrase the ad asks for. Formatting only: no word on any CV changes. New charWidths.bodyBold so page fit measures bold widths."
+    },
     {
       "version": "1.53",
       "date": "10 Nov 2026",
@@ -790,7 +795,33 @@
             "cv": 33.47,
             "hash": "3c3157f3"
           },
-          "linesSaved": 1
+          "linesSaved": 1,
+          "boldCandidates": [
+            {
+              "text": "verifying data",
+              "tags": [
+                "contract verification"
+              ]
+            },
+            {
+              "text": "system migration",
+              "tags": [
+                "data migration"
+              ]
+            },
+            {
+              "text": "Excel files",
+              "tags": [
+                "Microsoft Excel"
+              ]
+            },
+            {
+              "text": "client programme",
+              "tags": [
+                "client programme"
+              ]
+            }
+          ]
         },
         {
           "id": "bul-tcs-lng-scale-b",
@@ -802,7 +833,28 @@
           ],
           "text": "Verified data for 140 contract types ahead of a system migration for a US life insurer, working through Excel files of 30 to 50 columns and several thousand records on a three-hour turnaround per contract.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "Verified data",
+              "tags": [
+                "data validation"
+              ]
+            },
+            {
+              "text": "system migration",
+              "tags": [
+                "data migration"
+              ]
+            },
+            {
+              "text": "Excel files",
+              "tags": [
+                "excel skills",
+                "large datasets"
+              ]
+            }
+          ]
         }
       ],
       "basis": {
@@ -832,7 +884,37 @@
             "cv": 33.47,
             "hash": "1294acbf"
           },
-          "linesSaved": 1
+          "linesSaved": 1,
+          "boldCandidates": [
+            {
+              "text": "peer-reviewed",
+              "tags": [
+                "peer review",
+                "maker checker",
+                "quality assurance"
+              ]
+            },
+            {
+              "text": "peer review",
+              "tags": [
+                "peer review",
+                "maker checker",
+                "quality assurance"
+              ]
+            },
+            {
+              "text": "reviewed with the client",
+              "tags": [
+                "client review"
+              ]
+            },
+            {
+              "text": "checked with the client",
+              "tags": [
+                "client review"
+              ]
+            }
+          ]
         },
         {
           "id": "bul-tcs-accuracy-b",
@@ -845,7 +927,18 @@
           ],
           "text": "Held 99% accuracy across every contract processed, the highest of the ten, with every contract checked by a colleague and the results reviewed with the client weekly.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "checked by a colleague",
+              "tags": [
+                "quality control",
+                "internal controls",
+                "data quality",
+                "attention to detail"
+              ]
+            }
+          ]
         }
       ],
       "basis": {
@@ -875,7 +968,29 @@
             "cv": 33.47,
             "hash": "7c8c35b"
           },
-          "linesSaved": 0
+          "linesSaved": 0,
+          "boldCandidates": [
+            {
+              "text": "operating procedure",
+              "tags": [
+                "standard operating procedure",
+                "process documentation",
+                "process ownership"
+              ]
+            },
+            {
+              "text": "client calls",
+              "tags": [
+                "client calls"
+              ]
+            },
+            {
+              "text": "briefed the team",
+              "tags": [
+                "stakeholder briefing"
+              ]
+            }
+          ]
         },
         {
           "id": "bul-tcs-sop-b",
@@ -887,7 +1002,23 @@
           ],
           "text": "Kept the team's operating procedure current through near-weekly client changes, so all ten processors worked from one standard, and briefed the team on each change after client calls.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "operating procedure",
+              "tags": [
+                "process documentation",
+                "process improvement",
+                "continuous improvement"
+              ]
+            },
+            {
+              "text": "client changes",
+              "tags": [
+                "change management"
+              ]
+            }
+          ]
         }
       ],
       "basis": {
@@ -917,7 +1048,34 @@
             "cv": 33.47,
             "hash": "dc59bc20"
           },
-          "linesSaved": 0
+          "linesSaved": 0,
+          "boldCandidates": [
+            {
+              "text": "Processed claims",
+              "tags": [
+                "claims processing",
+                "insurance operations"
+              ]
+            },
+            {
+              "text": "OMNI and Legacy systems",
+              "tags": [
+                "OMNI"
+              ]
+            },
+            {
+              "text": "fully licensed",
+              "tags": [
+                "professional licensing"
+              ]
+            },
+            {
+              "text": "SLAs",
+              "tags": [
+                "SLA"
+              ]
+            }
+          ]
         },
         {
           "id": "bul-tcs-claims-b",
@@ -929,7 +1087,22 @@
           ],
           "text": "Gained a full processing licence within a month and carried the same SLAs and targets as far more experienced colleagues, processing claims for a US pensions provider on OMNI and Legacy.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "processing claims",
+              "tags": [
+                "claims processing"
+              ]
+            },
+            {
+              "text": "SLAs and targets",
+              "tags": [
+                "SLA",
+                "performance targets"
+              ]
+            }
+          ]
         }
       ],
       "_why": "strength: support (Derin, 19 Sept 2026) - 'before that' scene-setting for the second TCS client programme, not itself the match. No short variant supplied for this one.",
@@ -960,7 +1133,35 @@
             "cv": 33.47,
             "hash": "7d9228b4"
           },
-          "linesSaved": 0
+          "linesSaved": 0,
+          "boldCandidates": [
+            {
+              "text": "single point of contact",
+              "tags": [
+                "single point of contact",
+                "client liaison",
+                "stakeholder management"
+              ]
+            },
+            {
+              "text": "taking queries",
+              "tags": [
+                "query resolution"
+              ]
+            },
+            {
+              "text": "resolving requirements",
+              "tags": [
+                "requirements clarification"
+              ]
+            },
+            {
+              "text": "mismatched requirements",
+              "tags": [
+                "requirements clarification"
+              ]
+            }
+          ]
         },
         {
           "id": "bul-tcs-spoc-b",
@@ -972,7 +1173,23 @@
           ],
           "text": "Handled client queries and complaints as the single point of contact with internal teams, resolving mismatched requirements so delivery stayed on schedule.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "single point of contact",
+              "tags": [
+                "stakeholder management",
+                "client relationship"
+              ]
+            },
+            {
+              "text": "client queries and complaints",
+              "tags": [
+                "query resolution",
+                "escalation handling"
+              ]
+            }
+          ]
         }
       ],
       "basis": {
@@ -994,7 +1211,35 @@
           ],
           "text": "Serve customers on the till at one of the busiest Circle K stores in Dublin, taking cash, card and contactless payments accurately and keeping the queue moving at peak times. Handle queries and complaints calmly and escalate when needed.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "Serve customers",
+              "tags": [
+                "customer service",
+                "retail experience"
+              ]
+            },
+            {
+              "text": "cash, card and contactless payments",
+              "tags": [
+                "cash handling"
+              ]
+            },
+            {
+              "text": "queries and complaints",
+              "tags": [
+                "complaint handling"
+              ]
+            },
+            {
+              "text": "busiest Circle K stores",
+              "tags": [
+                "high volume",
+                "convenience store"
+              ]
+            }
+          ]
         }
       ],
       "basis": {
@@ -1015,7 +1260,28 @@
           ],
           "text": "Rotate stock on a FIFO basis, face up shelves and follow HACCP food-safety, forecourt safety and fire and evacuation procedures to keep the store clean, safe and ready for customers.",
           "verifiedBy": "stated",
-          "_unmeasured": true
+          "_unmeasured": true,
+          "boldCandidates": [
+            {
+              "text": "Rotate stock",
+              "tags": [
+                "stock rotation"
+              ]
+            },
+            {
+              "text": "HACCP food-safety",
+              "tags": [
+                "food hygiene"
+              ]
+            },
+            {
+              "text": "fire and evacuation procedures",
+              "tags": [
+                "health and safety",
+                "store policy"
+              ]
+            }
+          ]
         }
       ],
       "basis": {
@@ -2432,7 +2698,8 @@
         "compliance",
         "legal"
       ],
-      "letterLead": "let-ev-x-circlek"
+      "letterLead": "let-ev-x-circlek",
+      "mainRole": "role-circlek"
     }
   ],
   "profileVariants": [
@@ -4491,7 +4758,11 @@
     "skillLabelSuffix": ":  ",
     "hyperlinkColour": "1F3864",
     "hyperlinkUnderline": false,
-    "_mustBeReadAtRuntime": "RESOLVED, verified 25 Sept 2026 (item 7), CV-house-style.md side confirmed 26 Sept 2026: both js/render-docx.js and js/preview.js read every value here at runtime via their own configure(style) - neither hardcodes a copy (render-docx.js's own file header dates the fix to 13 Sept 2026; preview.js has never hardcoded these). tests/golden/run-golden-tests.mjs's \"Style single-source-of-truth\" section is the committed test this note used to ask for: it asserts every value each renderer is actually configured with equals this object, with a gate-fires half proving it's a live read (reconfigures both against an altered clone and confirms the mismatch is caught), not two copies that happen to agree. CV-house-style.md's own status block is now a dated 'wiring verified' note naming this same regression test - Derin updated it directly on the other side, so both documents now agree."
+    "_mustBeReadAtRuntime": "RESOLVED, verified 25 Sept 2026 (item 7), CV-house-style.md side confirmed 26 Sept 2026: both js/render-docx.js and js/preview.js read every value here at runtime via their own configure(style) - neither hardcodes a copy (render-docx.js's own file header dates the fix to 13 Sept 2026; preview.js has never hardcoded these). tests/golden/run-golden-tests.mjs's \"Style single-source-of-truth\" section is the committed test this note used to ask for: it asserts every value each renderer is actually configured with equals this object, with a gate-fires half proving it's a live read (reconfigures both against an altered clone and confirms the mismatch is caught), not two copies that happen to agree. CV-house-style.md's own status block is now a dated 'wiring verified' note naming this same regression test - Derin updated it directly on the other side, so both documents now agree.",
+    "profileBold": [
+      "a year",
+      "99% accuracy"
+    ]
   },
   "_educationRule": "Education sits BELOW project and experience on every archetype. Derin's decision, 12 Sept 2026. The trade-off: on graduate programmes and finance roles the degree is the qualifying criterion, so it must not be hard to find. MANDATORY CONSEQUENCE: every profileVariant must name the degree AND its classification in its first sentence, so eligibility is satisfied at line one and the education block only has to confirm it. A profile variant that does not do this is a bug. RECONCILED WITH THE ACTION-VERB-FIRST GATE (26 Sept 2026, item 2a below): every profileVariant now opens 'Holds a/an <degree>...' - the classification string still lands in the same first sentence (this rule's own test), so both rules are satisfied by the same three words, not by exempting anyone from either rule.",
   "actionVerbs": {
@@ -4875,6 +5146,80 @@
         "(": 4.662,
         ")": 4.662,
         ":": 3.878
+      },
+      "bodyBold": {
+        "0": 6.333,
+        "1": 6.333,
+        "2": 6.333,
+        "3": 6.333,
+        "4": 6.333,
+        "5": 6.333,
+        "6": 6.333,
+        "7": 6.333,
+        "8": 6.333,
+        "9": 6.333,
+        " ": 3.167,
+        "A": 9.145,
+        "B": 8.449,
+        "C": 9.148,
+        "D": 9.145,
+        "E": 8.437,
+        "F": 7.736,
+        "G": 9.85,
+        "H": 9.85,
+        "I": 4.929,
+        "J": 6.33,
+        "K": 9.85,
+        "L": 8.437,
+        "M": 11.954,
+        "N": 9.145,
+        "O": 9.85,
+        "P": 7.736,
+        "Q": 9.85,
+        "R": 9.148,
+        "S": 7.043,
+        "T": 8.437,
+        "U": 9.145,
+        "V": 9.145,
+        "W": 12.656,
+        "X": 9.145,
+        "Y": 9.145,
+        "Z": 8.437,
+        "a": 6.321,
+        "b": 7.044,
+        "c": 5.611,
+        "d": 7.044,
+        "e": 5.611,
+        "f": 4.218,
+        "g": 6.333,
+        "h": 7.044,
+        "i": 3.509,
+        "j": 4.206,
+        "k": 7.044,
+        "l": 3.509,
+        "m": 10.54,
+        "n": 7.044,
+        "o": 6.333,
+        "p": 7.044,
+        "q": 7.044,
+        "r": 5.622,
+        "s": 4.927,
+        "t": 4.206,
+        "u": 7.044,
+        "v": 6.333,
+        "w": 9.145,
+        "x": 6.333,
+        "y": 6.333,
+        "z": 5.611,
+        ".": 3.167,
+        ",": 3.167,
+        "&apos;": 2.456,
+        "-": 4.218,
+        "&amp;": 10.827,
+        "/": 3.509,
+        "(": 4.218,
+        ")": 4.218,
+        ":": 4.206
       }
     },
     "styleHash": "e49a4054"
@@ -5373,5 +5718,6 @@
       ]
     }
   ],
-  "_atsRule": "10 Nov 2026, Derin: the CV should come out at the best ATS grade the moment the ad is pasted, with no extra step. ATS keyword search is literal, so when the ad uses a word for something Derin has done and the CV says it differently, this term adds the ad's word. atsOnly skill terms carry atsAsk (data.matchRule syntax, matched against the ad's requirement text). Every term is something Derin has done; the four marked \"Approved by Derin 10 Nov 2026\" were confirmed by him one by one. atsGaps are skills he does not have: the app names them in the ATS readout and never prints them. atsSoft marks the soft-skill terms; when space runs out the trim ladder takes those off before the others."
+  "_atsRule": "10 Nov 2026, Derin: the CV should come out at the best ATS grade the moment the ad is pasted, with no extra step. ATS keyword search is literal, so when the ad uses a word for something Derin has done and the CV says it differently, this term adds the ad's word. atsOnly skill terms carry atsAsk (data.matchRule syntax, matched against the ad's requirement text). Every term is something Derin has done; the four marked \"Approved by Derin 10 Nov 2026\" were confirmed by him one by one. atsGaps are skills he does not have: the app names them in the ATS readout and never prints them. atsSoft marks the soft-skill terms; when space runs out the trim ladder takes those off before the others.",
+  "_boldRule": "12 Nov 2026, Derin's approved spec: bold is formatting only, the text never changes. Profile: style.profileBold, the first time each appears. Bullets: only the main job's (archetype.mainRole, else role-tcs), at most one phrase each, chosen from the variant's boldCandidates by how strongly the ad asks for its tags (a tie goes to the first listed); no candidate holds a number. Not in the letter or form answers. charWidths.bodyBold is for measuring the wider bold letters."
 }

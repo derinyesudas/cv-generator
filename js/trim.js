@@ -287,14 +287,36 @@
     return null;
   }
 
+  // ---- Bold (12 Nov 2026, data._boldRule) ------------------------------------
+  // Bold is formatting only and must never change a CV's words, so a block
+  // whose bold costs an extra line loses its bold before anything is
+  // shortened or dropped (last such block first).
+  function applyDropBold(model, docType) {
+    for (var i = model.length - 1; i >= 0; i--) {
+      var b = model[i];
+      if (!b.bold || !PageFit.boldExtraPx(b, docType)) continue;
+      var plain = Object.assign({}, b, { bold: null });
+      return {
+        model: model.map(function (x) { return x === b ? plain : x; }),
+        applied: true,
+        phase: "shorten",
+        description: "Took the bold off a " + (b.t === "bullet" ? "bullet" : "profile") + " line, which made it wrap onto an extra line (trim step 1, before any words change)."
+      };
+    }
+    return null;
+  }
+
   // ---- Combined ladder --------------------------------------------------------
-  // One atomic action per call: shorten if anything is still shortenable,
-  // else drop if anything is still droppable, else {applied: false} - step
-  // 3 (HARD FAILURE) is the caller's own job from there (see file header).
-  // When the CV carries ATS skill terms, the drop step runs in two halves
-  // around them: standalone lines, then the ATS terms, then bullets.
+  // One atomic action per call: take off bold that costs a line, else
+  // shorten if anything is still shortenable, else drop if anything is still
+  // droppable, else {applied: false} - step 3 (HARD FAILURE) is the caller's
+  // own job from there (see file header). When the CV carries ATS skill
+  // terms, the drop step runs in two halves around them: standalone lines,
+  // then the ATS terms, then bullets.
   function applyOneStep(model, docType) {
     docType = docType || "cv";
+    var unbold = applyDropBold(model, docType);
+    if (unbold) return unbold;
     var shorten = applyShorten(model, docType);
     if (shorten) return shorten;
     if (model.some(function (b) { return b._ats && b._ats.length; })) {

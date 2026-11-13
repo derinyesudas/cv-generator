@@ -87,6 +87,13 @@
       .replace(/"/g, "&quot;");
   }
 
+  // A block's bold phrases (data._boldRule), escaped; same text.
+  function boldHtml(b) {
+    return global.CVMatcher.boldParts(b.text, b.bold).map(function (part) {
+      return part.bold ? '<span style="font-weight:bold;">' + esc(part.text) + "</span>" : esc(part.text);
+    }).join("");
+  }
+
   // Attribute-safe escaping for href values - additionally escapes quotes
   // and angle brackets the same way esc() does. Before the 13 Sept 2026
   // review, linkifyContactPart() interpolated part.link into an href
@@ -196,7 +203,7 @@
       case "bullet":
         p = el("p", "margin:0 0 " + twipsToPt(SPACING.bullet) + "pt 0;font-size:" + halfPtToPt(SIZES.body) +
           "pt;line-height:1.15;padding-left:" + twipsToPt(BULLET.indentLeft) + "pt;text-indent:-" + twipsToPt(BULLET.hanging) + "pt;");
-        p.innerHTML = '<span style="color:#' + BULLET.colour + ';">&#8226;</span>&nbsp;' + esc(b.text);
+        p.innerHTML = '<span style="color:#' + BULLET.colour + ';">&#8226;</span>&nbsp;' + boldHtml(b);
         return p;
 
       // letterPara/letterLine (21 Sept 2026, cover-letter renderer): render
@@ -213,7 +220,7 @@
         if (o.italics) style += "font-style:italic;";
         if (o.color) style += "color:#" + o.color + ";";
         p = el("p", style);
-        p.textContent = b.text;
+        p.innerHTML = boldHtml(b);
         return p;
       }
 

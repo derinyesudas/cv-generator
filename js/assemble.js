@@ -275,7 +275,9 @@
   // false; js/trim.js's shorten step flips it (on a NEW block object, not
   // by mutating this one - see trim.js's own header) so a block is never
   // shortened twice.
-  function bulletBlocksFor(data, groupIds, extraction, groupMeta, bulletChoices) {
+  // boldOn (12 Nov 2026, data._boldRule): this is the CV's main job, so each
+  // bullet bolds the boldCandidates phrase the ad asks for most.
+  function bulletBlocksFor(data, groupIds, extraction, groupMeta, bulletChoices, boldOn) {
     if (!groupMeta) {
       throw new Error("assemble.js: bulletBlocksFor() called without groupMeta - every bullet must be traceable to a role/project for trim-ladder execution (Phase 6).");
     }
@@ -295,8 +297,10 @@
       return { variant: variant, score: overlapScore(variant.tags, extraction), gid: gid, strength: group.basis.strength };
     });
     return stableSortDesc(scored, function (x) { return x.score; }).map(function (x) {
+      var asked = (boldOn ? x.variant.boldCandidates || [] : []).filter(function (c) { return overlapScore(c.tags, extraction) > 0; });
       return {
         t: "bullet", text: x.variant.text, _prov: { text: oneProv(x.variant, "text") },
+        bold: { phrases: stableSortDesc(asked, function (c) { return overlapScore(c.tags, extraction); }).map(function (c) { return c.text; }), max: 1 },
         _group: groupMeta,
         _trim: { kind: "bullet", groupId: x.gid, strength: x.strength, score: x.score, ref: x.variant, shortApplied: false }
       };
@@ -349,6 +353,7 @@
         {
           t: "para", text: variant.text,
           opts: { after: data.style.spacingAfter.profile },
+          bold: { phrases: data.style.profileBold || [], max: (data.style.profileBold || []).length },
           _prov: { text: oneProv(variant, "text") },
           _trim: { kind: "profile", groupId: variant.id, strength: variant.basis.strength, score: overlapScore(variant.tags, extraction), ref: variant, shortApplied: false }
         }
@@ -491,7 +496,7 @@
     }).map(function (x) { return x.r; });
   }
 
-  function buildExperience(data, includeIds, headingText, extraction, choices, newestOnly) {
+  function buildExperience(data, includeIds, headingText, extraction, choices, newestOnly, mainRole) {
     var roles = roleOrder(selectInOrder(data.facts.roles, includeIds), newestOnly);
     if (!roles.length) return null;
     var blocks = [];
@@ -503,7 +508,7 @@
         _group: groupMeta
       });
       blocks.push({ t: "dates", text: role.dates, _prov: { text: oneProv(role, "dates") }, _group: groupMeta });
-      blocks = blocks.concat(bulletBlocksFor(data, role.bullets, extraction, groupMeta, choices && choices.bullets));
+      blocks = blocks.concat(bulletBlocksFor(data, role.bullets, extraction, groupMeta, choices && choices.bullets, role.id === mainRole));
     });
     return { headingText: headingText, blocks: blocks };
   }
@@ -619,7 +624,7 @@
       case "profile": return buildProfile(data, archetype, headingText, extraction, choices);
       case "skills": return buildSkills(data, archetype, headingText, extraction, choices);
       case "project": return buildProjects(data, includeIds, headingText, extraction, choices);
-      case "experience": return buildExperience(data, includeIds, headingText, extraction, choices, archetype.roleOrder === "newest");
+      case "experience": return buildExperience(data, includeIds, headingText, extraction, choices, archetype.roleOrder === "newest", archetype.mainRole || "role-tcs");
       case "education": return buildEducation(data, includeIds, headingText);
       case "certifications": return buildCertificationsAndVolunteering(data, includeIds, headingText);
       default:

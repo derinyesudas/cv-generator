@@ -1679,6 +1679,61 @@ check('ATS: when space runs out, the soft-skill term goes before Requirements ga
 check('ATS: with no room left, the trim ladder takes ATS terms off before dropping a bullet, and the CV still fits and passes every gate',
   ats.crowded.atsDrops > 0 && ats.crowded.fits && !ats.crowded.failedGates.length, JSON.stringify({ drops: ats.crowded.atsDrops, printed: ats.crowded.printedAts, failed: ats.crowded.failedGates }));
 
+// ---- Bold emphasis (Derin's spec, 12 Nov 2026, data._boldRule): formatting
+// only. The profile bolds "a year" and "99% accuracy"; each main-job bullet
+// bolds at most one phrase the ad asks for, never a number; other jobs,
+// projects, retail profiles and the letter stay plain.
+console.log('\n--- Bold emphasis ---');
+const boldRes = await page.evaluate(() => {
+  var data = CVApp._test.getLoadedData();
+  function run(archetypeId, jd) {
+    var extraction = CVScore.extractFromJD(data, jd);
+    var model = CVAssemble.buildModel(data, archetypeId, { extraction: extraction, excludeFactIds: ['vol'] });
+    var fit = CVPageFit.measure(model, 'cv');
+    for (var steps = 0; fit.overflows && steps < 30; steps++) {
+      var s = CVTrim.applyOneStep(model);
+      if (!s.applied) break;
+      model = s.model;
+      fit = CVPageFit.measure(model, 'cv');
+    }
+    var rows = model.map(function (b) {
+      var parts = CVMatcher.boldParts(b.text, b.bold);
+      return { t: b.t, group: b._group && b._group.id, kind: b._trim && b._trim.kind, joins: parts.map(function (p) { return p.text; }).join('') === String(b.text == null ? '' : b.text),
+        bold: parts.filter(function (p) { return p.bold; }).map(function (p) { return p.text; }) };
+    });
+    return { rows: rows, fits: !fit.overflows, failed: CVVerify.runGates(model, data, fit).gates.filter(function (g) { return !g.passed; }).map(function (g) { return g.name; }) };
+  }
+  var sopAd = 'Process Administrator\n\nRequirements:\nWrite and maintain the standard operating procedure for the team.\nClaims processing experience in insurance operations.\nStrong stakeholder management as the single point of contact for clients.';
+  var shopAd = 'Retail Assistant\n\nRequirements:\nExcellent customer service and cash handling on the tills.\nStock rotation and health and safety in store.';
+  var letter = CVApp._test.getModels().letter;
+  return {
+    ba: run('business-analyst', sopAd),
+    ins: run('insurance-pensions', sopAd),
+    retail: run('retail-parttime', shopAd),
+    letterBold: (letter || []).filter(function (b) { return b.bold; }).length
+  };
+});
+const boldOf = (r, f) => r.rows.filter(f).map((x) => x.bold);
+check('Bold: every block\'s pieces join back to exactly its text (formatting only)', [boldRes.ba, boldRes.ins, boldRes.retail].every((r) => r.rows.every((x) => x.joins)));
+check('Bold: the analyst profile bolds "a year" and "99% accuracy" and nothing else', JSON.stringify(boldOf(boldRes.ba, (x) => x.kind === 'profile')[0].map((s) => s.toLowerCase())) === '["a year","99% accuracy"]', JSON.stringify(boldOf(boldRes.ba, (x) => x.kind === 'profile')));
+check('Bold: an ad asking for an operating procedure, claims and a single point of contact bolds those phrases in the TCS bullets',
+  ['operating procedure', 'Processed claims', 'single point of contact'].every((p) => boldRes.ins.rows.some((x) => x.group === 'role-tcs' && x.bold.indexOf(p) !== -1)),
+  JSON.stringify(boldOf(boldRes.ins, (x) => x.group === 'role-tcs')));
+check('Bold: at most one phrase per bullet, no number in any bullet bold, no bold outside the main job',
+  [boldRes.ba, boldRes.ins, boldRes.retail].every((r) => r.rows.every((x) => x.t !== 'bullet' || (x.bold.length <= 1 && !x.bold.some((p) => /[0-9]/.test(p))))) &&
+  [boldRes.ba, boldRes.ins].every((r) => r.rows.every((x) => x.t !== 'bullet' || x.group === 'role-tcs' || !x.bold.length)) &&
+  boldRes.retail.rows.every((x) => x.t !== 'bullet' || x.group === 'role-circlek' || !x.bold.length));
+check('Bold: the retail CV bolds Circle K bullets, not TCS, and its profile stays plain',
+  boldRes.retail.rows.some((x) => x.group === 'role-circlek' && x.bold.length) && boldOf(boldRes.retail, (x) => x.kind === 'profile')[0].length === 0,
+  JSON.stringify(boldRes.retail.rows.filter((x) => x.bold.length)));
+check('Bold: the bolded CVs fit one page and pass every gate', [boldRes.ba, boldRes.ins, boldRes.retail].every((r) => r.fits && !r.failed.length), JSON.stringify([boldRes.ba.failed, boldRes.ins.failed, boldRes.retail.failed]));
+check('Bold: the cover letter has no bold', boldRes.letterBold === 0, String(boldRes.letterBold));
+const boldWrap = await page.evaluate(() => {
+  var cw = { a: 5, ' ': 2, m: 8 }, bw = { a: 7, ' ': 2, m: 9 };
+  return [CVTextWrap.wrapLineCount('aaaa aaaa', cw, 46, 0, 0), CVTextWrap.wrapLineCount('aaaa aaaa', cw, 46, 0, 0, { table: bw, spans: [[5, 9]] })];
+});
+check('Bold: the wrap simulator counts bold letters as wider (one line plain, two with the last word bold)', boldWrap[0] === 1 && boldWrap[1] === 2, JSON.stringify(boldWrap));
+
 // ---- Close-match letter mode: gate-fires (26 Sept 2026, item 4, Derin's
 // own instruction: "Derin rejected a letter today as generic, for an ad...
 // whose responsibilities were almost exactly his TCS job. Trigger: 50% or
