@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.58",
+  "_version": "1.59",
   "_changelog": [
+    {
+      "version": "1.59",
+      "date": "13 Nov 2026",
+      "summary": "Useful points from Derin's ATS review: skill label 'Core skills' (was 'Transversal'); MSc entry reads 'MSc Business Analytics, 2:1 Honours'; no full stop after the BMS dates; the tracker bullet no longer repeats 'built with Claude Code'; atsOnly terms for escalation, prioritising workload and adapting to change; atsGaps for negotiation, settlement, motor, Consumer Protection Code and telematics. See _atsReviewNote for what was not taken and why."
+    },
     {
       "version": "1.58",
       "date": "13 Nov 2026",
@@ -314,7 +319,7 @@
     "education": [
       {
         "id": "edu-msc",
-        "title": "MSc Business Analytics",
+        "title": "MSc Business Analytics, 2:1 Honours",
         "org": "University College Cork",
         "dates": "September 2025 - September 2026",
         "grade": null,
@@ -340,13 +345,14 @@
             "hash": "60f88302"
           }
         },
-        "printModules": true
+        "printModules": true,
+        "_unmeasured": true
       },
       {
         "id": "edu-bms",
         "title": "BMS Finance, First Class Honours, Grade 1",
         "org": "Annasaheb Vartak College, University of Mumbai",
-        "dates": "June 2021 - May 2024.",
+        "dates": "June 2021 - May 2024",
         "grade": "First Class Honours, Grade 1",
         "_gradeNote": "Derin, 14 Sept 2026, absolute instruction: drop the 9.13/10 CGPI figure and the 'H1 equivalent' conversion label entirely - both gone from every field, not just dates. The classification is now stated once, consistently, as 'First Class Honours, Grade 1' in title and grade. Nothing about the underlying degree changed, only which wording is allowed to print - the raw CGPI figure and the self-declared H1 mapping are no longer represented anywhere in this fact. Only this record was touched; free-text profile sentences elsewhere that say plain 'First Class Honours' (prof-ba, prof-customerops) were not - that's a separate, larger content edit Derin didn't ask for here.",
         "modules": [
@@ -376,7 +382,8 @@
             "cv": 14.93,
             "hash": "711bc396"
           }
-        }
+        },
+        "_unmeasured": true
       }
     ],
     "roles": [
@@ -1337,10 +1344,10 @@
             "scheduled workflows",
             "github actions"
           ],
-          "text": "Built a job-matching tool that reads 335 Irish employers' own career sites and scores each new role out of 100 against my CV, so I spot the right openings early and apply only where my skills and eligibility fit. It screens out roles I do not qualify for and explains every score. Wrote the specification, built it with Claude Code and checked its output; it runs unattended on GitHub Actions.",
+          "text": "Built a job-matching tool that reads 335 Irish employers' own career sites and scores each new role out of 100 against my CV, so I spot the right openings early and apply only where my skills and eligibility fit. It screens out roles I do not qualify for and explains every score. Wrote the specification and checked its output; it runs unattended on GitHub Actions.",
           "verifiedBy": "stated",
           "_unmeasured": true,
-          "short": "Built a job-matching tool that reads 335 Irish employers' own career sites and scores each new role against my CV, so I spot the right openings early and apply only where I fit. Built with Claude Code; it runs unattended on GitHub Actions."
+          "short": "Built a job-matching tool that reads 335 Irish employers' own career sites and scores each new role against my CV, so I spot the right openings early and apply only where I fit. It runs unattended on GitHub Actions."
         }
       ],
       "basis": {
@@ -1665,7 +1672,7 @@
       }
     },
     "transversal": {
-      "label": "Transversal",
+      "label": "Core skills",
       "terms": [
         {
           "text": "Accuracy and attention to detail",
@@ -1815,6 +1822,37 @@
             "financial services"
           ],
           "_why": "Approved by Derin 10 Nov 2026: TCS work for a US pensions provider and a US life insurer."
+        },
+        {
+          "atsOnly": true,
+          "atsSoft": true,
+          "text": "Escalating issues when needed",
+          "atsAsk": [
+            "escalat*"
+          ],
+          "_why": "TCS: single point of contact handling client queries and complaints (escalation handling); Circle K: escalates when needed (approved 10 Nov 2026)."
+        },
+        {
+          "atsOnly": true,
+          "atsSoft": true,
+          "text": "Prioritising workload to deadlines",
+          "atsAsk": [
+            "prioriti*",
+            "workload"
+          ],
+          "_why": "TCS: three-hour turnaround per contract and the same SLAs and targets as experienced colleagues."
+        },
+        {
+          "atsOnly": true,
+          "atsSoft": true,
+          "text": "Adapting quickly to change",
+          "atsAsk": [
+            "adapting",
+            "adaptable",
+            "adaptability",
+            "changing priorities"
+          ],
+          "_why": "TCS: kept the SOP current through near-weekly client changes; moved onto a new client programme mid-year."
         }
       ],
       "_fileOrderBaselineHeightPx": {
@@ -2094,6 +2132,37 @@
             "telephone"
           ],
           "_why": "Approved by Derin 10 Nov 2026: took client queries and complaints by phone at TCS."
+        },
+        {
+          "atsOnly": true,
+          "atsSoft": true,
+          "text": "Escalating issues when needed",
+          "atsAsk": [
+            "escalat*"
+          ],
+          "_why": "TCS: single point of contact handling client queries and complaints (escalation handling); Circle K: escalates when needed (approved 10 Nov 2026)."
+        },
+        {
+          "atsOnly": true,
+          "atsSoft": true,
+          "text": "Prioritising workload to deadlines",
+          "atsAsk": [
+            "prioriti*",
+            "workload"
+          ],
+          "_why": "TCS: three-hour turnaround per contract and the same SLAs and targets as experienced colleagues."
+        },
+        {
+          "atsOnly": true,
+          "atsSoft": true,
+          "text": "Adapting quickly to change",
+          "atsAsk": [
+            "adapting",
+            "adaptable",
+            "adaptability",
+            "changing priorities"
+          ],
+          "_why": "TCS: kept the SOP current through near-weekly client changes; moved onto a new client programme mid-year."
         }
       ]
     }
@@ -5741,8 +5810,39 @@
         "sales targets",
         "sales experience"
       ]
+    },
+    {
+      "label": "Negotiation",
+      "atsAsk": [
+        "negotiat*"
+      ]
+    },
+    {
+      "label": "Claims settlement",
+      "atsAsk": [
+        "settlement*"
+      ]
+    },
+    {
+      "label": "Motor claims",
+      "atsAsk": [
+        "motor"
+      ]
+    },
+    {
+      "label": "Consumer Protection Code",
+      "atsAsk": [
+        "consumer protection"
+      ]
+    },
+    {
+      "label": "Telematics",
+      "atsAsk": [
+        "telematics"
+      ]
     }
   ],
   "_atsRule": "10 Nov 2026, Derin: the CV should come out at the best ATS grade the moment the ad is pasted, with no extra step. ATS keyword search is literal, so when the ad uses a word for something Derin has done and the CV says it differently, this term adds the ad's word. atsOnly skill terms carry atsAsk (data.matchRule syntax, matched against the ad's requirement text). Every term is something Derin has done; the four marked \"Approved by Derin 10 Nov 2026\" were confirmed by him one by one. atsGaps are skills he does not have: the app names them in the ATS readout and never prints them. atsSoft marks the soft-skill terms; when space runs out the trim ladder takes those off before the others.",
-  "_boldRule": "12 Nov 2026, Derin's approved spec: bold is formatting only, the text never changes. Profile: style.profileBold, the first time each appears. Bullets: only the main job's (archetype.mainRole, else role-tcs), at most one phrase each, chosen from the variant's boldCandidates by how strongly the ad asks for its tags (a tie goes to the first listed); no candidate holds a number. Not in the letter or form answers. charWidths.bodyBold is for measuring the wider bold letters."
+  "_boldRule": "12 Nov 2026, Derin's approved spec: bold is formatting only, the text never changes. Profile: style.profileBold, the first time each appears. Bullets: only the main job's (archetype.mainRole, else role-tcs), at most one phrase each, chosen from the variant's boldCandidates by how strongly the ad asks for its tags (a tie goes to the first listed); no candidate holds a number. Not in the letter or form answers. charWidths.bodyBold is for measuring the wider bold letters.",
+  "_atsReviewNote": "13 Nov 2026, Derin's ATS review of a generated Claims Handler CV. Taken: 'Core skills' for 'Transversal', the MSc grade in its education entry, no trailing full stop after dates, no duplicated 'built with Claude Code', ATS wording for escalation, prioritising and adapting to change, and five more reported gaps. Not taken, because Derin has decided otherwise: showing Circle K on non-retail CVs (TCS only), 'Work authorisation:' before Stamp 1G (Stamp 1G only), 9.13 CGPI and 94% (not printed), bold only on numbers (his bold spec keeps numbers plain), the Excel filter (excluded from the fact set). Not taken because they need re-measuring every height in LibreOffice: sans-serif font, 10pt body, wider margins. Not taken because they are not in the fact set: 12-18 claims a day, 100% within SLA, 2-3 contracts a day, checking 3 colleagues' work, training colleagues, 7,661 events, the title 'Data Process Enabler'."
 }

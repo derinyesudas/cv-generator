@@ -784,8 +784,12 @@
     });
     (data.facts.education || []).forEach(function (e) {
       var label = "facts.education['" + e.id + "']";
-      checkHeight(e.heightPx, "role", label, { text: roleHashText(e, true), sizeKey: "body", docType: "cv", isBullet: false });
-      checkHeight(e.heightPx, "dates", label, { text: datesHashText(e, true), sizeKey: "small", docType: "cv", isBullet: false });
+      // _unmeasured: the title and dates lines are wrap-simulated (js/pagefit.js);
+      // the modules line keeps its own measured height.
+      if (!e._unmeasured) {
+        checkHeight(e.heightPx, "role", label, { text: roleHashText(e, true), sizeKey: "body", docType: "cv", isBullet: false });
+        checkHeight(e.heightPx, "dates", label, { text: datesHashText(e, true), sizeKey: "small", docType: "cv", isBullet: false });
+      }
       if (e.printModules && e.modules && e.modules.length) {
         checkHeight(e.heightPx, "modules", label, { text: "Modules: " + e.modules.join(", "), sizeKey: "small", docType: "cv", isBullet: false });
       }
