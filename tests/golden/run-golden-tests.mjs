@@ -1325,7 +1325,10 @@ const zeroSaving = await page.evaluate((data) => {
     // 5 Oct 2026 (data 1.30): Star of the Month moved from bul-tcs-sop to
     // bul-tcs-accuracy, so accuracy's short now saves a line and sop's
     // saves none - the real zero-savers are now sop, claims and spoc.
-    return !!report && report.indexOf('bul-tcs-sop') !== -1 && report.indexOf('bul-tcs-claims') !== -1 && report.indexOf('bul-tcs-accuracy') === -1;
+    // 13 Nov 2026 (data 1.60): sop and claims were rewritten with Derin's
+    // confirmed figures and are _unmeasured (no linesSaved), so spoc is the
+    // one measured zero-saver left.
+    return !!report && report.indexOf('bul-tcs-spoc') !== -1 && report.indexOf('bul-tcs-accuracy') === -1;
   })();
   // A data file with every linesSaved either positive or absent must report null.
   var clean = JSON.parse(JSON.stringify(data));
@@ -1336,7 +1339,7 @@ const zeroSaving = await page.evaluate((data) => {
   results.reportIsNullWhenNoZeroSavers = CVValidate.zeroSavingShortsReport(clean) === null;
   return results;
 }, dataJson);
-check('zeroSavingShortsReport names the real zero-saving shorts in the shipped data file (bul-tcs-sop and bul-tcs-claims among them, bul-tcs-accuracy no longer)',
+check('zeroSavingShortsReport names the real zero-saving shorts in the shipped data file (bul-tcs-spoc, not bul-tcs-accuracy)',
   zeroSaving.reportNamesKnownZeroSavers === true, JSON.stringify(zeroSaving));
 check('zeroSavingShortsReport returns null when no linesSaved is exactly 0',
   zeroSaving.reportIsNullWhenNoZeroSavers === true, JSON.stringify(zeroSaving));
@@ -1673,9 +1676,10 @@ check('ATS: a word the CV already says is not added again (finance CV already sa
 check('ATS: a business analyst ad adds Reporting, Analytical problem solving, Requirements gathering and Process documentation, but not a second communication line',
   ['Reporting', 'Analytical problem solving', 'Requirements gathering', 'Process documentation'].every((t) => ats.ba.addedBeforeTrim.indexOf(t) !== -1) &&
   ats.ba.addedBeforeTrim.indexOf('Written and verbal communication') === -1 && !ats.ba.failedGates.length && ats.ba.fits, JSON.stringify({ added: ats.ba.addedBeforeTrim, failed: ats.ba.failedGates }));
-check('ATS: when space runs out, the soft-skill term goes before Requirements gathering',
-  ats.ba.printedAts.indexOf('Requirements gathering') !== -1 &&
-  (ats.ba.printedAts.indexOf('Analytical problem solving') === -1 || ats.ba.printedAts.length === ats.ba.addedBeforeTrim.length), JSON.stringify(ats.ba.printedAts));
+// How many terms fit depends on the page; the rule is the order they go in.
+check('ATS: when space runs out, the soft-skill term goes before any hard-skill term like Requirements gathering',
+  ats.ba.addedBeforeTrim.filter((t) => t !== 'Analytical problem solving' && ats.ba.printedAts.indexOf(t) === -1).length === 0 ||
+  ats.ba.printedAts.indexOf('Analytical problem solving') === -1, JSON.stringify({ added: ats.ba.addedBeforeTrim, printed: ats.ba.printedAts }));
 check('ATS: with no room left, the trim ladder takes ATS terms off before dropping a bullet, and the CV still fits and passes every gate',
   ats.crowded.atsDrops > 0 && ats.crowded.fits && !ats.crowded.failedGates.length, JSON.stringify({ drops: ats.crowded.atsDrops, printed: ats.crowded.printedAts, failed: ats.crowded.failedGates }));
 
@@ -1717,7 +1721,7 @@ const boldOf = (r, f) => r.rows.filter(f).map((x) => x.bold);
 check('Bold: every block\'s pieces join back to exactly its text (formatting only)', [boldRes.ba, boldRes.ins, boldRes.retail].every((r) => r.rows.every((x) => x.joins)));
 check('Bold: the analyst profile bolds "a year" and "99% accuracy" and nothing else', JSON.stringify(boldOf(boldRes.ba, (x) => x.kind === 'profile')[0].map((s) => s.toLowerCase())) === '["a year","99% accuracy"]', JSON.stringify(boldOf(boldRes.ba, (x) => x.kind === 'profile')));
 check('Bold: an ad asking for an operating procedure, claims and a single point of contact bolds those phrases in the TCS bullets',
-  ['operating procedure', 'Processed claims', 'single point of contact'].every((p) => boldRes.ins.rows.some((x) => x.group === 'role-tcs' && x.bold.indexOf(p) !== -1)),
+  ['operating procedure', 'death claims', 'single point of contact'].every((p) => boldRes.ins.rows.some((x) => x.group === 'role-tcs' && x.bold.indexOf(p) !== -1)),
   JSON.stringify(boldOf(boldRes.ins, (x) => x.group === 'role-tcs')));
 check('Bold: at most one phrase per bullet, no number in any bullet bold, no bold outside the main job',
   [boldRes.ba, boldRes.ins, boldRes.retail].every((r) => r.rows.every((x) => x.t !== 'bullet' || (x.bold.length <= 1 && !x.bold.some((p) => /[0-9]/.test(p))))) &&
