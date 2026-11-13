@@ -117,7 +117,7 @@
     o = o || {};
     return {
       text: text, bold: !!o.bold, italic: !!o.italic, size: o.size, color: o.color || "000000",
-      charSpace: o.charSpace || 0, link: o.link || null, underline: !!o.underline
+      charSpace: o.charSpace || 0, link: o.link || null
     };
   }
   function spacingFor(b) {
@@ -185,7 +185,7 @@
         p.align = "center";
         break;
       case "head":
-        p.runs = [run(b.text, { bold: true, underline: true, size: halfPointsToPt(S.sizes.heading), color: navy, charSpace: twipsToPt(S.characterSpacing.heading) })];
+        p.runs = [run(b.text, { bold: true, size: halfPointsToPt(S.sizes.heading), color: navy, charSpace: twipsToPt(S.characterSpacing.heading) })];
         if (S.headingBorder) p.border = { width: S.headingBorder.size / 8, space: S.headingBorder.space, color: S.headingBorder.colour };
         break;
       case "role":
@@ -293,12 +293,6 @@
     if (r.charSpace) opts.charSpace = r.charSpace;
     doc.text(piece.text, x, baseline, opts);
     var w = widthOf(doc, r, piece.text);
-    if (r.underline) {
-      // Word's underline sits about a tenth of the font size below the baseline.
-      doc.setDrawColor(c[0], c[1], c[2]);
-      doc.setLineWidth(r.size / 18);
-      doc.line(x, baseline + r.size / 10, x + w, baseline + r.size / 10);
-    }
     if (r.link) {
       var top = baseline - r.size * ASCENT / UPEM;
       doc.link(x, top, w, r.size * (ASCENT + DESCENT) / UPEM, { url: r.link });

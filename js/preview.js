@@ -173,7 +173,7 @@
 
       case "head":
         p = el("p", "margin:" + twipsToPt(SPACING.headingBefore) + "pt 0 " + twipsToPt(SPACING.heading) + "pt 0;font-weight:bold;font-size:" +
-          halfPtToPt(SIZES.heading) + "pt;color:" + NAVY + ";letter-spacing:" + (CHAR_SPACING.heading / 20) + "pt;line-height:1.15;text-decoration:underline;" +
+          halfPtToPt(SIZES.heading) + "pt;color:" + NAVY + ";letter-spacing:" + (CHAR_SPACING.heading / 20) + "pt;line-height:1.15;" +
           (HEADING_BORDER ? "border-bottom:" + (HEADING_BORDER.size / 8) + "pt solid " + NAVY + ";padding-bottom:2pt;" : ""));
         p.textContent = b.text;
         return p;

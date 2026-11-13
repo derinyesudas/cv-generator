@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.55",
+  "_version": "1.56",
   "_changelog": [
+    {
+      "version": "1.56",
+      "date": "13 Nov 2026",
+      "summary": "Derin: remove all underlines. Section headings are bold, title case, no underline and no rule line. Links were already not underlined."
+    },
     {
       "version": "1.55",
       "date": "13 Nov 2026",
@@ -4763,7 +4768,7 @@
       "a year",
       "99% accuracy"
     ],
-    "_lookNote": "13 Nov 2026, Derin: 'Imbibe everything that can be done' from his friend's CV. Black text, name in title case without letter spacing, headings bold italic underlined in title case with no rule line, PROFILE renamed Summary. colours.navy keeps its key but is now black. Not taken: the sans-serif font (needs a new font file and every height re-measured in LibreOffice), dates right-aligned on the job line (parsers join right-aligned text to the city), contact icons (ATS reads them as junk), one combined Experience & Projects heading (ATS looks for Experience)."
+    "_lookNote": "13 Nov 2026, Derin: 'Imbibe everything that can be done' from his friend's CV. Black text, name in title case without letter spacing, headings bold in title case with no rule line (13 Nov 2026, Derin: \"remove all underlines\"), PROFILE renamed Summary. colours.navy keeps its key but is now black. Not taken: the sans-serif font (needs a new font file and every height re-measured in LibreOffice), dates right-aligned on the job line (parsers join right-aligned text to the city), contact icons (ATS reads them as junk), one combined Experience & Projects heading (ATS looks for Experience)."
   },
   "_educationRule": "Education sits BELOW project and experience on every archetype. Derin's decision, 12 Sept 2026. The trade-off: on graduate programmes and finance roles the degree is the qualifying criterion, so it must not be hard to find. MANDATORY CONSEQUENCE: every profileVariant must name the degree AND its classification in its first sentence, so eligibility is satisfied at line one and the education block only has to confirm it. A profile variant that does not do this is a bug. RECONCILED WITH THE ACTION-VERB-FIRST GATE (26 Sept 2026, item 2a below): every profileVariant now opens 'Holds a/an <degree>...' - the classification string still lands in the same first sentence (this rule's own test), so both rules are satisfied by the same three words, not by exempting anyone from either rule.",
   "actionVerbs": {
