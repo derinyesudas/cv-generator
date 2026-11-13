@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.57",
+  "_version": "1.58",
   "_changelog": [
+    {
+      "version": "1.58",
+      "date": "13 Nov 2026",
+      "summary": "Derin: the job tracker must not read as mass applying. Rewrote both tracker bullets, the three profiles and the letter evidence paragraph that mention it: a job-matching tool that scores each new role against his CV and screens out roles he does not qualify for, so he applies only where he fits. All six entries _unmeasured."
+    },
     {
       "version": "1.57",
       "date": "13 Nov 2026",
@@ -600,7 +605,8 @@
           "bul-tracker-build",
           "bul-tracker-register"
         ],
-        "_unmeasured": true
+        "_unmeasured": true,
+        "_wordingNote": "13 Nov 2026, Derin: the tracker read as if he mass-applies. Every mention now says what it is for: scoring each new role against his CV and screening out roles he does not qualify for, so he applies only where he fits and does not miss the right openings. Facts from github.com/derinyesudas/ireland-job-tracker's README (scores out of 100, drops ineligible roles, explains each score, never applies by itself)."
       }
     ]
   },
@@ -1331,10 +1337,10 @@
             "scheduled workflows",
             "github actions"
           ],
-          "text": "Designed an automated tracker that checks 335 Irish employers' own career sites on a schedule, rather than job boards, so new entry-level roles reach a live board as early as possible. Wrote the specification, built it with Claude Code and checked its output; it runs unattended on GitHub Actions.",
+          "text": "Built a job-matching tool that reads 335 Irish employers' own career sites and scores each new role out of 100 against my CV, so I spot the right openings early and apply only where my skills and eligibility fit. It screens out roles I do not qualify for and explains every score. Wrote the specification, built it with Claude Code and checked its output; it runs unattended on GitHub Actions.",
           "verifiedBy": "stated",
           "_unmeasured": true,
-          "short": "Designed an automated tracker that checks 335 Irish employers' own career sites on a schedule, rather than job boards, so new entry-level roles reach a live board early. Built it with Claude Code; it runs unattended on GitHub Actions."
+          "short": "Built a job-matching tool that reads 335 Irish employers' own career sites and scores each new role against my CV, so I spot the right openings early and apply only where I fit. Built with Claude Code; it runs unattended on GitHub Actions."
         }
       ],
       "basis": {
@@ -1350,7 +1356,7 @@
             "employer register",
             "research compilation"
           ],
-          "text": "Researched and compiled the employer register behind it, with the careers page, sector, entry routes and hiring system for each company, and kept the research files encrypted.",
+          "text": "Researched the employer register behind it, recording the careers page, sector, entry routes and hiring system for each company, so the tool searches only employers with real entry-level routes.",
           "verifiedBy": "stated",
           "_unmeasured": true
         }
@@ -2803,7 +2809,7 @@
         "data sourcing",
         "automated testing"
       ],
-      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate, setting the problem, sourcing and checking the data and testing the output myself. Projects so far: a tracker watching 335 Irish employers' career sites, and a Power BI alert console for an MSc market surveillance project. Before that, a year at Tata Consultancy Services validating US insurance and pensions data, where I held 99% accuracy on a ten-person pilot team, the highest of the ten. Work in Excel (certified at 100%), Power BI, Tableau, Python, R and SQL.",
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate, setting the problem, sourcing and checking the data and testing the output myself. Projects so far: a job-matching tool that scores roles from 335 Irish employers against my CV, and a Power BI alert console for an MSc market surveillance project. Before that, a year at Tata Consultancy Services validating US insurance and pensions data, where I held 99% accuracy on a ten-person pilot team, the highest of the ten. Work in Excel (certified at 100%), Power BI, Tableau, Python, R and SQL.",
       "basis": {
         "strength": "required",
         "why": "The analyst CV model Derin supplied (Oct 2026), reworded so the AI work reads as skill and control."
@@ -3083,7 +3089,7 @@
         "management consulting",
         "data sourcing"
       ],
-      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate real work, and I own the parts that matter: the problem, the data and the testing. My projects include a tracker that watches 335 Irish employers' career sites and a Power BI alert console for an MSc market surveillance project, and before that I held 99% accuracy on a ten-person pilot team at Tata Consultancy Services, the highest of the ten.",
+      "text": "Earned an MSc in Business Analytics at 2:1 Honours from University College Cork, on top of a First Class Honours degree in Finance. I use AI to build and automate real work, and I own the parts that matter: the problem, the data and the testing. My projects include a job-matching tool that scores roles from 335 Irish employers' career sites against my CV, and a Power BI alert console for an MSc market surveillance project, and before that I held 99% accuracy on a ten-person pilot team at Tata Consultancy Services, the highest of the ten.",
       "basis": {
         "strength": "required",
         "why": "Additional approved profile (21 Oct 2026) built only from facts already in this file."
@@ -3102,7 +3108,7 @@
         "task automation",
         "data sourcing"
       ],
-      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services on permanent night shifts taught me to work to fixed targets and procedures from my first month, and on a ten-person pilot team I held 99% accuracy, the highest in the team. Outside the degree I build data tools with AI, including a tracker that watches 335 Irish employers' career sites.",
+      "text": "Earned a Finance degree with First Class Honours and an MSc in Business Analytics at 2:1 Honours from University College Cork. A year at Tata Consultancy Services on permanent night shifts taught me to work to fixed targets and procedures from my first month, and on a ten-person pilot team I held 99% accuracy, the highest in the team. Outside the degree I build data tools with AI, including a job-matching tool that scores new roles from 335 Irish employers against my CV.",
       "basis": {
         "strength": "required",
         "why": "Additional approved profile (21 Oct 2026) built only from facts already in this file."
@@ -3895,7 +3901,7 @@
           "dashboard",
           "tooling"
         ],
-        "text": "Outside my degree I build things that save time, and I treat each one as a data project: where the data comes from, how I know it is right, and who uses the result. I built a tracker that checks 335 Irish employers' own career sites on a schedule and posts new roles to a live board, and I researched the employer register behind it: the careers page, sector, entry routes and hiring system for each company. I use AI to build faster, and I set the rules, checked the output and kept the data accurate.",
+        "text": "Outside my degree I build things that save time, and I treat each one as a data project: where the data comes from, how I know it is right, and who uses the result. I built a job-matching tool that checks 335 Irish employers' own career sites, scores each new role against my CV and screens out the ones I do not qualify for, so I apply where I genuinely fit. I also researched the employer register behind it: the careers page, sector, entry routes and hiring system for each company. I use AI to build faster, and I set the rules, checked the output and kept the data accurate.",
         "_unmeasured": true
       },
       {
