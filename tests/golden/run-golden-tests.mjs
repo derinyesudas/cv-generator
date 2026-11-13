@@ -1734,6 +1734,50 @@ const boldWrap = await page.evaluate(() => {
 });
 check('Bold: the wrap simulator counts bold letters as wider (one line plain, two with the last word bold)', boldWrap[0] === 1 && boldWrap[1] === 2, JSON.stringify(boldWrap));
 
+// ---- Location rule (Derin, 13 Nov 2026, data.identity._locationNote): the
+// job's place sets the CV contact line, a relocation line for the rest of
+// Ireland, and the letter's location sentence; remote, unclear, Northern
+// Ireland or abroad gets "Dublin, Ireland" and a review flag.
+console.log('\n--- Location rule ---');
+const locRule = await page.evaluate(() => ['Dublin', 'Sandyford, Co. Dublin', 'Cork or Dublin', 'Little Island, Cork', 'Galway or Limerick', 'Co. Kildare', 'Remote', 'London', 'Belfast', '']
+  .map(function (c) { var r = CVAdInfo.locationRule(c); return c + '=' + r.kind + (r.kind === 'elsewhere' ? ':' + r.place : ''); }).join(' | '));
+check('Location: County Dublin, County Cork, the rest of Ireland and everything else sort as Derin set out (Dublin first, then Cork, when several are listed)',
+  locRule === 'Dublin=dublin | Sandyford, Co. Dublin=dublin | Cork or Dublin=dublin | Little Island, Cork=cork | Galway or Limerick=elsewhere:Galway | Co. Kildare=elsewhere:Kildare | Remote=review | London=review | Belfast=review | =review', locRule);
+const locLines = await page.evaluate(() => ['Ireland - Dublin', 'Dublin 2, Ireland', 'Dublin 18, ie', 'Ireland, Leixlip']
+  .map(function (l) { return (CVAdInfo.extract('Client Engagement Specialist\nAcme Ltd\n' + l + '\n\nAbout the role\nYou will support clients.').city || {}).value; }).join(','));
+check('Location: the ad reader finds "Ireland - Dublin", "Dublin 2, Ireland", "Dublin 18, ie" and "Ireland, Leixlip" as location lines', locLines === 'Dublin,Dublin,Dublin,Leixlip', locLines);
+const locAds = await page.evaluate(() => {
+  var ta = document.getElementById('jd-input');
+  function run(place) {
+    ta.value = 'Claims Administrator\nExample Insurance Ltd\nLocation: ' + place + '\n\nResponsibilities:\nProcess claims accurately and handle client queries.\nRequirements:\nStrong attention to detail.';
+    CVApp._test.recomputeNow();
+    var s = CVApp._test.getRunSummary();
+    var m = CVApp._test.getModels();
+    var contacts = function (model) { return model.filter(function (b) { return b.t === 'contact'; }).map(function (b) { return b.items.map(function (it) { return it.text; }).join(' | '); }); };
+    var card = document.getElementById('ready-checks');
+    return {
+      cv: contacts(m.cv), letterHead: contacts(m.letter)[0], close: (s.letterParas.filter(function (p) { return p.cat === 'close'; })[0] || {}).text || '',
+      letterText: s.letterParas.map(function (p) { return p.text; }).join(' '), flagged: /Check the location/.test(card ? card.textContent : ''),
+      ok: !(s.cvFailed || []).length && !(s.letterFailed || []).length && !(s.cvFit && s.cvFit.overflows)
+    };
+  }
+  return { dublin: run('Sandyford, Dublin 18'), cork: run('Mahon, Cork'), wexford: run('Wexford'), remote: run('Remote') };
+});
+check('Location: a Dublin job reads "Dublin 7 (D07), Ireland" on the CV and letter header and "I live in Dublin 7 (D07)." in the letter, with no relocation line',
+  /^Dublin 7 \(D07\), Ireland \|/.test(locAds.dublin.cv[0]) && locAds.dublin.cv.every((c) => !/relocate/.test(c)) && /^Dublin 7 \(D07\), Ireland/.test(locAds.dublin.letterHead) &&
+  /I live in Dublin 7 \(D07\)\. I hold Stamp 1G\.$/.test(locAds.dublin.close) && !locAds.dublin.flagged && locAds.dublin.ok, JSON.stringify(locAds.dublin));
+check('Location: a Cork job reads "Cork, Ireland" and "I am based in Cork.", with no relocation wording',
+  /^Cork, Ireland \|/.test(locAds.cork.cv[0]) && locAds.cork.cv.every((c) => !/relocate/.test(c)) && /^Cork, Ireland/.test(locAds.cork.letterHead) &&
+  /I am based in Cork\. I hold Stamp 1G\.$/.test(locAds.cork.close) && !/relocat|Dublin/.test(locAds.cork.letterText) && locAds.cork.ok, JSON.stringify(locAds.cork));
+check('Location: a Wexford job reads "Dublin, Ireland", adds "Based in Dublin, ready to relocate to Wexford" under the contact details, and the letter says the same',
+  /^Dublin, Ireland \|/.test(locAds.wexford.cv[0]) && locAds.wexford.cv.indexOf('Based in Dublin, ready to relocate to Wexford') !== -1 &&
+  /I am based in Dublin and ready to relocate to Wexford\. I hold Stamp 1G\.$/.test(locAds.wexford.close) && !locAds.wexford.flagged && locAds.wexford.ok, JSON.stringify(locAds.wexford));
+check('Location: a remote job reads "Dublin, Ireland" with no relocation line and is flagged for review',
+  /^Dublin, Ireland \|/.test(locAds.remote.cv[0]) && locAds.remote.cv.every((c) => !/relocate/.test(c)) && /I am based in Dublin\. I hold Stamp 1G\.$/.test(locAds.remote.close) && locAds.remote.flagged && locAds.remote.ok,
+  JSON.stringify(locAds.remote));
+check('Location: no letter gives a reason for the location (family, friends, moving dates)',
+  ['dublin', 'cork', 'wexford', 'remote'].every((k) => !/family|friend|moving|move in|from (january|february|march|april|may|june|july|august|september|october|november|december)/i.test(locAds[k].letterText + ' ' + locAds[k].cv.join(' '))));
+
 // ---- Close-match letter mode: gate-fires (26 Sept 2026, item 4, Derin's
 // own instruction: "Derin rejected a letter today as generic, for an ad...
 // whose responsibilities were almost exactly his TCS job. Trigger: 50% or
@@ -3178,7 +3222,7 @@ console.log('\n--- Never-claim scan: the company, role and other details of an a
     const close = data.letterBlocks.close[0];
     const tpl = (ref, slots) => ({ template: { ref: ref, field: 'text', slots: slots } });
     const fill = (text, slots) => text.replace(/\{\{([A-Z]+)\}\}/g, (m, k) => slots[k] || '');
-    const slots = { COMPANY: 'Salesforce', ROLE: 'Commercial Graduate Program' };
+    const slots = { COMPANY: 'Salesforce', ROLE: 'Commercial Graduate Program', LOCATION: 'I am based in Dublin.' };
     const para = (ref, sl) => ({ t: 'letterPara', text: fill(ref.text, sl), ref: ref, category: 'close', _prov: { text: tpl(ref, sl) } });
     const gate = (model) => CVVerify.runGates(model, data, null, { docType: 'letter', rawJD: '', echoText: '', team: '', recipientName: '' }).gates.find((g) => g.name === 'Never-claim scan');
     const companyInSlot = gate([{ t: 'letterLine', text: 'Salesforce', opts: {} }, para(close, slots)]);

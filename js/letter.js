@@ -76,13 +76,10 @@
   // letters carry no such line, and js/verify.js's provenance gate no
   // longer requires one for a docType:"letter" model (that check was
   // always a CV-only invariant - see trimPolicy.neverDo).
-  function headerBlocks(data) {
+  function headerBlocks(data, location) {
     return [
       { t: "name", text: data.identity.name, _prov: { text: Assemble.oneProv(data.identity, "name") } },
-      {
-        t: "contact", items: data.identity.contact,
-        _prov: { items: data.identity.contact.map(function (it) { return Assemble.oneProv(it, "text"); }) }
-      },
+      Assemble.contactBlock(data, location),
       { t: "spacer" }
     ];
   }
@@ -219,7 +216,7 @@
   // gap paragraph got selected.
   function assembleLetter(data, opts, letterResult) {
     var model = []
-      .concat(headerBlocks(data))
+      .concat(headerBlocks(data, opts.location))
       .concat(dateBlocks(data, opts.now))
       .concat(recipientBlocks(data, opts))
       .concat([salutationBlock(data, opts.recipientName)])

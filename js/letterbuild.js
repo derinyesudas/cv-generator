@@ -713,6 +713,10 @@
     var echoCandidates = opts.echoCandidates || buildEchoCandidates(data, rawJD, opts.yearsRelevant);
 
     var slots = { ROLE: role, COMPANY: company, TEAM: team, ECHO: echoText, YEARS: opts.yearsRequiredText || (extraction && extraction.yearsRequired != null ? String(extraction.yearsRequired) : ""), REFEREE: refereeName };
+    // The close's location sentence (13 Nov 2026, data.identity._locationNote).
+    var location = opts.location || { kind: "review" };
+    var locLine = data.identity.location.letter[location.kind] || data.identity.location.letter.review;
+    slots.LOCATION = fillTemplate(locLine, { PLACE: location.place }, "identity.location.letter");
 
     // Close-match mode (26 Sept 2026, item 4): checked once, up front, and
     // used below to pick the opening variant and to replace why+evidence+

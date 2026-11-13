@@ -169,7 +169,7 @@
   // js/letter.js, or js/assemble.js, it must be added here in the same
   // change, or validate.js will (correctly) refuse to load the data file
   // that uses it.
-  var KNOWN_LETTER_SLOTS = ["ROLE", "COMPANY", "TEAM", "ECHO", "YEARS", "RECIPIENT", "REFEREE"];
+  var KNOWN_LETTER_SLOTS = ["ROLE", "COMPANY", "TEAM", "ECHO", "YEARS", "RECIPIENT", "REFEREE", "LOCATION", "PLACE"];
 
   // ---------------------------------------------------------------------
   // Stem-set tag matching (27 Sept 2026, item 1 of Derin's matcher/deploy

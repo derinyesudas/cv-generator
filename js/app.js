@@ -327,6 +327,13 @@
     };
   }
 
+  // Where the job is, from the City field: picks the CV contact line, the
+  // relocation line and the letter's location sentence (13 Nov 2026,
+  // data.identity._locationNote).
+  function locationNow() {
+    return CVAdInfo.locationRule(letterInputsNow().city);
+  }
+
   // --- Ad details, read automatically (2 Oct 2026) -------------------------
   // Derin, verbatim: "I don't want to manually fill the details in the
   // cover letter... I will only paste the job description... In case you
@@ -1144,6 +1151,11 @@
     else if (level === 'amber') items.push(['👀', 'Worth a quick look first: see "Should you apply?" below.']);
     else items.push(['👍', 'Nothing in the ad rules you out.']);
     items.push(cvOk ? ['📄', 'CV: one page, every check passed.'] : ['🔧', 'CV: ' + plainReason(cvBtn)]);
+    var loc = locationNow();
+    if (loc.kind === 'review') {
+      items.push(['📍', 'Check the location: ' + (loc.place ? loc.place + ' is outside the Republic of Ireland' : 'the ad is remote or does not say where the job is') +
+        ', so the CV says "Dublin, Ireland" with no relocation line. Fix the City field if that is wrong.']);
+    }
     items.push(letterOk ? ['✉️', 'Cover letter: one page, every check passed.'] : ['🔧', 'Cover letter: ' + plainReason(letterBtn)]);
     var both = cvOk && letterOk;
     var mood = READY_MOODS[Math.abs(simpleHash(li.role + '|' + li.company)) % READY_MOODS.length];
@@ -1412,6 +1424,7 @@
       team: teamCheck.team,
       recipientName: recipientNameCheck.name,
       city: li.city,
+      location: locationNow(),
       echoText: selectedEchoText,
       titleMismatch: li.titleMismatch,
       fitCheckGapTrigger: lastFitCheck ? lastFitCheck.gapTrigger : 'none',
@@ -1835,7 +1848,7 @@
     }
     var attemptedModel;
     try {
-      attemptedModel = CVAssemble.buildModel(loadedData, candidateArchetypeId, { excludeFactIds: ['vol'], extraction: extraction, choices: cvChoices });
+      attemptedModel = CVAssemble.buildModel(loadedData, candidateArchetypeId, { excludeFactIds: ['vol'], extraction: extraction, choices: cvChoices, location: locationNow() });
     } catch (err) {
       console.error(err);
       var label = (CVAssemble.findById(loadedData.archetypes, candidateArchetypeId) || {}).label || candidateArchetypeId;
@@ -1954,7 +1967,7 @@
 
   function buildCvWith(choices) {
     var model = CVAssemble.buildModel(loadedData, currentArchetypeId, {
-      excludeFactIds: ['vol'], extraction: lastExtraction, choices: choices
+      excludeFactIds: ['vol'], extraction: lastExtraction, choices: choices, location: locationNow()
     });
     var assembled = model.slice();
     var fitted = fitToPage(model);
@@ -2922,7 +2935,8 @@
     // discrete choice, not typing).
     ['letter-company', 'letter-role', 'letter-team', 'letter-recipient-name', 'letter-city'].forEach(function (id) {
       var el = document.getElementById(id);
-      if (el) el.addEventListener('input', debouncedRecomputeLetter);
+      // The City field also sets the CV's contact line (locationNow).
+      if (el) el.addEventListener('input', id === 'letter-city' ? debouncedRecompute : debouncedRecomputeLetter);
     });
     var titleMismatchEl = document.getElementById('letter-title-mismatch');
     if (titleMismatchEl) titleMismatchEl.addEventListener('change', recomputeLetter);

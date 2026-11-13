@@ -78,12 +78,38 @@
     "Copenhagen", "Stockholm", "Oslo", "Helsinki", "Dubai", "Abu Dhabi", "Singapore",
     "Sydney", "Melbourne", "Toronto", "New York", "Boston", "San Francisco", "Chicago"
   ];
+  // Location rule (13 Nov 2026, Derin): County Dublin, County Cork and the
+  // rest of the Republic decide the CV header and the letter's location
+  // line (see locationRule). Northern Ireland and abroad are none of these:
+  // Stamp 1G does not cover them.
+  var DUBLIN_AREA = ["Dublin", "Swords", "Balbriggan", "Blanchardstown", "Tallaght", "Sandyford", "Dun Laoghaire", "Dún Laoghaire",
+    "Citywest", "Blackrock", "Lucan", "Clondalkin", "Malahide", "Dundrum", "Santry", "Ballsbridge", "Leopardstown", "Cherrywood",
+    "Stillorgan", "Rathfarnham", "Finglas", "Skerries", "Portmarnock", "Donabate", "Howth", "Glasnevin", "Drumcondra", "Rathmines",
+    "Ranelagh", "Grand Canal Dock", "Dublin Airport", "Parkwest", "Ballymount", "Clonskeagh"];
+  var CORK_AREA = ["Cork", "Cobh", "Midleton", "Mallow", "Carrigtwohill", "Ringaskiddy", "Mahon", "Little Island", "Ballincollig",
+    "Blarney", "Carrigaline", "Glanmire", "Bandon", "Kinsale", "Youghal", "Fermoy", "Clonakilty", "Macroom", "Mitchelstown",
+    "Bishopstown", "Skibbereen"];
+  // The rest of the Republic: the towns above plus counties an ad may name
+  // on their own ("Co. Kildare"). Kerry and Clare only with "Co."/"County",
+  // since "Kerry Group" and a recruiter called Clare are not places.
+  var IRELAND_OTHER = ["Galway", "Limerick", "Waterford", "Kilkenny", "Drogheda", "Dundalk", "Bray", "Navan", "Ennis", "Tralee",
+    "Carlow", "Naas", "Athlone", "Letterkenny", "Sligo", "Wexford", "Clonmel", "Mullingar", "Portlaoise", "Newbridge", "Celbridge",
+    "Maynooth", "Leixlip", "Shannon", "Killarney", "Castlebar", "Tullamore", "Arklow", "Ballina", "Longford", "Cavan", "Monaghan",
+    "Dungarvan", "Wicklow", "Greystones", "Ashbourne", "Clonee", "Kildare", "Meath", "Louth", "Laois", "Offaly", "Westmeath",
+    "Roscommon", "Leitrim", "Donegal", "Mayo", "Tipperary", "County Kerry", "Co. Kerry", "County Clare", "Co. Clare"];
+  CITIES = CITIES.concat(DUBLIN_AREA, CORK_AREA, IRELAND_OTHER);
+  var AREA_OF = {};
+  DUBLIN_AREA.forEach(function (c) { AREA_OF[c.toLowerCase()] = "dublin"; });
+  CORK_AREA.forEach(function (c) { AREA_OF[c.toLowerCase()] = "cork"; });
+  IRELAND_OTHER.forEach(function (c) { AREA_OF[c.toLowerCase()] = "ireland"; });
   // Longest first so "Dun Laoghaire" wins over a shorter overlapping name.
   var CITY_RE = new RegExp("\\b(" + CITIES.slice().sort(function (a, b) { return b.length - a.length; }).map(escapeRe).join("|") + ")\\b");
   var CITY_CANON = {};
   CITIES.forEach(function (c) { CITY_CANON[c.toLowerCase()] = c; });
   CITY_CANON["dún laoghaire"] = "Dún Laoghaire";
   CITY_CANON["londonderry"] = "Derry";
+  CITY_CANON["co. kerry"] = "County Kerry";
+  CITY_CANON["co. clare"] = "County Clare";
 
   // Header lines that are site furniture, not information about the job.
   var JUNK_LINE_RE = new RegExp("^(?:" + [
@@ -254,16 +280,47 @@
     }
     return CITY_CANON[m[1].toLowerCase()] || m[1];
   }
+  // Every place a location line names, in order ("Cork or Dublin").
+  function placesIn(text) {
+    var out = [];
+    var re = new RegExp(CITY_RE.source, "gi");
+    var m;
+    while ((m = re.exec(String(text || ""))) !== null) {
+      var c = CITY_CANON[m[1].toLowerCase()] || m[1];
+      if (out.indexOf(c) === -1) out.push(c);
+    }
+    var one = cityIn(text);
+    if (one && out.indexOf(one) === -1) out.unshift(one);
+    return out;
+  }
+  // Several places listed: Dublin if one of them, then Cork, else the first.
+  function pickPlace(places) {
+    var area = function (p) { return AREA_OF[String(p).toLowerCase()]; };
+    return places.filter(function (p) { return area(p) === "dublin"; })[0] ||
+      places.filter(function (p) { return area(p) === "cork"; })[0] || places[0] || null;
+  }
+  // Which header and letter line the job gets (data.identity.location):
+  // "dublin", "cork", "elsewhere" (with the place to relocate to), or
+  // "review" for remote, unclear, Northern Ireland or abroad.
+  function locationRule(cityText) {
+    var place = pickPlace(placesIn(cityText));
+    var area = place && AREA_OF[place.toLowerCase()];
+    if (area === "dublin" || area === "cork") return { kind: area, place: place };
+    if (area === "ireland") return { kind: "elsewhere", place: place };
+    return { kind: "review", place: place };
+  }
+
   function looksLikeLocationLine(line) {
-    var first = line.split(/\s+·\s+|\s+\|\s+/)[0];
+    // "Ireland - Dublin" and "Ireland, Leixlip" put the country first.
+    var first = line.split(/\s+·\s+|\s+\|\s+/)[0].replace(/^(?:Republic of )?Ireland\s*[-–—,:]\s*/i, "");
     if (wordCount(first) > 8) return false;
     // The place has to lead the line: "Graduate Programme, Audit - Dublin
     // (Sept 2027)" is a title that mentions a city, not a location line.
     if (!cityIn(first.split(/\s*[,(\/]\s*|\s+[-–—]\s+/)[0])) return false;
     // "Dublin", "Cork, Ireland", "Galway, Republic of Ireland",
     // "Dublin, County Dublin, Ireland", "Dublin, IE, D02 H638",
-    // "Dublin (Hybrid)", "Dublin or Cork".
-    return /^[A-Za-zÀ-ÿ'’. -]+(?:\s*(?:,|\/|or|and|\(|-)\s*[A-Za-zÀ-ÿ0-9'’. ()-]+)*\)?$/.test(first);
+    // "Dublin (Hybrid)", "Dublin or Cork", "Dublin 18, ie".
+    return /^[A-Za-zÀ-ÿ'’. -]+(?: \d{1,2})?(?:\s*(?:,|\/|or|and|\(|-)\s*[A-Za-zÀ-ÿ0-9'’. ()-]+)*\)?$/.test(first);
   }
   function citiesMentioned(plain) {
     var seen = {};
@@ -286,13 +343,13 @@
   function findCity(lines, header, plain) {
     var labelled = findAllLabelled(lines, LABEL_LOCATION_RE, LABEL_LOCATION_ALONE_RE);
     for (var i = 0; i < labelled.length; i++) {
-      var c = cityIn(labelled[i].value);
+      var c = pickPlace(placesIn(labelled[i].value));
       if (c) return { value: c, from: labelled[i].line, how: "label" };
       if (/remote/i.test(labelled[i].value)) return { value: null, from: labelled[i].line, how: "remote" };
     }
     for (var h = 0; h < header.length; h++) {
       var l = header[h].text;
-      if (looksLikeLocationLine(l)) return { value: cityIn(l.split(/\s+·\s+|\s+\|\s+/)[0]), from: l, how: "header" };
+      if (looksLikeLocationLine(l)) return { value: pickPlace(placesIn(l.split(/\s+·\s+|\s+\|\s+/)[0])), from: l, how: "header" };
     }
     var body = [
       /\b(?:based|located) (?:in|at|out of) (?:our |the )?((?:[A-Z][\w'’-]+[ ,]*){1,4})/,
@@ -699,6 +756,7 @@
     // exposed for tests
     tidyRole: tidyRole,
     tidyCompany: tidyCompany,
-    cityIn: cityIn
+    cityIn: cityIn,
+    locationRule: locationRule
   };
 })(typeof window !== "undefined" ? window : globalThis);

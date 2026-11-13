@@ -632,6 +632,20 @@
     }
   }
 
+  // The contact line with its place swapped for the job's location line
+  // (data.identity.location.cv; location from CVAdInfo.locationRule). The
+  // cover letter's header uses the same block.
+  function contactBlock(data, location) {
+    var lines = data.identity.location.cv;
+    var kind = (location && lines[location.kind]) ? location.kind : "review";
+    var items = data.identity.contact.map(function (it, i) { return i === 0 ? { text: lines[kind], link: it.link } : it; });
+    return {
+      t: "contact", items: items,
+      _prov: { items: items.map(function (it, i) { return i === 0 ? oneProv(lines, kind) : oneProv(it, "text"); }) }
+    };
+  }
+
+  // opts.location: {kind, place} from CVAdInfo.locationRule (13 Nov 2026).
   // opts.excludeFactIds: fact ids to leave out even though the archetype's
   // own include list has them - e.g. ["vol"] to drop volunteering from one
   // specific CV without changing the archetype's default for everyone else.
@@ -672,12 +686,10 @@
         .concat(roleSource.include.filter(function (id) { return roleIds.indexOf(id) !== -1 && excludeFactIds.indexOf(id) === -1; }));
     }
 
+    var location = opts.location || { kind: "review" };
     var model = [
       { t: "name", text: data.identity.name, _prov: { text: oneProv(data.identity, "name") } },
-      {
-        t: "contact", items: data.identity.contact,
-        _prov: { items: data.identity.contact.map(function (it) { return oneProv(it, "text"); }) }
-      },
+      contactBlock(data, location),
       { t: "auth", text: data.identity.rightToWork, _prov: { text: oneProv(data.identity, "rightToWork") } },
       { t: "spacer" }
     ];
@@ -685,6 +697,15 @@
     var extra = archetype.extraContactKey && data.identity[archetype.extraContactKey];
     if (extra && extra.length) {
       model.splice(2, 0, { t: "contact", items: extra, _prov: { items: extra.map(function (it) { return oneProv(it, "text"); }) } });
+    }
+    // A job elsewhere in Ireland gets "Based in Dublin, ready to relocate
+    // to PLACE" under the contact details (data.identity._locationNote).
+    if (location.kind === "elsewhere") {
+      var reloc = data.identity.location;
+      model.splice(model.map(function (b) { return b.t; }).indexOf("auth"), 0, {
+        t: "contact", items: [{ text: reloc.relocate.replace("{{PLACE}}", location.place), link: null }],
+        _prov: { items: [{ template: { ref: reloc, field: "relocate", slots: { PLACE: location.place } } }] }
+      });
     }
 
     archetype.sectionOrder.forEach(function (so) {
@@ -776,6 +797,7 @@
 
   global.CVAssemble = {
     buildModel: buildModel,
+    contactBlock: contactBlock,
     atsReport: atsReport,
     autoPicks: autoPicks,
     findById: findById,
