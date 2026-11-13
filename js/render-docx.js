@@ -186,11 +186,14 @@
   function head(t) {
     requireConfigured();
     requireLib();
-    return new Paragraph({
+    // Underlined, no rule line (13 Nov 2026, style._lookNote); a rule line
+    // only if style.headingBorder is set.
+    var o = {
       spacing: { before: SPACING.headingBefore, after: SPACING.heading, line: LINE, lineRule: LR },
-      border: { bottom: { style: BorderStyle.SINGLE, size: HEADING_BORDER.size, space: HEADING_BORDER.space, color: HEADING_BORDER.colour } },
-      children: [new TextRun({ text: t, bold: true, size: HEAD, color: NAVY, font: FONT, characterSpacing: CHAR_SPACING.heading })]
-    });
+      children: [new TextRun({ text: t, bold: true, underline: {}, size: HEAD, color: NAVY, font: FONT, characterSpacing: CHAR_SPACING.heading })]
+    };
+    if (HEADING_BORDER) o.border = { bottom: { style: BorderStyle.SINGLE, size: HEADING_BORDER.size, space: HEADING_BORDER.space, color: HEADING_BORDER.colour } };
+    return new Paragraph(o);
   }
 
   // Optional third argument prints right-aligned at the margin (tool stack, dates).

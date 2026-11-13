@@ -73,7 +73,7 @@ for (const fx of FIXTURES) {
     check(`${fx} ${d.label}: one A4 page`, /Pages:\s+1\n/.test(info) && /Page size:\s+595\.\d+ x 841\.\d+ pts \(A4\)/.test(info), info.split('\n').filter((l) => /Pages|Page size/.test(l)).join(' | '));
     const text = execFileSync('pdftotext', ['-layout', pdf.target, '-']).toString();
     check(`${fx} ${d.label}: text extracts cleanly (name, contact line, no stray markup or replacement glyphs)`,
-      /DERIN YESUDAS/.test(text) && /derinyesudas@gmail\.com/.test(text) && !/[�]|\{\{|\}\}|undefined/.test(text), text.slice(0, 200));
+      /Derin Yesudas/.test(text) && /derinyesudas@gmail\.com/.test(text) && !/[�]|\{\{|\}\}|undefined/.test(text), text.slice(0, 200));
     const cmp = spawnSync('python3', [path.join(ROOT, 'tests/pdf-compare.py'), pdf.target, docx.target], { encoding: 'utf8' });
     check(`${fx} ${d.label}: same line breaks as LibreOffice's PDF of the .docx, baselines within 1.5pt`, cmp.status === 0, (cmp.stdout + cmp.stderr).trim().split('\n').slice(0, 6).join(' / '));
   }

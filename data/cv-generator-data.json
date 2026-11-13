@@ -1,7 +1,12 @@
 {
   "_README": "Data layer for the CV Generator. The app may SELECT, ORDER and OMIT text from this file. It may never compose, paraphrase or interpolate. The only fillable slots are {{COMPANY}} {{ROLE}} {{CITY}} {{DATE}} {{ECHO}} in letterBlocks. Extend this file rather than letting the app write anything. STANDING CONSTRAINT, added 14 Sept 2026: the app may never modify its own rules, thresholds, weights or severities. Data changes behaviour; a human changes data. Any feature that would let the program edit this file is out of scope permanently, not deferred - see the w-qualification entry in data.warnings for the concrete case this was written to close off.",
-  "_version": "1.54",
+  "_version": "1.55",
   "_changelog": [
+    {
+      "version": "1.55",
+      "date": "13 Nov 2026",
+      "summary": "Derin asked for his friend's CV look wherever it can be done: black instead of navy, name 'Derin Yesudas' without letter spacing, section headings bold italic underlined in title case with no rule line, PROFILE renamed Summary. Styling only; see style._lookNote for what was not taken and why."
+    },
     {
       "version": "1.54",
       "date": "12 Nov 2026",
@@ -237,7 +242,7 @@
   "_versionRule": "Bump _version on every data change and show it in the UI footer. When an output looks wrong later, the first question is always which version produced it.",
   "_sourceOfTruth": "claude/CV-fact-bank.md and claude/CV-house-style.md in the 'How to use Claude' project. When a fact changes, change it in both places. A generic job description for a job title is not evidence of what the person actually did in that role - the same category error as treating the title itself as a basis. Web-sourced role descriptions (job-board postings, etc.) may be used to ASK a better question of Derin directly; they may never be promoted to fact-bank content on their own (added 17 Sept 2026, role-dmart resolution).",
   "identity": {
-    "name": "DERIN YESUDAS",
+    "name": "Derin Yesudas",
     "contact": [
       {
         "text": "Dublin, Ireland",
@@ -2082,27 +2087,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "SKILLS"
+          "heading": "Skills"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2158,27 +2163,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "SKILLS"
+          "heading": "Skills"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2228,27 +2233,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "SKILLS"
+          "heading": "Skills"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2302,27 +2307,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "SKILLS"
+          "heading": "Skills"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2379,27 +2384,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "SKILLS"
+          "heading": "Skills"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2463,27 +2468,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "SKILLS"
+          "heading": "Skills"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2531,27 +2536,27 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "KEY SKILLS"
+          "heading": "Key Skills"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "project",
-          "heading": "PROJECTS"
+          "heading": "Projects"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -2605,23 +2610,23 @@
       "sectionOrder": [
         {
           "type": "profile",
-          "heading": "PROFILE"
+          "heading": "Summary"
         },
         {
           "type": "skills",
-          "heading": "KEY SKILLS"
+          "heading": "Key Skills"
         },
         {
           "type": "experience",
-          "heading": "EXPERIENCE"
+          "heading": "Experience"
         },
         {
           "type": "education",
-          "heading": "EDUCATION"
+          "heading": "Education"
         },
         {
           "type": "certifications",
-          "heading": "CERTIFICATIONS"
+          "heading": "Certifications"
         }
       ],
       "skillCategories": [
@@ -4718,7 +4723,7 @@
       "letterBody": 21
     },
     "colours": {
-      "navy": "1F3864",
+      "navy": "000000",
       "grey": "555555",
       "faint": "444444"
     },
@@ -4739,18 +4744,13 @@
       "letterPara": 150
     },
     "characterSpacing": {
-      "name": 20,
-      "heading": 12
+      "name": 0,
+      "heading": 0
     },
-    "headingBorder": {
-      "style": "single",
-      "size": 6,
-      "space": 2,
-      "colour": "1F3864"
-    },
+    "headingBorder": null,
     "bullet": {
       "glyph": "•",
-      "colour": "1F3864",
+      "colour": "000000",
       "indentLeft": 200,
       "hanging": 160
     },
@@ -4762,7 +4762,8 @@
     "profileBold": [
       "a year",
       "99% accuracy"
-    ]
+    ],
+    "_lookNote": "13 Nov 2026, Derin: 'Imbibe everything that can be done' from his friend's CV. Black text, name in title case without letter spacing, headings bold italic underlined in title case with no rule line, PROFILE renamed Summary. colours.navy keeps its key but is now black. Not taken: the sans-serif font (needs a new font file and every height re-measured in LibreOffice), dates right-aligned on the job line (parsers join right-aligned text to the city), contact icons (ATS reads them as junk), one combined Experience & Projects heading (ATS looks for Experience)."
   },
   "_educationRule": "Education sits BELOW project and experience on every archetype. Derin's decision, 12 Sept 2026. The trade-off: on graduate programmes and finance roles the degree is the qualifying criterion, so it must not be hard to find. MANDATORY CONSEQUENCE: every profileVariant must name the degree AND its classification in its first sentence, so eligibility is satisfied at line one and the education block only has to confirm it. A profile variant that does not do this is a bug. RECONCILED WITH THE ACTION-VERB-FIRST GATE (26 Sept 2026, item 2a below): every profileVariant now opens 'Holds a/an <degree>...' - the classification string still lands in the same first sentence (this rule's own test), so both rules are satisfied by the same three words, not by exempting anyone from either rule.",
   "actionVerbs": {
@@ -4987,16 +4988,16 @@
       "rightToWork": 14.07
     },
     "headings": {
-      "PROFILE": 17.67,
-      "SKILLS": 17.67,
-      "ANALYTICS PROJECT": 17.67,
-      "EXPERIENCE": 17.67,
-      "EDUCATION": 17.67,
-      "CERTIFICATIONS AND VOLUNTEERING": 17.67,
-      "CERTIFICATIONS": 17.67,
-      "PROJECT": 17.67,
-      "KEY SKILLS": 17.67,
-      "PROJECTS": 17.67
+      "Summary": 17.67,
+      "Skills": 17.67,
+      "Analytics Project": 17.67,
+      "Experience": 17.67,
+      "Education": 17.67,
+      "Certifications and Volunteering": 17.67,
+      "Certifications": 17.67,
+      "Project": 17.67,
+      "Key Skills": 17.67,
+      "Projects": 17.67
     },
     "charWidths": {
       "body": {
